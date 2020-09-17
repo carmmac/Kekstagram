@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Петр Кириенко](https://up.htmlacademy.ru/javascript/21/user/835565).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Буртылёв](https://htmlacademy.ru/profile/id3341).
 
 ---
 
