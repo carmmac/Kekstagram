@@ -99,3 +99,29 @@ function getPhotoDescr() {
 }
 getPhotoDescr();
 
+/*
+* Прототип алгоритма создания массива рандомных неповторяющихся url для фоток;
+* не работает, бесконечный цикл.
+function getUrl () {
+  url = `photos/${getRandomNumber(1, 3)}.jpg`;
+  return url;
+}
+
+function checkDouble (a, array) {
+  array.forEach(function(item, i, arr)  {
+    if ((arr.length > 2) && (item === a)) {
+      let newUrl = getUrl();
+      arr[i] = newUrl;
+      checkDouble(newUrl, arr);
+    }
+    return array;
+  });
+}
+
+let urls = [];
+for (let i = 0; i < 3; i++) {
+  urls[i] = getUrl();
+  checkDouble(url, urls);
+};
+
+*/
