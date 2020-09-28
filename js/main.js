@@ -10,7 +10,6 @@ const messages = [
   `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`,
   `Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!`
 ];
-
 const names = [
   `Иван`,
   `Федор`,
@@ -22,11 +21,20 @@ const names = [
   `Михаил`,
   `Георгий`
 ];
+const descriptions = [
+  `Лучший день рождения!`,
+  `Потрясающие выходные..`,
+  `С лучшим другом))`,
+  `Это был восхитительный день!`,
+  `Настроение супер`
+]
 
+// Рандомайзер чисел
 function getRandomNumber (min, max) {
  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Перемешивание массива
 function shuffleArr(arr){
 	let j, temp;
 	for (let i = arr.length - 1; i > 0; i--) {
@@ -38,14 +46,18 @@ function shuffleArr(arr){
 	return arr;
 }
 
+// Наполнение комментария
 function getComment () {
-  let comment = {};
-  comment.avatar = `img/avatar-${getRandomNumber(1, 6)}.svg`;
+  const avatarNumMin = 1;
+  const avatarNumMax = 6;
+  const comment = {};
+  comment.avatar = `img/avatar-${getRandomNumber(avatarNumMin, avatarNumMax)}.svg`;
   comment.message = messages[getRandomNumber(0, messages.length - 1)];
   comment.name = names[getRandomNumber(0, names.length - 1)];
   return comment;
 }
 
+// Наполнение описания фотографии
 function getPhotoDescr () {
   const PHOTO_NUM_MIN = 1;
   const PHOTO_NUM_MAX = 25;
@@ -53,11 +65,11 @@ function getPhotoDescr () {
   const LIKES_MAX = 200;
 
   let urls = [];
-  let description = `Описание фотографии`;
+
   let likes = [];
 
   for (let i = 0; i < 25; i++) {
-    // наполнение массива фотографий
+    // наполнение массива url-ов
     urls[i] = `photos/${i+1}.jpg`;
 
     // наполнение массива лайков
@@ -71,9 +83,9 @@ function getPhotoDescr () {
   comments = shuffleArr(comments);
 
   for (let i = 0; i < 25; i++) {
-    let newDescrItem = {};
+    const newDescrItem = {};
     newDescrItem.url = urls[i];
-    newDescrItem.description = description;
+    newDescrItem.description = descriptions[getRandomNumber(0, descriptions.length - 1)];
     newDescrItem.likes = likes[i];
     newDescrItem.comments = comments[getRandomNumber(0, comments.length - 1)];
     newDescr[i] = newDescrItem;
@@ -81,3 +93,4 @@ function getPhotoDescr () {
   return newDescr;
 }
 getPhotoDescr();
+console.log(newDescr);
