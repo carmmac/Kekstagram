@@ -1,7 +1,8 @@
 "use strict";
 
-let comments = [];
-const newDescr = [];
+const LIKES_MIN = 15;
+const LIKES_MAX = 200;
+let newDescr = [];
 const messages = [
   `Всё отлично!`,
   `В целом всё неплохо. Но не всё.`,
@@ -53,75 +54,37 @@ function getComment() {
   const avatarNumMax = 6;
   const comment = {};
   comment.avatar = `img/avatar-${getRandomNumber(
-      avatarNumMin,
-      avatarNumMax
+    avatarNumMin,
+    avatarNumMax
   )}.svg`;
   comment.message = messages[getRandomNumber(0, messages.length - 1)];
   comment.name = names[getRandomNumber(0, names.length - 1)];
   return comment;
 }
 
-// Наполнение описания фотографии
-function getPhotoDescr() {
-  // const PHOTO_NUM_MIN = 1;
-  // const PHOTO_NUM_MAX = 25;
-  const LIKES_MIN = 15;
-  const LIKES_MAX = 200;
-
-  let urls = [];
-
-  let likes = [];
-
-  for (let i = 0; i < 25; i++) {
-    // наполнение массива url-ов
-    urls[i] = `photos/${i + 1}.jpg`;
-
-    // наполнение массива лайков
-    likes[i] = getRandomNumber(LIKES_MIN, LIKES_MAX);
-
-    // наполнение объекта комментария
-    comments[i] = getComment();
-  }
-
-  urls = shuffleArr(urls);
-  comments = shuffleArr(comments);
-
+// Наполнение информации о фотографии
+function getPhotos() {
   for (let i = 0; i < 25; i++) {
     const newDescrItem = {};
-    newDescrItem.url = urls[i];
+
+    newDescrItem.url = `photos/${i + 1}.jpg`;
+
     newDescrItem.description =
       descriptions[getRandomNumber(0, descriptions.length - 1)];
-    newDescrItem.likes = likes[i];
-    newDescrItem.comments = comments[getRandomNumber(0, comments.length - 1)];
+
+    newDescrItem.likes = getRandomNumber(LIKES_MIN, LIKES_MAX);
+
+    newDescrItem.comments = [];
+    for (let j = 0; j < getRandomNumber(1, 5); j++) {
+      newDescrItem.comments[j] = getComment();
+    }
+
     newDescr[i] = newDescrItem;
   }
+
+  newDescr = shuffleArr(newDescr);
   return newDescr;
 }
-getPhotoDescr();
 
-/*
-* Прототип алгоритма создания массива рандомных неповторяющихся url для фоток;
-* не работает, бесконечный цикл.
-function getUrl () {
-  url = `photos/${getRandomNumber(1, 3)}.jpg`;
-  return url;
-}
-
-function checkDouble (a, array) {
-  array.forEach(function(item, i, arr)  {
-    if ((arr.length > 2) && (item === a)) {
-      let newUrl = getUrl();
-      arr[i] = newUrl;
-      checkDouble(newUrl, arr);
-    }
-    return array;
-  });
-}
-
-let urls = [];
-for (let i = 0; i < 3; i++) {
-  urls[i] = getUrl();
-  checkDouble(url, urls);
-};
-
-*/
+getPhotos();
+console.log(newDescr);
