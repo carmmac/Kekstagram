@@ -83,8 +83,7 @@ function getPhotos() {
     newDescr[i] = newDescrItem;
   }
 
-  newDescr = shuffleArr(newDescr);
-  return newDescr;
+  return shuffleArr(newDescr);
 }
 
-getPhotos();
+const photos = getPhotos();
