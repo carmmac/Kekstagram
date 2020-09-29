@@ -54,8 +54,8 @@ function getComment() {
   const avatarNumMax = 6;
   const comment = {};
   comment.avatar = `img/avatar-${getRandomNumber(
-    avatarNumMin,
-    avatarNumMax
+      avatarNumMin,
+      avatarNumMax
   )}.svg`;
   comment.message = messages[getRandomNumber(0, messages.length - 1)];
   comment.name = names[getRandomNumber(0, names.length - 1)];
@@ -87,4 +87,3 @@ function getPhotos() {
 }
 
 getPhotos();
-console.log(newDescr);
