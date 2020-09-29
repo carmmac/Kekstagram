@@ -2,7 +2,6 @@
 
 const LIKES_MIN = 15;
 const LIKES_MAX = 200;
-let newDescr = [];
 const messages = [
   `Всё отлично!`,
   `В целом всё неплохо. Но не всё.`,
@@ -64,6 +63,8 @@ function getComment() {
 
 // Наполнение информации о фотографии
 function getPhotos() {
+  let newDescr = [];
+
   for (let i = 0; i < 25; i++) {
     const newDescrItem = {};
 
