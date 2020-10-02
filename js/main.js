@@ -93,22 +93,22 @@ function getPhotos() {
 
 const photos = getPhotos();
 
-// Наполнение блока фотографиями из массива
-function insertPhotoElements(arr) {
-  // Функция наполнения темплейта
-  function getPhotoElement(obj) {
-    const newPicture = pictureTemplate.cloneNode(true);
+// Функция наполнения темплейта
+function getPhotoElement(obj) {
+  const newPicture = pictureTemplate.cloneNode(true);
 
-    newPicture.querySelector(`.picture__img`).src = obj.url;
-    newPicture.querySelector(`.picture__likes`).textContent = obj.likes;
-    newPicture.querySelector(`.picture__comments`).textContent = obj.comments.length;
+  newPicture.querySelector(`.picture__img`).src = obj.url;
+  newPicture.querySelector(`.picture__likes`).textContent = obj.likes;
+  newPicture.querySelector(`.picture__comments`).textContent = obj.comments.length;
 
-    return newPicture;
-  }
-
-  for (let i = 0; i < arr.length; i++) {
-    pictures.appendChild(getPhotoElement(arr[i]));
-  }
+  return newPicture;
 }
 
-const photoElements = insertPhotoElements(photos);
+// Наполнение блока фотографиями из массива
+function insertPhotoElements(arr) {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < arr.length; i++) {
+    fragment.appendChild(getPhotoElement(arr[i]));
+  }
+  return pictures.appendChild(fragment);
+}
