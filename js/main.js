@@ -112,3 +112,5 @@ function insertPhotoElements(arr) {
   }
   return pictures.appendChild(fragment);
 }
+
+insertPhotoElements(photos);
