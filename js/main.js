@@ -136,7 +136,6 @@ function insertPhotoElements(imgs) {
 insertPhotoElements(photos);
 
 
-
 // Добавление темплейта в DOM
 function createBigPicCommentTemplate() {
   pictureTemplate.insertAdjacentHTML(`afterend`, BigPicCommentTemplate);
