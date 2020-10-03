@@ -115,7 +115,7 @@ const photos = getPhotos();
 
 // Функция наполнения темплейта
 function getPhotoElement(photo) {
-  const newPicture = pictureTemplate.cloneNode(true);
+  const newPicture = pictureTemplateContent.cloneNode(true);
 
   newPicture.querySelector(`.picture__img`).src = photo.url;
   newPicture.querySelector(`.picture__likes`).textContent = photo.likes;
@@ -125,15 +125,16 @@ function getPhotoElement(photo) {
 }
 
 // Наполнение блока фотографиями из массива
-function insertPhotoElements(fotos) {
+function insertPhotoElements(imgs) {
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < fotos.length; i++) {
-    fragment.appendChild(getPhotoElement(fotos[i]));
+  for (let i = 0; i < imgs.length; i++) {
+    fragment.appendChild(getPhotoElement(imgs[i]));
   }
   return pictures.appendChild(fragment);
 }
 
 insertPhotoElements(photos);
+
 
 
 // Добавление темплейта в DOM
@@ -148,21 +149,21 @@ function createBigPicCommentTemplate() {
 const bigPicCommentHTML = createBigPicCommentTemplate();
 
 // Функция наполнения темплейта
-function getBigPicComment(obj) {
+function getBigPicComment(comment) {
   const newBigPicComment = bigPicCommentHTML.cloneNode(true);
 
-  newBigPicComment.querySelector(`.social__picture`).src = obj.avatar;
-  newBigPicComment.querySelector(`.social__picture`).alt = obj.name;
-  newBigPicComment.querySelector(`.social__text`).textContent = obj.message;
+  newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
+  newBigPicComment.querySelector(`.social__picture`).alt = comment.name;
+  newBigPicComment.querySelector(`.social__text`).textContent = comment.message;
 
   return newBigPicComment;
 }
 
 // Наполнение комментариев из массива
-function insertBigPicComment(arr) {
+function insertBigPicComment(comments) {
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < arr.length; i++) {
-    fragment.appendChild(getBigPicComment(arr[i]));
+  for (let i = 0; i < comments.length; i++) {
+    fragment.appendChild(getBigPicComment(comments[i]));
   }
   return bigPictureComments.appendChild(fragment);
 }
