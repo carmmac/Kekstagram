@@ -6,9 +6,29 @@ const LIKES_MAX = 200;
 const AVATAR_NUM_MIN = 1;
 const AVATAR_NUM_MAX = 6;
 const pictures = document.querySelector(`.pictures`);
-const pictureTemplate = document
-  .querySelector(`#picture`)
-  .content.querySelector(`.picture`);
+const pictureTemplate = document.querySelector(`#picture`);
+const pictureTemplateContent = pictureTemplate.content.querySelector(
+    `.picture`
+);
+const bigPicture = document.querySelector(`.big-picture`);
+const bigPictureImg = bigPicture.querySelector(`.big-picture__img img`);
+const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
+const bigPictureCommentsCount = bigPicture.querySelector(`.comments-count`);
+const bigPictureComments = bigPicture.querySelector(`.social__comments`);
+const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
+
+const BigPicCommentTemplate = `
+  <template id="big-picture-comment">
+    <li class="social__comment">
+      <img
+          class="social__picture"
+          src="{{аватар}}"
+          alt="{{имя комментатора}}"
+          width="35" height="35">
+      <p class="social__text">{{текст комментария}}</p>
+    </li>
+  </template>
+`;
 
 const messages = [
   `Всё отлично!`,
@@ -114,3 +134,53 @@ function insertPhotoElements(fotos) {
 }
 
 insertPhotoElements(photos);
+
+
+// Добавление темплейта в DOM
+function createBigPicCommentTemplate() {
+  pictureTemplate.insertAdjacentHTML(`afterend`, BigPicCommentTemplate);
+  const BigPicCommentTemplateContent = document
+    .querySelector(`#big-picture-comment`)
+    .content.querySelector(`.social__comment`);
+
+  return BigPicCommentTemplateContent;
+}
+const bigPicCommentHTML = createBigPicCommentTemplate();
+
+// Функция наполнения темплейта
+function getBigPicComment(obj) {
+  const newBigPicComment = bigPicCommentHTML.cloneNode(true);
+
+  newBigPicComment.querySelector(`.social__picture`).src = obj.avatar;
+  newBigPicComment.querySelector(`.social__picture`).alt = obj.name;
+  newBigPicComment.querySelector(`.social__text`).textContent = obj.message;
+
+  return newBigPicComment;
+}
+
+// Наполнение комментариев из массива
+function insertBigPicComment(arr) {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < arr.length; i++) {
+    fragment.appendChild(getBigPicComment(arr[i]));
+  }
+  return bigPictureComments.appendChild(fragment);
+}
+
+// Отображение фотографии в fullscreen
+function showBigPicture() {
+  const photoBig = photos[0];
+  // лучше создавать переменные для элементов или сразу находить и изменять их здесь?
+  bigPicture.classList.remove(`hidden`);
+  bigPictureImg.src = photoBig.url;
+  bigPictureLikesCount.textContent = photoBig.likes;
+  bigPictureCommentsCount.textContent = photoBig.comments.length;
+  bigPictureDescription.textContent = photoBig.description;
+  // вот так:
+  bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
+  bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
+  document.body.classList.add(`modal-open`);
+
+  insertBigPicComment(photoBig.comments);
+}
+showBigPicture();
