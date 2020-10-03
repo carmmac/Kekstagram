@@ -3,6 +3,8 @@
 const PHOTOS_NUM_MAX = 25;
 const LIKES_MIN = 15;
 const LIKES_MAX = 200;
+const AVATAR_NUM_MIN = 1;
+const AVATAR_NUM_MAX = 6;
 const pictures = document.querySelector(`.pictures`);
 const pictureTemplate = document
   .querySelector(`#picture`)
@@ -55,12 +57,10 @@ function shuffleArr(arr) {
 
 // Наполнение комментария
 function getComment() {
-  const avatarNumMin = 1;
-  const avatarNumMax = 6;
   const comment = {};
   comment.avatar = `img/avatar-${getRandomNumber(
-      avatarNumMin,
-      avatarNumMax
+      AVATAR_NUM_MIN,
+      AVATAR_NUM_MAX
   )}.svg`;
   comment.message = messages[getRandomNumber(0, messages.length - 1)];
   comment.name = names[getRandomNumber(0, names.length - 1)];
@@ -69,46 +69,46 @@ function getComment() {
 
 // Наполнение информации о фотографии
 function getPhotos() {
-  let newDescr = [];
+  let photos = [];
 
   for (let i = 0; i < PHOTOS_NUM_MAX; i++) {
-    const newDescrItem = {};
+    const newPhoto = {};
 
-    newDescrItem.url = `photos/${i + 1}.jpg`;
+    newPhoto.url = `photos/${i + 1}.jpg`;
 
-    newDescrItem.description =
+    newPhoto.description =
       descriptions[getRandomNumber(0, descriptions.length - 1)];
 
-    newDescrItem.likes = getRandomNumber(LIKES_MIN, LIKES_MAX);
+    newPhoto.likes = getRandomNumber(LIKES_MIN, LIKES_MAX);
 
-    newDescrItem.comments = [];
+    newPhoto.comments = [];
     for (let j = 0; j < getRandomNumber(1, 5); j++) {
-      newDescrItem.comments[j] = getComment();
+      newPhoto.comments[j] = getComment();
     }
 
-    newDescr[i] = newDescrItem;
+    photos[i] = newPhoto;
   }
-  return shuffleArr(newDescr);
+  return shuffleArr(photos);
 }
 
 const photos = getPhotos();
 
 // Функция наполнения темплейта
-function getPhotoElement(obj) {
+function getPhotoElement(photo) {
   const newPicture = pictureTemplate.cloneNode(true);
 
-  newPicture.querySelector(`.picture__img`).src = obj.url;
-  newPicture.querySelector(`.picture__likes`).textContent = obj.likes;
-  newPicture.querySelector(`.picture__comments`).textContent = obj.comments.length;
+  newPicture.querySelector(`.picture__img`).src = photo.url;
+  newPicture.querySelector(`.picture__likes`).textContent = photo.likes;
+  newPicture.querySelector(`.picture__comments`).textContent = photo.comments.length;
 
   return newPicture;
 }
 
 // Наполнение блока фотографиями из массива
-function insertPhotoElements(arr) {
+function insertPhotoElements(fotos) {
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < arr.length; i++) {
-    fragment.appendChild(getPhotoElement(arr[i]));
+  for (let i = 0; i < fotos.length; i++) {
+    fragment.appendChild(getPhotoElement(fotos[i]));
   }
   return pictures.appendChild(fragment);
 }
