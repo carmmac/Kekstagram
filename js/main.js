@@ -157,14 +157,10 @@ function showBigPicture(currentImg) {
   insertBigPicComment(photos[currentImg.id].comments);
 
   // Обработчик закрытия окна по по нажатию Esc
-  document.addEventListener(`keydown`, function (evt) {
-    onBigPictureEscPress(evt);
-  });
+  document.addEventListener(`keydown`, onBigPictureEscPress);
 
   // Обработчик закрытия окна по клику вне окна
-  bigPicture.addEventListener(`click`, function (evt) {
-    bigPictureCloseHandler(evt);
-  });
+  bigPicture.addEventListener(`click`, bigPictureCloseHandler);
 }
 
 
@@ -186,8 +182,7 @@ function onBigPictureEscPress(evt) {
 // Функция закрытия окна по клику вне окна
 function bigPictureCloseHandler(evt) {
   if (!evt.target.closest(`.big-picture__preview`)) {
-    bigPicture.classList.add(`hidden`);
-    document.body.classList.remove(`modal-open`);
+    closeBigPicture();
   }
 }
 
@@ -195,12 +190,8 @@ function bigPictureCloseHandler(evt) {
 function closeBigPicture() {
   bigPicture.classList.add(`hidden`);
   document.body.classList.remove(`modal-open`);
-  document.removeEventListener(`keydown`, function (evt) {
-    onBigPictureEscPress(evt);
-  });
-  bigPicture.removeEventListener(`click`, function (evt) {
-    bigPictureCloseHandler(evt);
-  });
+  document.removeEventListener(`keydown`, onBigPictureEscPress);
+  bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
 }
 
 // Обработчик закрытия окна по кнопке "X"
