@@ -17,19 +17,6 @@ const bigPictureCommentsCount = bigPicture.querySelector(`.comments-count`);
 const bigPictureComments = bigPicture.querySelector(`.social__comments`);
 const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
 
-const BigPicCommentTemplate = `
-  <template id="big-picture-comment">
-    <li class="social__comment">
-      <img
-          class="social__picture"
-          src="{{аватар}}"
-          alt="{{имя комментатора}}"
-          width="35" height="35">
-      <p class="social__text">{{текст комментария}}</p>
-    </li>
-  </template>
-`;
-
 const messages = [
   `Всё отлично!`,
   `В целом всё неплохо. Но не всё.`,
@@ -93,19 +80,14 @@ function getPhotos() {
 
   for (let i = 0; i < PHOTOS_NUM_MAX; i++) {
     const newPhoto = {};
-
     newPhoto.url = `photos/${i + 1}.jpg`;
-
     newPhoto.description =
       descriptions[getRandomNumber(0, descriptions.length - 1)];
-
     newPhoto.likes = getRandomNumber(LIKES_MIN, LIKES_MAX);
-
     newPhoto.comments = [];
     for (let j = 0; j < getRandomNumber(1, 5); j++) {
       newPhoto.comments[j] = getComment();
     }
-
     photos[i] = newPhoto;
   }
   return shuffleArr(photos);
@@ -113,11 +95,13 @@ function getPhotos() {
 
 const photos = getPhotos();
 
-// Функция наполнения темплейта
-function getPhotoElement(photo) {
+// Функция наполнения темплейта фотографии
+function getPhotoElement(photo, idNum) {
   const newPicture = pictureTemplateContent.cloneNode(true);
+  const newPictureImg = newPicture.querySelector(`.picture__img`);
 
-  newPicture.querySelector(`.picture__img`).src = photo.url;
+  newPictureImg.src = photo.url;
+  newPictureImg.id = `${idNum}`;
   newPicture.querySelector(`.picture__likes`).textContent = photo.likes;
   newPicture.querySelector(`.picture__comments`).textContent = photo.comments.length;
 
@@ -128,28 +112,17 @@ function getPhotoElement(photo) {
 function insertPhotoElements(imgs) {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < imgs.length; i++) {
-    fragment.appendChild(getPhotoElement(imgs[i]));
+    fragment.appendChild(getPhotoElement(imgs[i], i));
   }
   return pictures.appendChild(fragment);
 }
-
 insertPhotoElements(photos);
 
 
-// Добавление темплейта в DOM
-function createBigPicCommentTemplate() {
-  pictureTemplate.insertAdjacentHTML(`afterend`, BigPicCommentTemplate);
-  const BigPicCommentTemplateContent = document
-    .querySelector(`#big-picture-comment`)
-    .content.querySelector(`.social__comment`);
-
-  return BigPicCommentTemplateContent;
-}
-const bigPicCommentHTML = createBigPicCommentTemplate();
-
-// Функция наполнения темплейта
+// ПОЛНОЭКРАННОЕ ФОТО
+// Функция наполнения комментария для полноэкранного фото
 function getBigPicComment(comment) {
-  const newBigPicComment = bigPicCommentHTML.cloneNode(true);
+  const newBigPicComment = bigPictureComments.querySelector(`.social__comment`).cloneNode(true);
 
   newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
   newBigPicComment.querySelector(`.social__picture`).alt = comment.name;
@@ -158,7 +131,7 @@ function getBigPicComment(comment) {
   return newBigPicComment;
 }
 
-// Наполнение комментариев из массива
+// Наполнение комментариев из массива для полноэкранного фото
 function insertBigPicComment(comments) {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < comments.length; i++) {
@@ -167,20 +140,24 @@ function insertBigPicComment(comments) {
   return bigPictureComments.appendChild(fragment);
 }
 
-// Отображение фотографии в fullscreen
-function showBigPicture() {
-  const photoBig = photos[0];
-  // лучше создавать переменные для элементов или сразу находить и изменять их здесь?
+// Отображение полноэкранной фотографии
+function showBigPicture(currentImg) {
+
   bigPicture.classList.remove(`hidden`);
-  bigPictureImg.src = photoBig.url;
-  bigPictureLikesCount.textContent = photoBig.likes;
-  bigPictureCommentsCount.textContent = photoBig.comments.length;
-  bigPictureDescription.textContent = photoBig.description;
-  // вот так:
+  bigPictureImg.src = currentImg.src;
+  bigPictureLikesCount.textContent = photos[currentImg.id].likes;
+  bigPictureCommentsCount.textContent = photos[currentImg.id].comments.length;
+  bigPictureDescription.textContent = photos[currentImg.id].description;
   bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
   bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
   document.body.classList.add(`modal-open`);
 
-  insertBigPicComment(photoBig.comments);
+  insertBigPicComment(photos[currentImg.id].comments);
 }
-showBigPicture();
+
+// Открытие полноэкранной фотографии
+pictures.addEventListener(`click`, function (evt) {
+  if (evt.target && evt.target.matches(`img`)) {
+    showBigPicture(evt.target);
+  }
+});
