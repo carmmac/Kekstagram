@@ -141,7 +141,8 @@ function insertBigPicComment(comments) {
   return bigPictureComments.appendChild(fragment);
 }
 
-// Отображение полноэкранной фотографии
+
+// Функция отображения окна с полноэкранной фотографией
 function showBigPicture(currentImg) {
 
   bigPicture.classList.remove(`hidden`);
@@ -155,32 +156,54 @@ function showBigPicture(currentImg) {
 
   insertBigPicComment(photos[currentImg.id].comments);
 
-  // Закрытие окна по кнопке Esc
+  // Обработчик закрытия окна по по нажатию Esc
   document.addEventListener(`keydown`, function (evt) {
-    if (evt.key === `Escape`) {
-      evt.preventDefault();
-      bigPicture.classList.add(`hidden`);
-      document.body.classList.remove(`modal-open`);
-    }
+    onBigPictureEscPress(evt);
   });
-  // Закрытие окна по клику вне окна
+
+  // Обработчик закрытия окна по клику вне окна
   bigPicture.addEventListener(`click`, function (evt) {
-    if (!evt.target.closest(`.big-picture__preview`)) {
-      bigPicture.classList.add(`hidden`);
-      document.body.classList.remove(`modal-open`);
-    }
+    bigPictureCloseHandler(evt);
   });
 }
 
-// Открытие полноэкранной фотографии
+
+// Обработчик открытия окна полноэкранной фотографии
 pictures.addEventListener(`click`, function (evt) {
   if (evt.target && evt.target.matches(`img`)) {
     showBigPicture(evt.target);
   }
 });
 
-// Закрытие полноэкранной фотографии по кнопке
-bigPictureCloseBtn.addEventListener(`click`, function () {
+// Функция закрытия окна по нажатию Esc
+function onBigPictureEscPress(evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closeBigPicture();
+  }
+}
+
+// Функция закрытия окна по клику вне окна
+function bigPictureCloseHandler(evt) {
+  if (!evt.target.closest(`.big-picture__preview`)) {
+    bigPicture.classList.add(`hidden`);
+    document.body.classList.remove(`modal-open`);
+  }
+}
+
+// Функция закрытия окна по кнопке "X"
+function closeBigPicture() {
   bigPicture.classList.add(`hidden`);
   document.body.classList.remove(`modal-open`);
+  document.removeEventListener(`keydown`, function (evt) {
+    onBigPictureEscPress(evt);
+  });
+  bigPicture.removeEventListener(`click`, function (evt) {
+    bigPictureCloseHandler(evt);
+  });
+}
+
+// Обработчик закрытия окна по кнопке "X"
+bigPictureCloseBtn.addEventListener(`click`, function () {
+  closeBigPicture();
 });
