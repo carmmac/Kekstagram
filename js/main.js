@@ -16,6 +16,7 @@ const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
 const bigPictureCommentsCount = bigPicture.querySelector(`.comments-count`);
 const bigPictureComments = bigPicture.querySelector(`.social__comments`);
 const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
+const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 
 const messages = [
   `Всё отлично!`,
@@ -153,6 +154,22 @@ function showBigPicture(currentImg) {
   document.body.classList.add(`modal-open`);
 
   insertBigPicComment(photos[currentImg.id].comments);
+
+  // Закрытие окна по кнопке Esc
+  document.addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Escape`) {
+      evt.preventDefault();
+      bigPicture.classList.add(`hidden`);
+      document.body.classList.remove(`modal-open`);
+    }
+  });
+  // Закрытие окна по клику вне окна
+  bigPicture.addEventListener(`click`, function (evt) {
+    if (!evt.target.closest(`.big-picture__preview`)) {
+      bigPicture.classList.add(`hidden`);
+      document.body.classList.remove(`modal-open`);
+    }
+  });
 }
 
 // Открытие полноэкранной фотографии
@@ -160,4 +177,10 @@ pictures.addEventListener(`click`, function (evt) {
   if (evt.target && evt.target.matches(`img`)) {
     showBigPicture(evt.target);
   }
+});
+
+// Закрытие полноэкранной фотографии по кнопке
+bigPictureCloseBtn.addEventListener(`click`, function () {
+  bigPicture.classList.add(`hidden`);
+  document.body.classList.remove(`modal-open`);
 });
