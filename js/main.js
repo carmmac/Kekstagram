@@ -170,7 +170,7 @@ function showBigPicture(currentImg) {
 
 // Обработчик открытия окна полноэкранной фотографии
 pictures.addEventListener(`click`, function (evt) {
-  if (evt.target && evt.target.closest(`img`)) {
+  if (evt.target.closest(`img`)) {
     const pictureToShow = photos[evt.target.dataset.id];
     showBigPicture(pictureToShow);
   }
@@ -214,6 +214,7 @@ function hideModalWindow(elem) {
 // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
 const fileUploader = pictures.querySelector(`.img-upload__input`);
 const photoEditor = pictures.querySelector(`.img-upload__overlay`);
+const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
 const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
 
 const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
@@ -227,17 +228,18 @@ fileUploader.addEventListener(`change`, function () {
 
   // Открытие окна редактора изображения
   showModalWindow(photoEditor);
-  scaleValueField.value = initialScaleValue;
+  scaleValueField.value = `${initialScaleValue}%`;
 
-  scaleBtnSmaller.addEventListener(`click`, function () {
-    let newScale = getSmallerScale(scaleValueField.value, scaleChangeStep);
-    scaleValueField.value = newScale;
-    console.log(typeof scaleValueField.value);
+  scaleBtnSmaller.addEventListener(`click`, function (evt) {
+    const newScale = getNewScaleValue(scaleValueField.value, evt.target);
+    scaleValueField.value = `${newScale}%`;
+    changeImgScale(previewImg, newScale);
   });
 
-  scaleBtnBigger.addEventListener(`click`, function () {
-    let newScale = getBiggerScale(scaleValueField.value, scaleChangeStep);
-    scaleValueField.value = newScale;
+  scaleBtnBigger.addEventListener(`click`, function (evt) {
+    const newScale = getNewScaleValue(scaleValueField.value, evt.target);
+    scaleValueField.value = `${newScale}%`;
+    changeImgScale(previewImg, newScale);
   });
 
   // Обработчик закрытия окна по кнопке "X"
@@ -263,18 +265,32 @@ function onPhotoEditorEscPress(evt) {
   }
 }
 
-function getSmallerScale(currentScale, step) {
-  if (currentScale > 0) {
-    return currentScale - step;
+// Функция изменения показателя масштаба
+function getNewScaleValue(initValue, btn) {
+  const scalePureValue = initValue.slice(0, -1);
+  const newScaleValue = changeScaleValue(scalePureValue, scaleChangeStep, btn);
+  return newScaleValue;
+}
+
+// Функция вычисления показателя масштаба
+function changeScaleValue(currScale, step, btn) {
+  const currentScale = Number(currScale);
+  if (btn === scaleBtnSmaller) {
+    if (currentScale > 25) {
+      return currentScale - step;
+    } else {
+      return currentScale;
+    }
   } else {
-    return currentScale;
+    if (currentScale === 100) {
+      return currentScale;
+    } else {
+      return currentScale + step;
+    }
   }
 }
 
-function getBiggerScale(currentScale, step) {
-  if (currentScale === 100) {
-    return currentScale;
-  } else {
-    return currentScale + step;
-  }
+// Функция изменения масштаба превью-изображения
+function changeImgScale(img, value) {
+  img.style.transform = `scale(${value / 100})`;
 }
