@@ -171,7 +171,7 @@ function showBigPicture(currentImg) {
 
 // Обработчик открытия окна полноэкранной фотографии
 pictures.addEventListener(`click`, function (evt) {
-  if (evt.target && evt.target.closest(`img`)) {
+  if (evt.target.closest(`img`)) {
     const pictureToShow = photos[evt.target.dataset.id];
     showBigPicture(pictureToShow);
   }
