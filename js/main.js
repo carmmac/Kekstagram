@@ -145,14 +145,13 @@ function insertBigPicComment(comments) {
 // Функция отображения окна с полноэкранной фотографией
 function showBigPicture(currentImg) {
 
-  bigPicture.classList.remove(`hidden`);
+  showModalWindow(bigPicture);
   bigPictureImg.src = currentImg.url;
   bigPictureLikesCount.textContent = currentImg.likes;
   bigPictureCommentsCount.textContent = currentImg.comments.length;
   bigPictureDescription.textContent = currentImg.description;
   bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
   bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
-  document.body.classList.add(`modal-open`);
 
   insertBigPicComment(currentImg.comments);
 
@@ -192,10 +191,90 @@ function bigPictureCloseHandler(evt) {
   }
 }
 
-// Функция закрытия окна по кнопке "X"
+// Функция закрытия окна полноэкранной фотографии
 function closeBigPicture() {
-  bigPicture.classList.add(`hidden`);
-  document.body.classList.remove(`modal-open`);
+  hideModalWindow(bigPicture);
   document.removeEventListener(`keydown`, onBigPictureEscPress);
   bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
+}
+
+// Универсальная функция открытия модалки
+function showModalWindow(elem) {
+  elem.classList.remove(`hidden`);
+  document.body.classList.add(`modal-open`);
+}
+
+// Универсальная функция закрытия модалки
+function hideModalWindow(elem) {
+  elem.classList.add(`hidden`);
+  document.body.classList.remove(`modal-open`);
+}
+
+
+// ЗАГРУЗКА ИЗОБРАЖЕНИЯ
+const fileUploader = pictures.querySelector(`.img-upload__input`);
+const photoEditor = pictures.querySelector(`.img-upload__overlay`);
+const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
+
+const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
+const scaleBtnBigger = photoEditor.querySelector(`.scale__control--bigger`);
+const scaleValueField = photoEditor.querySelector(`.scale__control--value`);
+const initialScaleValue = 100;
+const scaleChangeStep = 25;
+
+// Обработчик загрузки нового изображения
+fileUploader.addEventListener(`change`, function () {
+
+  // Открытие окна редактора изображения
+  showModalWindow(photoEditor);
+  scaleValueField.value = initialScaleValue;
+
+  scaleBtnSmaller.addEventListener(`click`, function () {
+    let newScale = getSmallerScale(scaleValueField.value, scaleChangeStep);
+    scaleValueField.value = newScale;
+    console.log(typeof scaleValueField.value);
+  });
+
+  scaleBtnBigger.addEventListener(`click`, function () {
+    let newScale = getBiggerScale(scaleValueField.value, scaleChangeStep);
+    scaleValueField.value = newScale;
+  });
+
+  // Обработчик закрытия окна по кнопке "X"
+  photoEditorCloseBtn.addEventListener(`click`, function () {
+    closePhotoEditor();
+  });
+  // Обработчик закрытия окна по по нажатию Esc
+  document.addEventListener(`keydown`, onPhotoEditorEscPress);
+
+});
+
+// Функция закрытия редактора изображения
+function closePhotoEditor() {
+  hideModalWindow(photoEditor);
+  document.removeEventListener(`keydown`, onPhotoEditorEscPress);
+}
+
+// Функция закрытия редактора по нажатию Esc
+function onPhotoEditorEscPress(evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closePhotoEditor();
+  }
+}
+
+function getSmallerScale(currentScale, step) {
+  if (currentScale > 0) {
+    return currentScale - step;
+  } else {
+    return currentScale;
+  }
+}
+
+function getBiggerScale(currentScale, step) {
+  if (currentScale === 100) {
+    return currentScale;
+  } else {
+    return currentScale + step;
+  }
 }
