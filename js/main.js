@@ -217,8 +217,9 @@ const photoEditor = pictures.querySelector(`.img-upload__overlay`);
 const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
 const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
 
+const scalePanel = photoEditor.querySelector(`.img-upload__scale`);
 const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
-const scaleBtnBigger = photoEditor.querySelector(`.scale__control--bigger`);
+// const scaleBtnBigger = photoEditor.querySelector(`.scale__control--bigger`);
 const scaleValueField = photoEditor.querySelector(`.scale__control--value`);
 const initialScaleValue = 100;
 const scaleChangeStep = 25;
@@ -230,17 +231,23 @@ fileUploader.addEventListener(`change`, function () {
   showModalWindow(photoEditor);
   scaleValueField.value = `${initialScaleValue}%`;
 
-  scaleBtnSmaller.addEventListener(`click`, function (evt) {
+  scalePanel.addEventListener(`click`, function (evt) {
     const newScale = getNewScaleValue(scaleValueField.value, evt.target);
     scaleValueField.value = `${newScale}%`;
     changeImgScale(previewImg, newScale);
   });
 
-  scaleBtnBigger.addEventListener(`click`, function (evt) {
-    const newScale = getNewScaleValue(scaleValueField.value, evt.target);
-    scaleValueField.value = `${newScale}%`;
-    changeImgScale(previewImg, newScale);
-  });
+  // scaleBtnSmaller.addEventListener(`click`, function (evt) {
+  //   const newScale = getNewScaleValue(scaleValueField.value, evt.target);
+  //   scaleValueField.value = `${newScale}%`;
+  //   changeImgScale(previewImg, newScale);
+  // });
+
+  // scaleBtnBigger.addEventListener(`click`, function (evt) {
+  //   const newScale = getNewScaleValue(scaleValueField.value, evt.target);
+  //   scaleValueField.value = `${newScale}%`;
+  //   changeImgScale(previewImg, newScale);
+  // });
 
   // Обработчик закрытия окна по кнопке "X"
   photoEditorCloseBtn.addEventListener(`click`, function () {
