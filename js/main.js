@@ -301,3 +301,45 @@ function changeScaleValue(currScale, step, btn) {
 function changeImgScale(img, value) {
   img.style.transform = `scale(${value / 100})`;
 }
+
+
+// ЭФФЕКТЫ ИЗОБРАЖЕНИЯ
+const effectsPanel = photoEditor.querySelector(`.effects__list`);
+
+// Обработчик переключения эффектов на изображении
+effectsPanel.addEventListener(`change`, effectChangeHandler);
+
+// Функция переключения эффектов
+function effectChangeHandler(evt) {
+  if (evt.target.matches(`input[type="radio"]`)) {
+    const currEffect = checkEffect(previewImg);
+    if (evt.target.value !== `none`) {
+      removeEffect(previewImg, currEffect);
+      addEffect(previewImg, evt.target.value);
+    } else {
+      removeEffect(previewImg, currEffect);
+    }
+  }
+}
+
+// Функция добавления эффекта
+function addEffect(img, effect) {
+  img.classList.add(`effects__preview--${effect}`);
+}
+
+// Функция удаления эффекта
+function removeEffect(img, effectClass) {
+  img.classList.remove(effectClass);
+}
+
+// Функция проверки наличия эффекта
+function checkEffect(img) {
+  const classes = img.classList;
+  for (let i = 0; i < classes.length; i++) {
+    if (classes[i].includes(`effects__preview--`)) {
+      const currentEffect = classes[i];
+      return currentEffect;
+    }
+  }
+  return undefined;
+}
