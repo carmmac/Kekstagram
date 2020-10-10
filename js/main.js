@@ -219,7 +219,6 @@ const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
 
 const scalePanel = photoEditor.querySelector(`.img-upload__scale`);
 const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
-// const scaleBtnBigger = photoEditor.querySelector(`.scale__control--bigger`);
 const scaleValueField = photoEditor.querySelector(`.scale__control--value`);
 const initialScaleValue = 100;
 const scaleChangeStep = 25;
@@ -237,18 +236,6 @@ fileUploader.addEventListener(`change`, function () {
     changeImgScale(previewImg, newScale);
   });
 
-  // scaleBtnSmaller.addEventListener(`click`, function (evt) {
-  //   const newScale = getNewScaleValue(scaleValueField.value, evt.target);
-  //   scaleValueField.value = `${newScale}%`;
-  //   changeImgScale(previewImg, newScale);
-  // });
-
-  // scaleBtnBigger.addEventListener(`click`, function (evt) {
-  //   const newScale = getNewScaleValue(scaleValueField.value, evt.target);
-  //   scaleValueField.value = `${newScale}%`;
-  //   changeImgScale(previewImg, newScale);
-  // });
-
   // Обработчик закрытия окна по кнопке "X"
   photoEditorCloseBtn.addEventListener(`click`, function () {
     closePhotoEditor();
@@ -260,6 +247,7 @@ fileUploader.addEventListener(`change`, function () {
 
 // Функция закрытия редактора изображения
 function closePhotoEditor() {
+  fileUploader.value = ``;
   hideModalWindow(photoEditor);
   document.removeEventListener(`keydown`, onPhotoEditorEscPress);
 }
@@ -277,6 +265,11 @@ function getNewScaleValue(initValue, btn) {
   const scalePureValue = initValue.slice(0, -1);
   const newScaleValue = changeScaleValue(scalePureValue, scaleChangeStep, btn);
   return newScaleValue;
+}
+
+// Функция изменения масштаба превью-изображения
+function changeImgScale(img, value) {
+  img.style.transform = `scale(${value / 100})`;
 }
 
 // Функция вычисления показателя масштаба
@@ -297,27 +290,33 @@ function changeScaleValue(currScale, step, btn) {
   }
 }
 
-// Функция изменения масштаба превью-изображения
-function changeImgScale(img, value) {
-  img.style.transform = `scale(${value / 100})`;
-}
-
 
 // ЭФФЕКТЫ ИЗОБРАЖЕНИЯ
 const effectsPanel = photoEditor.querySelector(`.effects__list`);
+const effectName = {
+  chrome: `grayscale`,
+  sepia: `sepia`,
+  marvin: `invert`,
+  phobos: `blur`,
+  heat: `brightness`,
+};
 
 // Обработчик переключения эффектов на изображении
-effectsPanel.addEventListener(`change`, effectChangeHandler);
+effectsPanel.addEventListener(`change`, function (evt) {
+  const currentEffectName = evt.target.value;
+  effectChangeHandler(evt);
+  applyEffect(previewImg, currentEffectName, effectName, initialEffectLevel);
+});
 
 // Функция переключения эффектов
 function effectChangeHandler(evt) {
   if (evt.target.matches(`input[type="radio"]`)) {
-    const currEffect = checkEffect(previewImg);
+    const currentEffect = checkEffect(previewImg);
     if (evt.target.value !== `none`) {
-      removeEffect(previewImg, currEffect);
+      removeEffect(previewImg, currentEffect);
       addEffect(previewImg, evt.target.value);
     } else {
-      removeEffect(previewImg, currEffect);
+      removeEffect(previewImg, currentEffect);
     }
   }
 }
@@ -337,9 +336,45 @@ function checkEffect(img) {
   const classes = img.classList;
   for (let i = 0; i < classes.length; i++) {
     if (classes[i].includes(`effects__preview--`)) {
-      const currentEffect = classes[i];
-      return currentEffect;
+      const currEffect = classes[i];
+      return currEffect;
     }
   }
-  return undefined;
+  return false;
 }
+
+
+// ИНТЕНСИВНОСТЬ ЭФФЕКТА
+// начальная реализация по заданию
+const effectLevelPanel = photoEditor.querySelector(`.img-upload__effect-level`);
+const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
+const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
+const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
+const initialEffectLevel = Number(effectLevelInput.value);
+
+effectLevelPin.addEventListener(`mouseup`, function (evt) {
+  const effectLevel = {
+    MIN: 0,
+    MAX: effectLevelBar.offsetWidth
+  };
+
+  effectLevelInput.value = setEffectLevel(effectLevel.MAX, getPositionX(evt.target));
+
+  // ! добавить параметры!
+  // applyEffect(previewImg, effectLevelInput.value);
+});
+
+function getPositionX(elem) {
+  const positionX = elem.offsetLeft;
+  return positionX;
+}
+
+function setEffectLevel(maxLevel, currLevel) {
+  const effectLevel = Math.floor((currLevel * 100) / maxLevel);
+  return effectLevel;
+}
+
+function applyEffect(elem, effect, effNames, value) {
+  elem.style.filter = effNames[effect] + `(${value / 100})`;
+}
+
