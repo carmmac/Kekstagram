@@ -212,7 +212,8 @@ function hideModalWindow(elem) {
 
 
 // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
-const fileUploader = pictures.querySelector(`.img-upload__input`);
+const photoUploadForm = pictures.querySelector(`.img-upload__form`);
+const photoUploader = pictures.querySelector(`.img-upload__input`);
 const photoEditor = pictures.querySelector(`.img-upload__overlay`);
 const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
 const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
@@ -224,7 +225,7 @@ const initialScaleValue = 100;
 const scaleChangeStep = 25;
 
 // Обработчик загрузки нового изображения
-fileUploader.addEventListener(`change`, function () {
+photoUploader.addEventListener(`change`, function () {
 
   // Открытие окна редактора изображения
   showModalWindow(photoEditor);
@@ -247,7 +248,7 @@ fileUploader.addEventListener(`change`, function () {
 
 // Функция закрытия редактора изображения
 function closePhotoEditor() {
-  fileUploader.value = ``;
+  photoUploader.value = ``;
   hideModalWindow(photoEditor);
   document.removeEventListener(`keydown`, onPhotoEditorEscPress);
 }
@@ -378,3 +379,36 @@ function applyEffect(elem, effect, effNames, value) {
   elem.style.filter = effNames[effect] + `(${value / 100})`;
 }
 
+
+// ВАЛИДАЦИЯ ХЭШТЕГОВ
+const hashtagInput = photoEditor.querySelector(`.text__hashtags`);
+const regExp = /^#[a-zA-Z\d]*$/;
+const MIN_HATSHTAG_LENGTH = 1;
+const MAX_HATSHTAG_LENGTH = 20;
+
+// Обработчик отправки изображения
+photoUploadForm.addEventListener(`submit`, function (evt) {
+  evt.preventDefault();
+});
+
+// Обработчик ввода хэштегов
+hashtagInput.addEventListener(`input`, function (evt) {
+  checkHashtagValidity(evt.target);
+});
+
+// Функция проверки валижности хэштега
+function checkHashtagValidity(input) {
+  let hashtags = input.value.split(` `);
+  for (let i = 0; i < hashtags.length; i++) {
+    if ((!regExp.test(hashtags[i])) && (hashtags[i].length !== 0)) {
+      hashtagInput.setCustomValidity(`Неверный формат хэштэга ${hashtags[i]}!`);
+    } else if (hashtags[i].length === MIN_HATSHTAG_LENGTH) {
+      hashtagInput.setCustomValidity(`Хэштэг ${hashtags[i]} слишком короткий!`);
+    } else if ((hashtags[i].length > MAX_HATSHTAG_LENGTH)) {
+      hashtagInput.setCustomValidity(`Хэштэг ${hashtags[i]} слишком длинный!`);
+    } else {
+      hashtagInput.setCustomValidity(``);
+    }
+    hashtagInput.reportValidity();
+  }
+}
