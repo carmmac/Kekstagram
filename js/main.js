@@ -15,6 +15,7 @@ const bigPictureImg = bigPicture.querySelector(`.big-picture__img img`);
 const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
 const bigPictureCommentsCount = bigPicture.querySelector(`.comments-count`);
 const bigPictureComments = bigPicture.querySelector(`.social__comments`);
+const bigPictureComment = bigPictureComments.querySelector(`.social__comment`);
 const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
 const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 
@@ -123,12 +124,10 @@ insertPhotoElements(photos);
 // ПОЛНОЭКРАННОЕ ФОТО
 // Функция наполнения комментария для полноэкранного фото
 function getBigPicComment(comment) {
-  const newBigPicComment = bigPictureComments.querySelector(`.social__comment`).cloneNode(true);
-
+  const newBigPicComment = bigPictureComment.cloneNode(true);
   newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
   newBigPicComment.querySelector(`.social__picture`).alt = comment.name;
   newBigPicComment.querySelector(`.social__text`).textContent = comment.message;
-
   return newBigPicComment;
 }
 
@@ -141,10 +140,17 @@ function insertBigPicComment(comments) {
   return bigPictureComments.appendChild(fragment);
 }
 
+// Функцуия очистки комментариев для bigPicture
+function removeBigPicComments(commentsList) {
+  while (commentsList.firstChild) {
+    commentsList.removeChild(commentsList.firstChild);
+  }
+}
+
 
 // Функция отображения окна с полноэкранной фотографией
 function showBigPicture(currentImg) {
-
+  removeBigPicComments(bigPictureComments);
   showModalWindow(bigPicture);
   bigPictureImg.src = currentImg.url;
   bigPictureLikesCount.textContent = currentImg.likes;
