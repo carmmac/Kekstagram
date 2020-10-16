@@ -269,6 +269,7 @@ function scaleChangeHandler(evt) {
 function closePhotoEditor() {
   photoUploader.value = ``;
   hideModalWindow(photoEditor);
+  removeEffect(getCurrentEffect());
   document.removeEventListener(`keydown`, onPhotoEditorEscPress);
   photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
   scalePanel.removeEventListener(`click`, scaleChangeHandler);
