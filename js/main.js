@@ -232,6 +232,9 @@ const SCALE_CHANGE_STEP = 25;
 // Функция открытия окна редактора изображения
 function openEditor() {
   showModalWindow(photoEditor);
+  if (getCurrentEffect() === null) {
+    hideElement(effectLevelPanel);
+  }
   scaleValueField.value = `${INIT_SCALE_VALUE}%`;
   // Обработчик изменения масштаба
   scalePanel.addEventListener(`click`, scaleChangeHandler);
@@ -327,9 +330,11 @@ function changeEffect(value) {
   const currentEffect = getCurrentEffect();
   if (currentEffect !== `effects__preview--${value}`) {
     if (value !== `none`) {
+      showElement(effectLevelPanel);
       removeEffect(currentEffect);
       addEffect(value);
     } else {
+      hideElement(effectLevelPanel);
       removeEffect(currentEffect);
     }
   }
@@ -404,6 +409,14 @@ function applyEffect(effect, value) {
     default:
       previewImg.style.filter = effectName[effect] + `(${value / 100})`;
   }
+}
+
+function hideElement(elem) {
+  elem.classList.add(`hidden`);
+}
+
+function showElement(elem) {
+  elem.classList.remove(`hidden`);
 }
 
 
