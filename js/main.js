@@ -241,6 +241,8 @@ function openEditor() {
   document.addEventListener(`keydown`, onPhotoEditorEscPress);
   // Обработчик переключения эффектов на изображении
   effectsPanel.addEventListener(`change`, effectChangeHandler);
+  // Обработчик уровня эффекта
+  effectLevelPin.addEventListener(`mouseup`, changeEffectLevel);
   // Обработчик ввода хэштегов
   hashtagInput.addEventListener(`input`, checkHashtagValidity);
 }
@@ -271,6 +273,7 @@ function closePhotoEditor() {
   photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
   scalePanel.removeEventListener(`click`, scaleChangeHandler);
   effectsPanel.removeEventListener(`change`, effectChangeHandler);
+  effectLevelPin.removeEventListener(`mouseup`, changeEffectLevel);
   hashtagInput.removeEventListener(`input`, checkHashtagValidity);
 }
 
@@ -321,11 +324,13 @@ function effectChangeHandler(evt) {
 // Функция применения эффектов
 function changeEffect(value) {
   const currentEffect = getCurrentEffect();
-  if (value !== `none`) {
-    removeEffect(currentEffect);
-    addEffect(value);
-  } else {
-    removeEffect(currentEffect);
+  if (currentEffect !== `effects__preview--${value}`) {
+    if (value !== `none`) {
+      removeEffect(currentEffect);
+      addEffect(value);
+    } else {
+      removeEffect(currentEffect);
+    }
   }
 }
 
@@ -361,17 +366,17 @@ const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
 const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
 const initialEffectLevel = parseInt(effectLevelInput.value, 10);
 
-effectLevelPin.addEventListener(`mouseup`, function (evt) {
+function changeEffectLevel(evt) {
   const effectLevel = {
     MIN: 0,
     MAX: effectLevelBar.offsetWidth
   };
+  const newEffectLevel = getEffectLevel(effectLevel.MAX, getPositionX(evt.target));
+  effectLevelInput.value = newEffectLevel;
 
-  effectLevelInput.value = getEffectLevel(effectLevel.MAX, getPositionX(evt.target));
-
-  // ! добавить параметры!
-  // applyEffect(previewImg, effectLevelInput.value);
-});
+  const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
+  applyEffect(currentFilter.value, newEffectLevel);
+}
 
 function getPositionX(elem) {
   const positionX = elem.offsetLeft;
