@@ -133,6 +133,7 @@ function getBigPicComment(comment) {
 
 // Наполнение комментариев из массива для полноэкранного фото
 function insertBigPicComment(comments) {
+  removeBigPicComments();
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < comments.length; i++) {
     fragment.appendChild(getBigPicComment(comments[i]));
@@ -141,16 +142,12 @@ function insertBigPicComment(comments) {
 }
 
 // Функцуия очистки комментариев для bigPicture
-function removeBigPicComments(commentsList) {
-  while (commentsList.firstChild) {
-    commentsList.removeChild(commentsList.firstChild);
-  }
+function removeBigPicComments() {
+  bigPictureComments.innerHTML = ``;
 }
-
 
 // Функция отображения окна с полноэкранной фотографией
 function showBigPicture(currentImg) {
-  removeBigPicComments(bigPictureComments);
   showModalWindow(bigPicture);
   bigPictureImg.src = currentImg.url;
   bigPictureLikesCount.textContent = currentImg.likes;
@@ -158,15 +155,11 @@ function showBigPicture(currentImg) {
   bigPictureDescription.textContent = currentImg.description;
   bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
   bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
-
   insertBigPicComment(currentImg.comments);
-
   // Обработчик закрытия окна по по нажатию Esc
   document.addEventListener(`keydown`, onBigPictureEscPress);
-
   // Обработчик закрытия окна по клику вне окна
   bigPicture.addEventListener(`click`, bigPictureCloseHandler);
-
   // Обработчик закрытия окна по кнопке "X"
   bigPictureCloseBtn.addEventListener(`click`, onBigPictureCloseBtnPress);
 }
@@ -227,6 +220,7 @@ const photoUploader = pictures.querySelector(`.img-upload__input`);
 const photoEditor = pictures.querySelector(`.img-upload__overlay`);
 const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
 const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
+photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
 
 // ИЗМЕНЕНИЕ МАСШТАБА ИЗОБРАЖЕНИЯ
 const scalePanel = photoEditor.querySelector(`.img-upload__scale`);
@@ -261,9 +255,9 @@ function scaleChangeHandler(evt) {
   const currentScale = parseInt(scaleValueField.value, 10);
   let newScale;
   if (evt.target === scaleBtnSmaller) {
-    newScale = decreaseScaleValue(currentScale, SCALE_CHANGE_STEP);
+    newScale = decreaseScaleValue(currentScale);
   } else {
-    newScale = increaseScaleValue(currentScale, SCALE_CHANGE_STEP);
+    newScale = increaseScaleValue(currentScale);
   }
   scaleValueField.value = `${newScale}%`;
   changeImgScale(newScale);
@@ -298,20 +292,12 @@ function changeImgScale(value) {
   previewImg.style.transform = `scale(${value / 100})`;
 }
 
-function decreaseScaleValue(currScale, step) {
-  if (currScale > 25) {
-    return currScale - step;
-  } else {
-    return currScale;
-  }
+function decreaseScaleValue(currScale) {
+  return currScale > 25 ? currScale - SCALE_CHANGE_STEP : currScale;
 }
 
-function increaseScaleValue(currScale, step) {
-  if (currScale === 100) {
-    return currScale;
-  } else {
-    return currScale + step;
-  }
+function increaseScaleValue(currScale) {
+  return currScale === 100 ? currScale : currScale + SCALE_CHANGE_STEP;
 }
 
 
@@ -424,9 +410,9 @@ const MAX_HASHTAG_NUM = 5;
 
 // Обработчик отправки изображения
 // ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования
-photoUploadForm.addEventListener(`submit`, function (evt) {
-  evt.preventDefault();
-});
+// photoUploadForm.addEventListener(`submit`, function (evt) {
+
+// });
 
 // Функция проверки валижности хэштега
 function checkHashtagValidity(evt) {
@@ -451,16 +437,7 @@ function checkHashtagValidity(evt) {
 
 // Функция проверки одиковых тэгов
 function checkIdenticalHashtags(arr) {
-  if (arr.length > 1) {
-    for (let i = 0; i < arr.length - 1; i++) {
-      for (let j = i + 1; j < arr.length; j++) {
-        if (arr[i] === arr[j]) {
-          return arr[i];
-        }
-      }
-    }
-  }
-  return false;
+  return arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
 }
 
 // Функция проверки пустых тэгов
