@@ -15,6 +15,7 @@ const bigPictureImg = bigPicture.querySelector(`.big-picture__img img`);
 const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
 const bigPictureCommentsCount = bigPicture.querySelector(`.comments-count`);
 const bigPictureComments = bigPicture.querySelector(`.social__comments`);
+const bigPictureComment = bigPictureComments.querySelector(`.social__comment`);
 const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
 const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 
@@ -123,17 +124,16 @@ insertPhotoElements(photos);
 // ПОЛНОЭКРАННОЕ ФОТО
 // Функция наполнения комментария для полноэкранного фото
 function getBigPicComment(comment) {
-  const newBigPicComment = bigPictureComments.querySelector(`.social__comment`).cloneNode(true);
-
+  const newBigPicComment = bigPictureComment.cloneNode(true);
   newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
   newBigPicComment.querySelector(`.social__picture`).alt = comment.name;
   newBigPicComment.querySelector(`.social__text`).textContent = comment.message;
-
   return newBigPicComment;
 }
 
 // Наполнение комментариев из массива для полноэкранного фото
 function insertBigPicComment(comments) {
+  removeBigPicComments();
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < comments.length; i++) {
     fragment.appendChild(getBigPicComment(comments[i]));
@@ -141,31 +141,27 @@ function insertBigPicComment(comments) {
   return bigPictureComments.appendChild(fragment);
 }
 
+// Функцуия очистки комментариев для bigPicture
+function removeBigPicComments() {
+  bigPictureComments.innerHTML = ``;
+}
 
 // Функция отображения окна с полноэкранной фотографией
 function showBigPicture(currentImg) {
-
-  bigPicture.classList.remove(`hidden`);
+  showModalWindow(bigPicture);
   bigPictureImg.src = currentImg.url;
   bigPictureLikesCount.textContent = currentImg.likes;
   bigPictureCommentsCount.textContent = currentImg.comments.length;
   bigPictureDescription.textContent = currentImg.description;
   bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
   bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
-  document.body.classList.add(`modal-open`);
-
   insertBigPicComment(currentImg.comments);
-
   // Обработчик закрытия окна по по нажатию Esc
   document.addEventListener(`keydown`, onBigPictureEscPress);
-
   // Обработчик закрытия окна по клику вне окна
   bigPicture.addEventListener(`click`, bigPictureCloseHandler);
-
   // Обработчик закрытия окна по кнопке "X"
-  bigPictureCloseBtn.addEventListener(`click`, function () {
-    closeBigPicture();
-  });
+  bigPictureCloseBtn.addEventListener(`click`, onBigPictureCloseBtnPress);
 }
 
 
@@ -176,6 +172,11 @@ pictures.addEventListener(`click`, function (evt) {
     showBigPicture(pictureToShow);
   }
 });
+
+// Функция закрытия окна по кнопке Х
+function onBigPictureCloseBtnPress() {
+  closeBigPicture();
+}
 
 // Функция закрытия окна по нажатию Esc
 function onBigPictureEscPress(evt) {
@@ -192,10 +193,278 @@ function bigPictureCloseHandler(evt) {
   }
 }
 
-// Функция закрытия окна по кнопке "X"
+// Функция закрытия окна полноэкранной фотографии
 function closeBigPicture() {
-  bigPicture.classList.add(`hidden`);
-  document.body.classList.remove(`modal-open`);
+  hideModalWindow(bigPicture);
   document.removeEventListener(`keydown`, onBigPictureEscPress);
   bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
+  bigPictureCloseBtn.removeEventListener(`click`, onBigPictureCloseBtnPress);
+}
+
+// Универсальная функция открытия модалки
+function showModalWindow(elem) {
+  elem.classList.remove(`hidden`);
+  document.body.classList.add(`modal-open`);
+}
+
+// Универсальная функция закрытия модалки
+function hideModalWindow(elem) {
+  elem.classList.add(`hidden`);
+  document.body.classList.remove(`modal-open`);
+}
+
+
+// ЗАГРУЗКА ИЗОБРАЖЕНИЯ
+const photoUploadForm = pictures.querySelector(`.img-upload__form`);
+const photoUploader = pictures.querySelector(`.img-upload__input`);
+const photoEditor = pictures.querySelector(`.img-upload__overlay`);
+const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
+const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
+photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
+
+// ИЗМЕНЕНИЕ МАСШТАБА ИЗОБРАЖЕНИЯ
+const scalePanel = photoEditor.querySelector(`.img-upload__scale`);
+const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
+const scaleValueField = photoEditor.querySelector(`.scale__control--value`);
+const INIT_SCALE_VALUE = 100;
+const SCALE_CHANGE_STEP = 25;
+
+// Функция открытия окна редактора изображения
+function openEditor() {
+  showModalWindow(photoEditor);
+  if (getCurrentEffect() === null) {
+    hideElement(effectLevelPanel);
+  }
+  scaleValueField.value = `${INIT_SCALE_VALUE}%`;
+  // Обработчик изменения масштаба
+  scalePanel.addEventListener(`click`, scaleChangeHandler);
+  // Обработчик закрытия окна по кнопке "X"
+  photoEditorCloseBtn.addEventListener(`click`, onPhotoEditorCloseBtnPress);
+  // Обработчик закрытия окна по по нажатию Esc
+  document.addEventListener(`keydown`, onPhotoEditorEscPress);
+  // Обработчик переключения эффектов на изображении
+  effectsPanel.addEventListener(`change`, effectChangeHandler);
+  // Обработчик уровня эффекта
+  effectLevelPin.addEventListener(`mouseup`, changeEffectLevel);
+  // Обработчик ввода хэштегов
+  hashtagInput.addEventListener(`input`, checkHashtagValidity);
+}
+
+// Обработчик загрузки нового изображения
+photoUploader.addEventListener(`change`, function () {
+  openEditor();
+});
+
+// Функция применения масштаба
+function scaleChangeHandler(evt) {
+  const currentScale = parseInt(scaleValueField.value, 10);
+  let newScale;
+  if (evt.target === scaleBtnSmaller) {
+    newScale = decreaseScaleValue(currentScale);
+  } else {
+    newScale = increaseScaleValue(currentScale);
+  }
+  scaleValueField.value = `${newScale}%`;
+  changeImgScale(newScale);
+}
+
+// Функция закрытия редактора изображения
+function closePhotoEditor() {
+  photoUploader.value = ``;
+  hideModalWindow(photoEditor);
+  removeEffect(getCurrentEffect());
+  document.removeEventListener(`keydown`, onPhotoEditorEscPress);
+  photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
+  scalePanel.removeEventListener(`click`, scaleChangeHandler);
+  effectsPanel.removeEventListener(`change`, effectChangeHandler);
+  effectLevelPin.removeEventListener(`mouseup`, changeEffectLevel);
+  hashtagInput.removeEventListener(`input`, checkHashtagValidity);
+}
+
+// Функция закрытия редактора по кнопке Х
+function onPhotoEditorCloseBtnPress() {
+  closePhotoEditor();
+}
+
+// Функция закрытия редактора по нажатию Esc
+function onPhotoEditorEscPress(evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closePhotoEditor();
+  }
+}
+
+// Функция изменения масштаба превью-изображения
+function changeImgScale(value) {
+  previewImg.style.transform = `scale(${value / 100})`;
+}
+
+function decreaseScaleValue(currScale) {
+  return currScale > 25 ? currScale - SCALE_CHANGE_STEP : currScale;
+}
+
+function increaseScaleValue(currScale) {
+  return currScale === 100 ? currScale : currScale + SCALE_CHANGE_STEP;
+}
+
+
+// ЭФФЕКТЫ ИЗОБРАЖЕНИЯ
+const effectsPanel = photoEditor.querySelector(`.effects__list`);
+const effectName = {
+  chrome: `grayscale`,
+  sepia: `sepia`,
+  marvin: `invert`,
+  phobos: `blur`,
+  heat: `brightness`,
+};
+
+function effectChangeHandler(evt) {
+  if (evt.target.matches(`input[type="radio"]`)) {
+    const currentEffectName = evt.target.value;
+    applyEffect(currentEffectName, initialEffectLevel);
+  }
+}
+
+// Функция применения эффектов
+function changeEffect(value) {
+  const currentEffect = getCurrentEffect();
+  if (currentEffect !== `effects__preview--${value}`) {
+    if (value !== `none`) {
+      showElement(effectLevelPanel);
+      removeEffect(currentEffect);
+      addEffect(value);
+    } else {
+      hideElement(effectLevelPanel);
+      removeEffect(currentEffect);
+    }
+  }
+}
+
+// Функция добавления эффекта
+function addEffect(effect) {
+  previewImg.classList.add(`effects__preview--${effect}`);
+}
+
+// Функция удаления эффекта
+function removeEffect(effectClass) {
+  previewImg.classList.remove(effectClass);
+  previewImg.style.filter = ``;
+}
+
+// Функция проверки наличия эффекта
+function getCurrentEffect() {
+  const classes = previewImg.classList;
+  for (let i = 0; i < classes.length; i++) {
+    if (classes[i].includes(`effects__preview--`)) {
+      const currEffect = classes[i];
+      return currEffect;
+    }
+  }
+  return null;
+}
+
+
+// ИНТЕНСИВНОСТЬ ЭФФЕКТА
+// начальная реализация по заданию
+const effectLevelPanel = photoEditor.querySelector(`.img-upload__effect-level`);
+const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
+const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
+const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
+const initialEffectLevel = parseInt(effectLevelInput.value, 10);
+
+function changeEffectLevel(evt) {
+  const effectLevel = {
+    MIN: 0,
+    MAX: effectLevelBar.offsetWidth
+  };
+  const newEffectLevel = getEffectLevel(effectLevel.MAX, getPositionX(evt.target));
+  effectLevelInput.value = newEffectLevel;
+
+  const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
+  applyEffect(currentFilter.value, newEffectLevel);
+}
+
+function getPositionX(elem) {
+  const positionX = elem.offsetLeft;
+  return positionX;
+}
+
+function getEffectLevel(maxLevel, currLevel) {
+  const effectLevel = Math.floor((currLevel * 100) / maxLevel);
+  return effectLevel;
+}
+
+function applyEffect(effect, value) {
+  changeEffect(effect);
+  switch (effect) {
+    case `phobos`:
+      previewImg.style.filter = effectName[effect] + `(${(value * 3) / 100}px)`;
+      break;
+    case `heat`:
+      previewImg.style.filter = effectName[effect] + `(${(value * 3) / 100})`;
+      break;
+    case `marvin`:
+      previewImg.style.filter = effectName[effect] + `(${value}%)`;
+      break;
+    default:
+      previewImg.style.filter = effectName[effect] + `(${value / 100})`;
+  }
+}
+
+function hideElement(elem) {
+  elem.classList.add(`hidden`);
+}
+
+function showElement(elem) {
+  elem.classList.remove(`hidden`);
+}
+
+
+// ВАЛИДАЦИЯ ХЭШТЕГОВ
+const hashtagInput = photoEditor.querySelector(`.text__hashtags`);
+const regExp = /^#[a-zA-Zа-яА-Я\d]+$/;
+const MIN_HATSHTAG_LENGTH = 1;
+const MAX_HATSHTAG_LENGTH = 20;
+const MAX_HASHTAG_NUM = 5;
+
+// Обработчик отправки изображения
+// ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования
+// photoUploadForm.addEventListener(`submit`, function (evt) {
+
+// });
+
+// Функция проверки валижности хэштега
+function checkHashtagValidity(evt) {
+  let hashtags = evt.target.value.split(/ +/);
+  for (let i = 0; i < hashtags.length; i++) {
+    if ((!regExp.test(hashtags[i])) && (hashtags[i].length !== 0)) {
+      hashtagInput.setCustomValidity(`Неверный формат хэштэга ${hashtags[i]} !`);
+    } else if ((hashtags[i].length > MAX_HATSHTAG_LENGTH)) {
+      hashtagInput.setCustomValidity(`Хэштэг ${hashtags[i]} слишком длинный!`);
+    } else if (hashtags.length > MAX_HASHTAG_NUM) {
+      hashtagInput.setCustomValidity(`Слишком много хэштэгов!`);
+    } else if (checkIdenticalHashtags(hashtags)) {
+      hashtagInput.setCustomValidity(`Не используйте одинаковые хэштэги!`);
+    } else if (checkEmptyHashtag(hashtags)) {
+      hashtagInput.setCustomValidity(`Не используйте пустые хэштэги!`);
+    } else {
+      hashtagInput.setCustomValidity(``);
+    }
+    hashtagInput.reportValidity();
+  }
+}
+
+// Функция проверки одиковых тэгов
+function checkIdenticalHashtags(arr) {
+  return arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
+}
+
+// Функция проверки пустых тэгов
+function checkEmptyHashtag(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].length === MIN_HATSHTAG_LENGTH) {
+      return true;
+    }
+  }
+  return false;
 }
