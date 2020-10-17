@@ -170,7 +170,7 @@ pictures.addEventListener(`click`, bigPictureOpenHandler);
 pictures.addEventListener(`keydown`, onPictureEnterPress);
 
 function bigPictureOpenHandler(evt) {
-  if (evt.target.closest(`img`)) {
+  if (evt.target.closest(`img`) && photoEditor.classList.value.includes(`hidden`)) {
     const pictureToShow = photos[evt.target.dataset.id];
     showBigPicture(pictureToShow);
   }
@@ -495,7 +495,3 @@ commentInput.onfocus = () => {
 commentInput.onblur = () => {
   commentInput.focused = false;
 };
-
-document.addEventListener(`click`, (evt) => {
-  console.log(evt);
-});
