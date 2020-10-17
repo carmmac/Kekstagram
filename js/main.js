@@ -165,13 +165,24 @@ function showBigPicture(currentImg) {
 }
 
 
-// Обработчик открытия окна полноэкранной фотографии
-pictures.addEventListener(`click`, function (evt) {
+// Обработчики открытия окна полноэкранной фотографии
+pictures.addEventListener(`click`, bigPictureOpenHandler);
+pictures.addEventListener(`keydown`, onPictureEnterPress);
+
+function bigPictureOpenHandler(evt) {
   if (evt.target.closest(`img`)) {
     const pictureToShow = photos[evt.target.dataset.id];
     showBigPicture(pictureToShow);
   }
-});
+}
+
+function onPictureEnterPress(evt) {
+  if (evt.target.matches(`.picture`) && evt.key === `Enter`) {
+    evt.preventDefault();
+    const pictureToShow = photos[evt.target.querySelector(`img`).dataset.id];
+    showBigPicture(pictureToShow);
+  }
+}
 
 // Функция закрытия окна по кнопке Х
 function onBigPictureCloseBtnPress() {
