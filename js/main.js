@@ -251,8 +251,10 @@ function openEditor() {
   scalePanel.addEventListener(`click`, scaleChangeHandler);
   // Обработчик закрытия окна по кнопке "X"
   photoEditorCloseBtn.addEventListener(`click`, onPhotoEditorCloseBtnPress);
+
   // Обработчик закрытия окна по по нажатию Esc
   document.addEventListener(`keydown`, onPhotoEditorEscPress);
+
   // Обработчик переключения эффектов на изображении
   effectsPanel.addEventListener(`change`, effectChangeHandler);
   // Обработчик уровня эффекта
@@ -299,7 +301,7 @@ function onPhotoEditorCloseBtnPress() {
 
 // Функция закрытия редактора по нажатию Esc
 function onPhotoEditorEscPress(evt) {
-  if (evt.key === `Escape`) {
+  if (evt.key === `Escape` && !commentInput.focused) {
     evt.preventDefault();
     closePhotoEditor();
   }
@@ -479,3 +481,21 @@ function checkEmptyHashtag(arr) {
   }
   return false;
 }
+
+
+// ВАЛИДАЦИЯ КОММЕНТАРИЯ
+const commentInput = photoEditor.querySelector(`.text__description`);
+commentInput.maxLength = 140;
+
+// Флаги фокуса поля для обработчика закрытия окна по Esc
+commentInput.onfocus = () => {
+  commentInput.focused = true;
+};
+
+commentInput.onblur = () => {
+  commentInput.focused = false;
+};
+
+document.addEventListener(`click`, (evt) => {
+  console.log(evt);
+});
