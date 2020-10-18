@@ -165,13 +165,24 @@ function showBigPicture(currentImg) {
 }
 
 
-// Обработчик открытия окна полноэкранной фотографии
-pictures.addEventListener(`click`, function (evt) {
-  if (evt.target.closest(`img`)) {
+// Обработчики открытия окна полноэкранной фотографии
+pictures.addEventListener(`click`, bigPictureOpenHandler);
+pictures.addEventListener(`keydown`, onPictureEnterPress);
+
+function bigPictureOpenHandler(evt) {
+  if (evt.target.closest(`img`) && photoEditor.classList.value.includes(`hidden`)) {
     const pictureToShow = photos[evt.target.dataset.id];
     showBigPicture(pictureToShow);
   }
-});
+}
+
+function onPictureEnterPress(evt) {
+  if (evt.target.matches(`.picture`) && evt.key === `Enter`) {
+    evt.preventDefault();
+    const pictureToShow = photos[evt.target.querySelector(`img`).dataset.id];
+    showBigPicture(pictureToShow);
+  }
+}
 
 // Функция закрытия окна по кнопке Х
 function onBigPictureCloseBtnPress() {
@@ -240,8 +251,10 @@ function openEditor() {
   scalePanel.addEventListener(`click`, scaleChangeHandler);
   // Обработчик закрытия окна по кнопке "X"
   photoEditorCloseBtn.addEventListener(`click`, onPhotoEditorCloseBtnPress);
+
   // Обработчик закрытия окна по по нажатию Esc
   document.addEventListener(`keydown`, onPhotoEditorEscPress);
+
   // Обработчик переключения эффектов на изображении
   effectsPanel.addEventListener(`change`, effectChangeHandler);
   // Обработчик уровня эффекта
@@ -288,7 +301,7 @@ function onPhotoEditorCloseBtnPress() {
 
 // Функция закрытия редактора по нажатию Esc
 function onPhotoEditorEscPress(evt) {
-  if (evt.key === `Escape`) {
+  if (evt.key === `Escape` && !commentInput.focused) {
     evt.preventDefault();
     closePhotoEditor();
   }
@@ -468,3 +481,17 @@ function checkEmptyHashtag(arr) {
   }
   return false;
 }
+
+
+// ВАЛИДАЦИЯ КОММЕНТАРИЯ
+const commentInput = photoEditor.querySelector(`.text__description`);
+commentInput.maxLength = 140;
+
+// Флаги фокуса поля для обработчика закрытия окна по Esc
+commentInput.onfocus = () => {
+  commentInput.focused = true;
+};
+
+commentInput.onblur = () => {
+  commentInput.focused = false;
+};
