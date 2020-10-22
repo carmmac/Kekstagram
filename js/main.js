@@ -1,10 +1,10 @@
 "use strict";
 
-const PHOTOS_NUM_MAX = 25;
-const LIKES_MIN = 15;
-const LIKES_MAX = 200;
-const AVATAR_NUM_MIN = 1;
-const AVATAR_NUM_MAX = 6;
+// const PHOTOS_NUM_MAX = 25;
+// const LIKES_MIN = 15;
+// const LIKES_MAX = 200;
+// const AVATAR_NUM_MIN = 1;
+// const AVATAR_NUM_MAX = 6;
 const pictures = document.querySelector(`.pictures`);
 const pictureTemplate = document.querySelector(`#picture`);
 const pictureTemplateContent = pictureTemplate.content.querySelector(
@@ -19,83 +19,65 @@ const bigPictureComment = bigPictureComments.querySelector(`.social__comment`);
 const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
 const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 
-const messages = [
-  `Всё отлично!`,
-  `В целом всё неплохо. Но не всё.`,
-  `Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.`,
-  `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`,
-  `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`,
-  `Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!`,
-];
-const names = [
-  `Иван`,
-  `Федор`,
-  `Василий`,
-  `Дмитрий`,
-  `Александр`,
-  `Сергей`,
-  `Петр`,
-  `Михаил`,
-  `Георгий`,
-];
-const descriptions = [
-  `Лучший день рождения!`,
-  `Потрясающие выходные..`,
-  `С лучшим другом))`,
-  `Это был восхитительный день!`,
-  `Настроение супер`,
-];
-
-// Рандомайзер чисел
-function getRandomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// Перемешивание массива
-function shuffleArr(arr) {
-  let j;
-  let temp;
-  for (let i = arr.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * (i + 1));
-    temp = arr[j];
-    arr[j] = arr[i];
-    arr[i] = temp;
-  }
-  return arr;
-}
+// const messages = [
+//   `Всё отлично!`,
+//   `В целом всё неплохо. Но не всё.`,
+//   `Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.`,
+//   `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`,
+//   `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`,
+//   `Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!`,
+// ];
+// const names = [
+//   `Иван`,
+//   `Федор`,
+//   `Василий`,
+//   `Дмитрий`,
+//   `Александр`,
+//   `Сергей`,
+//   `Петр`,
+//   `Михаил`,
+//   `Георгий`,
+// ];
+// const descriptions = [
+//   `Лучший день рождения!`,
+//   `Потрясающие выходные..`,
+//   `С лучшим другом))`,
+//   `Это был восхитительный день!`,
+//   `Настроение супер`,
+// ];
 
 // Наполнение комментария
-function getComment() {
-  const comment = {};
-  comment.avatar = `img/avatar-${getRandomNumber(
-      AVATAR_NUM_MIN,
-      AVATAR_NUM_MAX
-  )}.svg`;
-  comment.message = messages[getRandomNumber(0, messages.length - 1)];
-  comment.name = names[getRandomNumber(0, names.length - 1)];
-  return comment;
-}
+// function getComment() {
+//   const comment = {};
+//   comment.avatar = `img/avatar-${window.utility.getRandomNumber(
+//       AVATAR_NUM_MIN,
+//       AVATAR_NUM_MAX
+//   )}.svg`;
+//   comment.message = messages[window.utility.getRandomNumber(0, messages.length - 1)];
+//   comment.name = names[window.utility.getRandomNumber(0, names.length - 1)];
+//   return comment;
+// }
 
 // Наполнение информации о фотографии
-function getPhotos() {
-  let photos = [];
+// function getPhotos() {
+//   let photos = [];
 
-  for (let i = 0; i < PHOTOS_NUM_MAX; i++) {
-    const newPhoto = {};
-    newPhoto.url = `photos/${i + 1}.jpg`;
-    newPhoto.description =
-      descriptions[getRandomNumber(0, descriptions.length - 1)];
-    newPhoto.likes = getRandomNumber(LIKES_MIN, LIKES_MAX);
-    newPhoto.comments = [];
-    for (let j = 0; j < getRandomNumber(1, 5); j++) {
-      newPhoto.comments[j] = getComment();
-    }
-    photos[i] = newPhoto;
-  }
-  return shuffleArr(photos);
-}
+//   for (let i = 0; i < PHOTOS_NUM_MAX; i++) {
+//     const newPhoto = {};
+//     newPhoto.url = `photos/${i + 1}.jpg`;
+//     newPhoto.description =
+//       descriptions[window.utility.getRandomNumber(0, descriptions.length - 1)];
+//     newPhoto.likes = window.utility.getRandomNumber(LIKES_MIN, LIKES_MAX);
+//     newPhoto.comments = [];
+//     for (let j = 0; j < window.utility.getRandomNumber(1, 5); j++) {
+//       newPhoto.comments[j] = getComment();
+//     }
+//     photos[i] = newPhoto;
+//   }
+//   return window.utility.shuffleArr(photos);
+// }
 
-const photos = getPhotos();
+// const photos = getPhotos();
 
 // Функция наполнения темплейта фотографии
 function getPhotoElement(photo, idNum) {
@@ -118,7 +100,7 @@ function insertPhotoElements(imgs) {
   }
   return pictures.appendChild(fragment);
 }
-insertPhotoElements(photos);
+insertPhotoElements(window.data.photos);
 
 
 // ПОЛНОЭКРАННОЕ ФОТО
@@ -171,7 +153,7 @@ pictures.addEventListener(`keydown`, onPictureEnterPress);
 
 function bigPictureOpenHandler(evt) {
   if (evt.target.closest(`img`) && photoEditor.classList.value.includes(`hidden`)) {
-    const pictureToShow = photos[evt.target.dataset.id];
+    const pictureToShow = window.data.photos[evt.target.dataset.id];
     showBigPicture(pictureToShow);
   }
 }
@@ -179,7 +161,7 @@ function bigPictureOpenHandler(evt) {
 function onPictureEnterPress(evt) {
   if (evt.target.matches(`.picture`) && evt.key === `Enter`) {
     evt.preventDefault();
-    const pictureToShow = photos[evt.target.querySelector(`img`).dataset.id];
+    const pictureToShow = window.data.photos[evt.target.querySelector(`img`).dataset.id];
     showBigPicture(pictureToShow);
   }
 }
