@@ -7,10 +7,6 @@
   const AVATAR_NUM_MAX = 6;
   const LIKES_MIN = 15;
   const LIKES_MAX = 200;
-  const pictureTemplate = document.querySelector(`#picture`);
-  const pictureTemplateContent = pictureTemplate.content.querySelector(
-      `.picture`
-  );
 
   const messages = [
     `Всё отлично!`,
@@ -39,47 +35,36 @@
     `Настроение супер`,
   ];
 
+  function getPhotos() {
+    let photos = [];
+    for (let i = 0; i < PHOTOS_NUM_MAX; i++) {
+      const newPhoto = {};
+      newPhoto.url = `photos/${i + 1}.jpg`;
+      newPhoto.description =
+        descriptions[window.util.getRandomNumber(0, descriptions.length - 1)];
+      newPhoto.likes = window.util.getRandomNumber(LIKES_MIN, LIKES_MAX);
+      newPhoto.comments = [];
+      for (let j = 0; j < window.util.getRandomNumber(1, 5); j++) {
+        newPhoto.comments[j] = getComment();
+      }
+      photos[i] = newPhoto;
+    }
+    return window.util.shuffleArr(photos);
+  }
+
+  function getComment() {
+    const comment = {};
+    comment.avatar = `img/avatar-${window.util.getRandomNumber(
+        AVATAR_NUM_MIN,
+        AVATAR_NUM_MAX
+    )}.svg`;
+    comment.message = messages[window.util.getRandomNumber(0, messages.length - 1)];
+    comment.name = names[window.util.getRandomNumber(0, names.length - 1)];
+    return comment;
+  }
 
   window.data = {
-    // Наполнение комментария
-    getComment() {
-      const comment = {};
-      comment.avatar = `img/avatar-${window.util.getRandomNumber(
-          AVATAR_NUM_MIN,
-          AVATAR_NUM_MAX
-      )}.svg`;
-      comment.message = messages[window.util.getRandomNumber(0, messages.length - 1)];
-      comment.name = names[window.util.getRandomNumber(0, names.length - 1)];
-      return comment;
-    },
-
     // Наполнение информации о фотографии
-    getPhotos() {
-      let photos = [];
-      for (let i = 0; i < PHOTOS_NUM_MAX; i++) {
-        const newPhoto = {};
-        newPhoto.url = `photos/${i + 1}.jpg`;
-        newPhoto.description =
-          descriptions[window.util.getRandomNumber(0, descriptions.length - 1)];
-        newPhoto.likes = window.util.getRandomNumber(LIKES_MIN, LIKES_MAX);
-        newPhoto.comments = [];
-        for (let j = 0; j < window.util.getRandomNumber(1, 5); j++) {
-          newPhoto.comments[j] = window.data.getComment();
-        }
-        photos[i] = newPhoto;
-      }
-      return window.util.shuffleArr(photos);
-    },
-
-    // Функция наполнения темплейта фотографии
-    getPhotoElement(photo, idNum) {
-      const newPicture = pictureTemplateContent.cloneNode(true);
-      const newPictureImg = newPicture.querySelector(`.picture__img`);
-      newPictureImg.src = photo.url;
-      newPictureImg.dataset.id = `${idNum}`;
-      newPicture.querySelector(`.picture__likes`).textContent = photo.likes;
-      newPicture.querySelector(`.picture__comments`).textContent = photo.comments.length;
-      return newPicture;
-    },
+    photos: getPhotos(),
   };
 })();
