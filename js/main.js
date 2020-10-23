@@ -1,42 +1,49 @@
 "use strict";
 
-window.photosArr = window.data.getPhotos();
-window.picture.insertPhotoElements(window.photosArr);
+const pictures = document.querySelector(`.pictures`);
+
+// Наполнение блока фотографиями из массива
+function insertPhotoElements(imgs) {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < imgs.length; i++) {
+    fragment.appendChild(window.picture.getPicture(imgs[i], i));
+  }
+  return pictures.appendChild(fragment);
+}
+insertPhotoElements(window.data.photos);
+
 
 // ПОЛНОЭКРАННОЕ ФОТО
 // Обработчики открытия окна полноэкранной фотографии
-window.pictures.addEventListener(`click`, window.bigPicture.bigPictureOpenHandler);
-window.pictures.addEventListener(`keydown`, window.picture.onPictureEnterPress);
+pictures.addEventListener(`click`, bigPictureOpenHandler);
+pictures.addEventListener(`keydown`, onPictureEnterPress);
+
+function bigPictureOpenHandler(evt) {
+  if (evt.target.closest(`img`) && photoEditor.classList.value.includes(`hidden`)) {
+    const pictureToShow = window.data.photos[evt.target.dataset.id];
+    window.bigPicture.show(pictureToShow);
+  }
+}
+
+function onPictureEnterPress(evt) {
+  if (evt.target.matches(`.picture`) && evt.key === `Enter`) {
+    evt.preventDefault();
+    const pictureToShow = window.data.photos[evt.target.querySelector(`img`).dataset.id];
+    window.bigPicture.show(pictureToShow);
+  }
+}
+
 
 // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
-window.photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
+const photoUploadForm = document.querySelector(`.img-upload__form`);
+const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
+const photoEditor = photoUploadForm.querySelector(`.img-upload__overlay`);
+photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
+
 // Обработчик загрузки нового изображения
-window.photoUploader.addEventListener(`change`, function () {
-  window.load.openEditor();
-});
+photoUploader.addEventListener(`change`, window.form.openForm);
+
 // Обработчик отправки изображения
 // ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования
 // photoUploadForm.addEventListener(`submit`, function (evt) {
 // });
-
-// ИЗМЕНЕНИЕ МАСШТАБА ИЗОБРАЖЕНИЯ
-
-// ЭФФЕКТЫ ИЗОБРАЖЕНИЯ
-window.initialEffectLevel = parseInt(window.effectLevelInput.value, 10);
-
-// ИНТЕНСИВНОСТЬ ЭФФЕКТА
-// начальная реализация по заданию
-
-// ВАЛИДАЦИЯ ХЭШТЕГОВ
-
-// ВАЛИДАЦИЯ КОММЕНТАРИЯ
-
-window.comment.commentInput.maxLength = 140;
-// Флаги фокуса поля для обработчика закрытия окна по Esc
-window.comment.commentInput.onfocus = () => {
-  window.comment.commentInput.focused = true;
-};
-
-window.comment.commentInput.onblur = () => {
-  window.comment.commentInput.focused = false;
-};

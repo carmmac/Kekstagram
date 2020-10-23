@@ -1,6 +1,6 @@
 "use strict";
 
-// СОЗДАНИЕ ДАННЫХ
+// СОЗДАНИЕ МАССИВА ФОТОГРАФИЙ
 (() => {
   const PHOTOS_NUM_MAX = 25;
   const AVATAR_NUM_MIN = 1;
@@ -64,7 +64,6 @@
   }
 
   window.data = {
-    // Наполнение информации о фотографии
     photos: getPhotos(),
   };
 })();
