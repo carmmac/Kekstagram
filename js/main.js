@@ -10,14 +10,14 @@ const pictureTemplate = document.querySelector(`#picture`);
 const pictureTemplateContent = pictureTemplate.content.querySelector(
     `.picture`
 );
-const bigPicture = document.querySelector(`.big-picture`);
-const bigPictureImg = bigPicture.querySelector(`.big-picture__img img`);
-const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
-const bigPictureCommentsCount = bigPicture.querySelector(`.comments-count`);
-const bigPictureComments = bigPicture.querySelector(`.social__comments`);
-const bigPictureComment = bigPictureComments.querySelector(`.social__comment`);
-const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
-const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
+// const bigPicture = document.querySelector(`.big-picture`);
+// const bigPictureImg = bigPicture.querySelector(`.big-picture__img img`);
+// const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
+// const bigPictureCommentsCount = bigPicture.querySelector(`.comments-count`);
+// const bigPictureComments = bigPicture.querySelector(`.social__comments`);
+// const bigPictureComment = bigPictureComments.querySelector(`.social__comment`);
+// const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
+// const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 
 // const messages = [
 //   `Всё отлично!`,
@@ -49,12 +49,12 @@ const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 // Наполнение комментария
 // function getComment() {
 //   const comment = {};
-//   comment.avatar = `img/avatar-${window.utility.getRandomNumber(
+//   comment.avatar = `img/avatar-${window.util.getRandomNumber(
 //       AVATAR_NUM_MIN,
 //       AVATAR_NUM_MAX
 //   )}.svg`;
-//   comment.message = messages[window.utility.getRandomNumber(0, messages.length - 1)];
-//   comment.name = names[window.utility.getRandomNumber(0, names.length - 1)];
+//   comment.message = messages[window.util.getRandomNumber(0, messages.length - 1)];
+//   comment.name = names[window.util.getRandomNumber(0, names.length - 1)];
 //   return comment;
 // }
 
@@ -66,15 +66,15 @@ const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 //     const newPhoto = {};
 //     newPhoto.url = `photos/${i + 1}.jpg`;
 //     newPhoto.description =
-//       descriptions[window.utility.getRandomNumber(0, descriptions.length - 1)];
-//     newPhoto.likes = window.utility.getRandomNumber(LIKES_MIN, LIKES_MAX);
+//       descriptions[window.util.getRandomNumber(0, descriptions.length - 1)];
+//     newPhoto.likes = window.util.getRandomNumber(LIKES_MIN, LIKES_MAX);
 //     newPhoto.comments = [];
-//     for (let j = 0; j < window.utility.getRandomNumber(1, 5); j++) {
+//     for (let j = 0; j < window.util.getRandomNumber(1, 5); j++) {
 //       newPhoto.comments[j] = getComment();
 //     }
 //     photos[i] = newPhoto;
 //   }
-//   return window.utility.shuffleArr(photos);
+//   return window.util.shuffleArr(photos);
 // }
 
 // const photos = getPhotos();
@@ -104,47 +104,47 @@ insertPhotoElements(window.data.photos);
 
 
 // ПОЛНОЭКРАННОЕ ФОТО
-// Функция наполнения комментария для полноэкранного фото
-function getBigPicComment(comment) {
-  const newBigPicComment = bigPictureComment.cloneNode(true);
-  newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
-  newBigPicComment.querySelector(`.social__picture`).alt = comment.name;
-  newBigPicComment.querySelector(`.social__text`).textContent = comment.message;
-  return newBigPicComment;
-}
+// // Функция наполнения комментария для полноэкранного фото
+// function getBigPicComment(comment) {
+//   const newBigPicComment = bigPictureComment.cloneNode(true);
+//   newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
+//   newBigPicComment.querySelector(`.social__picture`).alt = comment.name;
+//   newBigPicComment.querySelector(`.social__text`).textContent = comment.message;
+//   return newBigPicComment;
+// }
 
-// Наполнение комментариев из массива для полноэкранного фото
-function insertBigPicComment(comments) {
-  removeBigPicComments();
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < comments.length; i++) {
-    fragment.appendChild(getBigPicComment(comments[i]));
-  }
-  return bigPictureComments.appendChild(fragment);
-}
+// // Наполнение комментариев из массива для полноэкранного фото
+// function insertBigPicComment(comments) {
+//   removeBigPicComments();
+//   const fragment = document.createDocumentFragment();
+//   for (let i = 0; i < comments.length; i++) {
+//     fragment.appendChild(window.bigPicture.getBigPicComment(comments[i]));
+//   }
+//   return bigPictureComments.appendChild(fragment);
+// }
 
-// Функцуия очистки комментариев для bigPicture
-function removeBigPicComments() {
-  bigPictureComments.innerHTML = ``;
-}
+// // Функцуия очистки комментариев для bigPicture
+// function removeBigPicComments() {
+//   bigPictureComments.innerHTML = ``;
+// }
 
 // Функция отображения окна с полноэкранной фотографией
-function showBigPicture(currentImg) {
-  showModalWindow(bigPicture);
-  bigPictureImg.src = currentImg.url;
-  bigPictureLikesCount.textContent = currentImg.likes;
-  bigPictureCommentsCount.textContent = currentImg.comments.length;
-  bigPictureDescription.textContent = currentImg.description;
-  bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
-  bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
-  insertBigPicComment(currentImg.comments);
-  // Обработчик закрытия окна по по нажатию Esc
-  document.addEventListener(`keydown`, onBigPictureEscPress);
-  // Обработчик закрытия окна по клику вне окна
-  bigPicture.addEventListener(`click`, bigPictureCloseHandler);
-  // Обработчик закрытия окна по кнопке "X"
-  bigPictureCloseBtn.addEventListener(`click`, onBigPictureCloseBtnPress);
-}
+// function showBigPicture(currentImg) {
+//   showModalWindow(bigPicture);
+//   bigPictureImg.src = currentImg.url;
+//   bigPictureLikesCount.textContent = currentImg.likes;
+//   bigPictureCommentsCount.textContent = currentImg.comments.length;
+//   bigPictureDescription.textContent = currentImg.description;
+//   bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
+//   bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
+//   insertBigPicComment(currentImg.comments);
+//   // Обработчик закрытия окна по по нажатию Esc
+//   document.addEventListener(`keydown`, onBigPictureEscPress);
+//   // Обработчик закрытия окна по клику вне окна
+//   bigPicture.addEventListener(`click`, bigPictureCloseHandler);
+//   // Обработчик закрытия окна по кнопке "X"
+//   bigPictureCloseBtn.addEventListener(`click`, onBigPictureCloseBtnPress);
+// }
 
 
 // Обработчики открытия окна полноэкранной фотографии
@@ -154,7 +154,7 @@ pictures.addEventListener(`keydown`, onPictureEnterPress);
 function bigPictureOpenHandler(evt) {
   if (evt.target.closest(`img`) && photoEditor.classList.value.includes(`hidden`)) {
     const pictureToShow = window.data.photos[evt.target.dataset.id];
-    showBigPicture(pictureToShow);
+    window.bigPicture.show(pictureToShow);
   }
 }
 
@@ -162,49 +162,49 @@ function onPictureEnterPress(evt) {
   if (evt.target.matches(`.picture`) && evt.key === `Enter`) {
     evt.preventDefault();
     const pictureToShow = window.data.photos[evt.target.querySelector(`img`).dataset.id];
-    showBigPicture(pictureToShow);
+    window.bigPicture.show(pictureToShow);
   }
 }
 
-// Функция закрытия окна по кнопке Х
-function onBigPictureCloseBtnPress() {
-  closeBigPicture();
-}
+// // Функция закрытия окна по кнопке Х
+// function onBigPictureCloseBtnPress() {
+//   closeBigPicture();
+// }
 
-// Функция закрытия окна по нажатию Esc
-function onBigPictureEscPress(evt) {
-  if (evt.key === `Escape`) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
-}
+// // Функция закрытия окна по нажатию Esc
+// function onBigPictureEscPress(evt) {
+//   if (evt.key === `Escape`) {
+//     evt.preventDefault();
+//     closeBigPicture();
+//   }
+// }
 
-// Функция закрытия окна по клику вне окна
-function bigPictureCloseHandler(evt) {
-  if (!evt.target.closest(`.big-picture__preview`)) {
-    closeBigPicture();
-  }
-}
+// // Функция закрытия окна по клику вне окна
+// function bigPictureCloseHandler(evt) {
+//   if (!evt.target.closest(`.big-picture__preview`)) {
+//     closeBigPicture();
+//   }
+// }
 
-// Функция закрытия окна полноэкранной фотографии
-function closeBigPicture() {
-  hideModalWindow(bigPicture);
-  document.removeEventListener(`keydown`, onBigPictureEscPress);
-  bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
-  bigPictureCloseBtn.removeEventListener(`click`, onBigPictureCloseBtnPress);
-}
+// // Функция закрытия окна полноэкранной фотографии
+// function closeBigPicture() {
+//   window.util.hideModalWindow(bigPicture);
+//   document.removeEventListener(`keydown`, onBigPictureEscPress);
+//   bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
+//   bigPictureCloseBtn.removeEventListener(`click`, onBigPictureCloseBtnPress);
+// }
 
-// Универсальная функция открытия модалки
-function showModalWindow(elem) {
-  elem.classList.remove(`hidden`);
-  document.body.classList.add(`modal-open`);
-}
+// // Универсальная функция открытия модалки
+// function showModalWindow(elem) {
+//   elem.classList.remove(`hidden`);
+//   document.body.classList.add(`modal-open`);
+// }
 
-// Универсальная функция закрытия модалки
-function hideModalWindow(elem) {
-  elem.classList.add(`hidden`);
-  document.body.classList.remove(`modal-open`);
-}
+// // Универсальная функция закрытия модалки
+// function hideModalWindow(elem) {
+//   elem.classList.add(`hidden`);
+//   document.body.classList.remove(`modal-open`);
+// }
 
 
 // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
@@ -224,7 +224,7 @@ const SCALE_CHANGE_STEP = 25;
 
 // Функция открытия окна редактора изображения
 function openEditor() {
-  showModalWindow(photoEditor);
+  window.util.showModalWindow(photoEditor);
   if (getCurrentEffect() === null) {
     hideElement(effectLevelPanel);
   }
@@ -266,7 +266,7 @@ function scaleChangeHandler(evt) {
 // Функция закрытия редактора изображения
 function closePhotoEditor() {
   photoUploader.value = ``;
-  hideModalWindow(photoEditor);
+  window.util.hideModalWindow(photoEditor);
   removeEffect(getCurrentEffect());
   document.removeEventListener(`keydown`, onPhotoEditorEscPress);
   photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
