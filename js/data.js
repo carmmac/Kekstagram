@@ -41,25 +41,25 @@
       const newPhoto = {};
       newPhoto.url = `photos/${i + 1}.jpg`;
       newPhoto.description =
-        descriptions[window.util.getRandomNumber(0, descriptions.length - 1)];
-      newPhoto.likes = window.util.getRandomNumber(LIKES_MIN, LIKES_MAX);
+        descriptions[window.util.random(0, descriptions.length - 1)];
+      newPhoto.likes = window.util.random(LIKES_MIN, LIKES_MAX);
       newPhoto.comments = [];
-      for (let j = 0; j < window.util.getRandomNumber(1, 5); j++) {
+      for (let j = 0; j < window.util.random(1, 5); j++) {
         newPhoto.comments[j] = getComment();
       }
       photos[i] = newPhoto;
     }
-    return window.util.shuffleArr(photos);
+    return window.util.shuffle(photos);
   }
 
   function getComment() {
     const comment = {};
-    comment.avatar = `img/avatar-${window.util.getRandomNumber(
+    comment.avatar = `img/avatar-${window.util.random(
         AVATAR_NUM_MIN,
         AVATAR_NUM_MAX
     )}.svg`;
-    comment.message = messages[window.util.getRandomNumber(0, messages.length - 1)];
-    comment.name = names[window.util.getRandomNumber(0, names.length - 1)];
+    comment.message = messages[window.util.random(0, messages.length - 1)];
+    comment.name = names[window.util.random(0, names.length - 1)];
     return comment;
   }
 

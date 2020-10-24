@@ -6,7 +6,7 @@ const pictures = document.querySelector(`.pictures`);
 function insertPhotoElements(imgs) {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < imgs.length; i++) {
-    fragment.appendChild(window.picture.getPicture(imgs[i], i));
+    fragment.appendChild(window.picture.get(imgs[i], i));
   }
   return pictures.appendChild(fragment);
 }
@@ -40,8 +40,11 @@ const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
 const photoEditor = photoUploadForm.querySelector(`.img-upload__overlay`);
 photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
 
+function changeUploadFormHandler() {
+  window.form.open();
+}
 // Обработчик загрузки нового изображения
-photoUploader.addEventListener(`change`, window.form.openForm);
+photoUploader.addEventListener(`change`, changeUploadFormHandler);
 
 // Обработчик отправки изображения
 // ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования

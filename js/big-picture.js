@@ -13,7 +13,7 @@
 
   // Функция отображения окна с полноэкранной фотографией
   function showBigPicture(currentImg) {
-    window.util.showModalWindow(bigPicture);
+    window.util.modal.show(bigPicture);
     bigPictureImg.src = currentImg.url;
     bigPictureLikesCount.textContent = currentImg.likes;
     bigPictureCommentsCount.textContent = currentImg.comments.length;
@@ -75,7 +75,7 @@
 
   // Функция закрытия окна полноэкранной фотографии
   function closeBigPicture() {
-    window.util.hideModalWindow(bigPicture);
+    window.util.modal.hide(bigPicture);
     document.removeEventListener(`keydown`, onBigPictureEscPress);
     bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
     bigPictureCloseBtn.removeEventListener(`click`, onBigPictureCloseBtnPress);

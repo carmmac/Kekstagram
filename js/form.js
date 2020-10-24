@@ -16,9 +16,9 @@
 
   // Функция открытия окна редактора изображения
   function openEditor() {
-    window.util.showModalWindow(photoEditor);
+    window.util.modal.show(photoEditor);
     if (getCurrentEffect() === null) {
-      window.util.hideElement(effectLevelPanel);
+      window.util.element.hide(effectLevelPanel);
     }
     scaleValueField.value = `${INIT_SCALE_VALUE}%`;
     // Обработчик изменения масштаба
@@ -38,7 +38,7 @@
   // Функция закрытия редактора изображения
   function closePhotoEditor() {
     photoUploader.value = ``;
-    window.util.hideModalWindow(photoEditor);
+    window.util.element.hide(photoEditor);
     removeEffect(getCurrentEffect());
     document.removeEventListener(`keydown`, onPhotoEditorEscPress);
     photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
@@ -110,11 +110,11 @@
     const currentEffect = getCurrentEffect();
     if (currentEffect !== `effects__preview--${value}`) {
       if (value !== `none`) {
-        window.util.showElement(effectLevelPanel);
+        window.util.element.show(effectLevelPanel);
         removeEffect(currentEffect);
         addEffect(value);
       } else {
-        window.util.hideElement(effectLevelPanel);
+        window.util.element.hide(effectLevelPanel);
         removeEffect(currentEffect);
       }
     }
@@ -250,6 +250,6 @@
 
 
   window.form = {
-    openForm: openEditor,
+    open: openEditor,
   };
 })();

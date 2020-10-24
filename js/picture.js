@@ -18,6 +18,6 @@
   }
 
   window.picture = {
-    getPicture: getPhotoElement,
+    get: getPhotoElement,
   };
 })();
