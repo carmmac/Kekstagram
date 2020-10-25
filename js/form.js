@@ -30,7 +30,7 @@
     // Обработчик переключения эффектов на изображении
     effectsPanel.addEventListener(`change`, effectChangeHandler);
     // Обработчик уровня эффекта
-    effectLevelPin.addEventListener(`mouseup`, changeEffectLevel);
+    effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
     // Обработчик ввода хэштегов
     hashtagInput.addEventListener(`input`, checkHashtagValidity);
   }
@@ -44,7 +44,7 @@
     photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
     scalePanel.removeEventListener(`click`, scaleChangeHandler);
     effectsPanel.removeEventListener(`change`, effectChangeHandler);
-    effectLevelPin.removeEventListener(`mouseup`, changeEffectLevel);
+    effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
     hashtagInput.removeEventListener(`input`, checkHashtagValidity);
   }
 
@@ -152,22 +152,54 @@
   const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
   const initialEffectLevel = parseInt(effectLevelInput.value, 10);
 
-  function changeEffectLevel(evt) {
+  // Функция изменения глубины эффекта
+  function effectLevelChangeHandler(evt) {
+    evt.preventDefault();
+
     const effectLevel = {
       MIN: 0,
       MAX: effectLevelBar.offsetWidth
     };
-    const newEffectLevel = getEffectLevel(effectLevel.MAX, getPositionX(evt.target));
-    effectLevelInput.value = newEffectLevel;
+    let startCoords = evt.clientX;
 
-    const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
-    applyEffect(currentFilter.value, newEffectLevel);
+    function moveAt(value) {
+      effectLevelPin.style.left = `${value}px`;
+    }
+
+    function onMouseMove(moveEvt) {
+      moveEvt.preventDefault();
+
+      let newEffectLevel = getEffectLevel(effectLevel.MAX, effectLevelPin.offsetLeft);
+      effectLevelInput.value = newEffectLevel;
+      const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
+      applyEffect(currentFilter.value, newEffectLevel);
+
+      const shift = startCoords - moveEvt.clientX;
+      startCoords = moveEvt.clientX;
+      let moveValue = effectLevelPin.offsetLeft - shift;
+
+      if (moveValue > 0 && moveValue < (effectLevelBar.offsetWidth)) {
+        moveAt((moveValue));
+      } else {
+        moveAt((moveValue) > 0 ? effectLevelBar.offsetWidth : 0);
+      }
+    }
+
+    function onMouseUp(upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener(`mousemove`, onMouseMove);
+      document.removeEventListener(`mouseup`, onMouseUp);
+    }
+
+    document.addEventListener(`mousemove`, onMouseMove);
+    document.addEventListener(`mouseup`, onMouseUp);
   }
 
-  function getPositionX(elem) {
-    const positionX = elem.offsetLeft;
-    return positionX;
-  }
+  // function getPositionX(elem) {
+  //   const positionX = elem.offsetLeft;
+  //   return positionX;
+  // }
 
   function getEffectLevel(maxLevel, currLevel) {
     const effectLevel = Math.floor((currLevel * 100) / maxLevel);
