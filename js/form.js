@@ -16,7 +16,6 @@
 
   // Функция открытия окна редактора изображения
   function openEditor() {
-    console.log(effectLevelDepthBar.style.width);
     window.util.modal.show(photoEditor);
     if (getCurrentEffect() === null) {
       window.util.element.hide(effectLevelPanel);
@@ -34,6 +33,12 @@
     effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
     // Обработчик ввода хэштегов
     hashtagInput.addEventListener(`input`, checkHashtagValidity);
+    // Обработчики фокусировки на поле комментария
+    commentInput.addEventListener(`focusin`, preventEscPress);
+    commentInput.addEventListener(`focusout`, restoreEscPress);
+    // Обработчики фокусировки на поле хэштегов
+    hashtagInput.addEventListener(`focusin`, preventEscPress);
+    hashtagInput.addEventListener(`focusout`, restoreEscPress);
   }
 
   // Функция закрытия редактора изображения
@@ -52,6 +57,10 @@
     effectsPanel.removeEventListener(`change`, effectChangeHandler);
     effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
     hashtagInput.removeEventListener(`input`, checkHashtagValidity);
+    commentInput.removeEventListener(`focusin`, preventEscPress);
+    commentInput.removeEventListener(`focusout`, restoreEscPress);
+    hashtagInput.removeEventListener(`focusin`, preventEscPress);
+    hashtagInput.removeEventListener(`focusout`, restoreEscPress);
   }
 
   // Функция закрытия редактора по кнопке Х
@@ -61,7 +70,7 @@
 
   // Функция закрытия редактора по нажатию Esc
   function onPhotoEditorEscPress(evt) {
-    if (evt.key === `Escape` && !commentInput.focused) {
+    if (evt.key === `Escape`) {
       evt.preventDefault();
       closePhotoEditor();
     }
@@ -281,14 +290,22 @@
   const commentInput = photoEditor.querySelector(`.text__description`);
   commentInput.maxLength = 140;
 
-  // Флаги фокуса поля для обработчика закрытия окна по Esc
-  commentInput.onfocus = () => {
-    commentInput.focused = true;
-  };
+  function preventEscPress() {
+    document.removeEventListener(`keydown`, onPhotoEditorEscPress);
+  }
 
-  commentInput.onblur = () => {
-    commentInput.focused = false;
-  };
+  function restoreEscPress() {
+    document.addEventListener(`keydown`, onPhotoEditorEscPress);
+  }
+
+  // Флаги фокуса поля для обработчика закрытия окна по Esc
+  // commentInput.onfocus = () => {
+  //   commentInput.focused = true;
+  // };
+
+  // commentInput.onblur = () => {
+  //   commentInput.focused = false;
+  // };
 
 
   window.form = {
