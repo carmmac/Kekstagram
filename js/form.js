@@ -105,6 +105,7 @@
     if (evt.target.matches(`input[type="radio"]`)) {
       const currentEffectName = evt.target.value;
       applyEffect(currentEffectName, initialEffectLevel);
+      effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * initialEffectLevel) / 100)}px`;
     }
   }
 
