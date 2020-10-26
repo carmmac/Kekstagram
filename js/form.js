@@ -16,6 +16,7 @@
 
   // Функция открытия окна редактора изображения
   function openEditor() {
+    console.log(effectLevelDepthBar.style.width);
     window.util.modal.show(photoEditor);
     if (getCurrentEffect() === null) {
       window.util.element.hide(effectLevelPanel);
@@ -40,6 +41,7 @@
     photoUploader.value = ``;
     previewImg.style.transform = ``;
     effectsPanel.querySelector(`#effect-none`).checked = true;
+    effectLevelDepthBar.style.width = ``;
     hashtagInput.value = ``;
     commentInput.value = ``;
     window.util.element.hide(photoEditor);
@@ -134,6 +136,7 @@
   function removeEffect(effectClass) {
     previewImg.classList.remove(effectClass);
     previewImg.style.filter = ``;
+    effectLevelDepthBar.style.width = `${initialEffectLevel}%`;
   }
 
   // Функция проверки наличия эффекта
@@ -155,6 +158,7 @@
   const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
   const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
   const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
+  const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
   const initialEffectLevel = parseInt(effectLevelInput.value, 10);
 
   // Функция изменения глубины эффекта
@@ -188,6 +192,7 @@
       } else {
         moveAt((moveValue) > 0 ? effectLevelBar.offsetWidth : 0);
       }
+      effectLevelDepthBar.style.width = `${newEffectLevel}%`;
     }
 
     function onMouseUp(upEvt) {
