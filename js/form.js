@@ -38,6 +38,7 @@
   // Функция закрытия редактора изображения
   function closePhotoEditor() {
     photoUploader.value = ``;
+    previewImg.style.transform = ``;
     window.util.element.hide(photoEditor);
     removeEffect(getCurrentEffect());
     document.removeEventListener(`keydown`, onPhotoEditorEscPress);
