@@ -39,6 +39,8 @@
   function closePhotoEditor() {
     photoUploader.value = ``;
     previewImg.style.transform = ``;
+    hashtagInput.value = ``;
+    commentInput.value = ``;
     window.util.element.hide(photoEditor);
     removeEffect(getCurrentEffect());
     document.removeEventListener(`keydown`, onPhotoEditorEscPress);
