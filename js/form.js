@@ -39,6 +39,7 @@
   function closePhotoEditor() {
     photoUploader.value = ``;
     previewImg.style.transform = ``;
+    effectsPanel.querySelector(`#effect-none`).checked = true;
     hashtagInput.value = ``;
     commentInput.value = ``;
     window.util.element.hide(photoEditor);
