@@ -116,8 +116,8 @@
   function effectChangeHandler(evt) {
     if (evt.target.matches(`input[type="radio"]`)) {
       const currentEffectName = evt.target.value;
-      applyEffect(currentEffectName, initialEffectLevel);
-      effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * initialEffectLevel) / 100)}px`;
+      applyEffect(currentEffectName, INITIAL_EFFECT_LVL);
+      effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * INITIAL_EFFECT_LVL) / 100)}px`;
     }
   }
 
@@ -145,7 +145,7 @@
   function removeEffect(effectClass) {
     previewImg.classList.remove(effectClass);
     previewImg.style.filter = ``;
-    effectLevelDepthBar.style.width = `${initialEffectLevel}%`;
+    effectLevelDepthBar.style.width = `${INITIAL_EFFECT_LVL}%`;
   }
 
   // Функция проверки наличия эффекта
@@ -168,7 +168,7 @@
   const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
   const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
   const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
-  const initialEffectLevel = 100;
+  const INITIAL_EFFECT_LVL = 100;
 
   // Функция изменения глубины эффекта
   function effectLevelChangeHandler(evt) {
