@@ -30,22 +30,37 @@
     // Обработчик переключения эффектов на изображении
     effectsPanel.addEventListener(`change`, effectChangeHandler);
     // Обработчик уровня эффекта
-    effectLevelPin.addEventListener(`mouseup`, changeEffectLevel);
+    effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
     // Обработчик ввода хэштегов
     hashtagInput.addEventListener(`input`, checkHashtagValidity);
+    // Обработчики фокусировки на поле комментария
+    commentInput.addEventListener(`focusin`, preventEscPress);
+    commentInput.addEventListener(`focusout`, restoreEscPress);
+    // Обработчики фокусировки на поле хэштегов
+    hashtagInput.addEventListener(`focusin`, preventEscPress);
+    hashtagInput.addEventListener(`focusout`, restoreEscPress);
   }
 
   // Функция закрытия редактора изображения
   function closePhotoEditor() {
     photoUploader.value = ``;
+    previewImg.style.transform = ``;
+    effectsPanel.querySelector(`#effect-none`).checked = true;
+    effectLevelDepthBar.style.width = ``;
+    hashtagInput.value = ``;
+    commentInput.value = ``;
     window.util.element.hide(photoEditor);
     removeEffect(getCurrentEffect());
     document.removeEventListener(`keydown`, onPhotoEditorEscPress);
     photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
     scalePanel.removeEventListener(`click`, scaleChangeHandler);
     effectsPanel.removeEventListener(`change`, effectChangeHandler);
-    effectLevelPin.removeEventListener(`mouseup`, changeEffectLevel);
+    effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
     hashtagInput.removeEventListener(`input`, checkHashtagValidity);
+    commentInput.removeEventListener(`focusin`, preventEscPress);
+    commentInput.removeEventListener(`focusout`, restoreEscPress);
+    hashtagInput.removeEventListener(`focusin`, preventEscPress);
+    hashtagInput.removeEventListener(`focusout`, restoreEscPress);
   }
 
   // Функция закрытия редактора по кнопке Х
@@ -55,7 +70,7 @@
 
   // Функция закрытия редактора по нажатию Esc
   function onPhotoEditorEscPress(evt) {
-    if (evt.key === `Escape` && !commentInput.focused) {
+    if (evt.key === `Escape`) {
       evt.preventDefault();
       closePhotoEditor();
     }
@@ -101,7 +116,8 @@
   function effectChangeHandler(evt) {
     if (evt.target.matches(`input[type="radio"]`)) {
       const currentEffectName = evt.target.value;
-      applyEffect(currentEffectName, initialEffectLevel);
+      applyEffect(currentEffectName, INITIAL_EFFECT_LVL);
+      effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * INITIAL_EFFECT_LVL) / 100)}px`;
     }
   }
 
@@ -129,6 +145,7 @@
   function removeEffect(effectClass) {
     previewImg.classList.remove(effectClass);
     previewImg.style.filter = ``;
+    effectLevelDepthBar.style.width = `${INITIAL_EFFECT_LVL}%`;
   }
 
   // Функция проверки наличия эффекта
@@ -150,27 +167,53 @@
   const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
   const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
   const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
-  const initialEffectLevel = parseInt(effectLevelInput.value, 10);
+  const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
+  const INITIAL_EFFECT_LVL = 100;
 
-  function changeEffectLevel(evt) {
-    const effectLevel = {
-      MIN: 0,
-      MAX: effectLevelBar.offsetWidth
-    };
-    const newEffectLevel = getEffectLevel(effectLevel.MAX, getPositionX(evt.target));
-    effectLevelInput.value = newEffectLevel;
+  // Функция изменения глубины эффекта
+  function effectLevelChangeHandler(evt) {
+    evt.preventDefault();
 
-    const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
-    applyEffect(currentFilter.value, newEffectLevel);
+    const maxEffectLevel = effectLevelBar.offsetWidth;
+    let startCoords = evt.clientX;
+
+    function moveAt(value) {
+      effectLevelPin.style.left = `${value}px`;
+    }
+
+    function onMouseMove(moveEvt) {
+      moveEvt.preventDefault();
+
+      let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
+      effectLevelInput.value = newEffectLevel;
+      const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
+      applyEffect(currentFilter.value, newEffectLevel);
+
+      const shift = startCoords - moveEvt.clientX;
+      startCoords = moveEvt.clientX;
+      let moveValue = effectLevelPin.offsetLeft - shift;
+
+      if (moveValue > 0 && moveValue < (maxEffectLevel)) {
+        moveAt((moveValue));
+      } else {
+        moveAt((moveValue) > 0 ? maxEffectLevel : 0);
+      }
+      effectLevelDepthBar.style.width = `${newEffectLevel}%`;
+    }
+
+    function onMouseUp(upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener(`mousemove`, onMouseMove);
+      document.removeEventListener(`mouseup`, onMouseUp);
+    }
+
+    document.addEventListener(`mousemove`, onMouseMove);
+    document.addEventListener(`mouseup`, onMouseUp);
   }
 
-  function getPositionX(elem) {
-    const positionX = elem.offsetLeft;
-    return positionX;
-  }
-
-  function getEffectLevel(maxLevel, currLevel) {
-    const effectLevel = Math.floor((currLevel * 100) / maxLevel);
+  function getEffectLevel(currLevel) {
+    const effectLevel = Math.floor((currLevel * 100) / effectLevelBar.offsetWidth);
     return effectLevel;
   }
 
@@ -239,14 +282,22 @@
   const commentInput = photoEditor.querySelector(`.text__description`);
   commentInput.maxLength = 140;
 
-  // Флаги фокуса поля для обработчика закрытия окна по Esc
-  commentInput.onfocus = () => {
-    commentInput.focused = true;
-  };
+  function preventEscPress() {
+    document.removeEventListener(`keydown`, onPhotoEditorEscPress);
+  }
 
-  commentInput.onblur = () => {
-    commentInput.focused = false;
-  };
+  function restoreEscPress() {
+    document.addEventListener(`keydown`, onPhotoEditorEscPress);
+  }
+
+  // Флаги фокуса поля для обработчика закрытия окна по Esc
+  // commentInput.onfocus = () => {
+  //   commentInput.focused = true;
+  // };
+
+  // commentInput.onblur = () => {
+  //   commentInput.focused = false;
+  // };
 
 
   window.form = {
