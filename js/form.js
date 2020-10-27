@@ -174,10 +174,7 @@
   function effectLevelChangeHandler(evt) {
     evt.preventDefault();
 
-    const effectLevel = {
-      MIN: 0,
-      MAX: effectLevelBar.offsetWidth
-    };
+    const maxEffectLevel = effectLevelBar.offsetWidth;
     let startCoords = evt.clientX;
 
     function moveAt(value) {
@@ -187,7 +184,7 @@
     function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
 
-      let newEffectLevel = getEffectLevel(effectLevel.MAX, effectLevelPin.offsetLeft);
+      let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
       effectLevelInput.value = newEffectLevel;
       const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
       applyEffect(currentFilter.value, newEffectLevel);
@@ -196,10 +193,10 @@
       startCoords = moveEvt.clientX;
       let moveValue = effectLevelPin.offsetLeft - shift;
 
-      if (moveValue > 0 && moveValue < (effectLevelBar.offsetWidth)) {
+      if (moveValue > 0 && moveValue < (maxEffectLevel)) {
         moveAt((moveValue));
       } else {
-        moveAt((moveValue) > 0 ? effectLevelBar.offsetWidth : 0);
+        moveAt((moveValue) > 0 ? maxEffectLevel : 0);
       }
       effectLevelDepthBar.style.width = `${newEffectLevel}%`;
     }
@@ -215,13 +212,8 @@
     document.addEventListener(`mouseup`, onMouseUp);
   }
 
-  // function getPositionX(elem) {
-  //   const positionX = elem.offsetLeft;
-  //   return positionX;
-  // }
-
-  function getEffectLevel(maxLevel, currLevel) {
-    const effectLevel = Math.floor((currLevel * 100) / maxLevel);
+  function getEffectLevel(currLevel) {
+    const effectLevel = Math.floor((currLevel * 100) / effectLevelBar.offsetWidth);
     return effectLevel;
   }
 
