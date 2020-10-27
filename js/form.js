@@ -168,7 +168,7 @@
   const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
   const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
   const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
-  const initialEffectLevel = parseInt(effectLevelInput.value, 10);
+  const initialEffectLevel = 100;
 
   // Функция изменения глубины эффекта
   function effectLevelChangeHandler(evt) {
