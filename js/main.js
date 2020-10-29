@@ -41,7 +41,7 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   }
 
-  window.load(successLoadHandler, errorLoadHandler);
+  window.load.get(successLoadHandler, errorLoadHandler);
 
   // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
   const photoUploadForm = document.querySelector(`.img-upload__form`);
@@ -51,11 +51,24 @@
   function changeUploadFormHandler() {
     window.form.open();
   }
+
   // Обработчик загрузки нового изображения
   photoUploader.addEventListener(`change`, changeUploadFormHandler);
 
   // Обработчик отправки изображения
   // ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования
-  // photoUploadForm.addEventListener(`submit`, function (evt) {
-  // });
+  photoUploadForm.addEventListener(`submit`, successPostHandler);
+
+  function onSuccess() {
+    window.load.post(new FormData(photoUploadForm), () => {
+      window.form.close();
+      window.popup.success.show();
+    });
+  }
+
+  function successPostHandler(evt) {
+    onSuccess();
+    evt.preventDefault();
+  }
+
 })();

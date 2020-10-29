@@ -49,7 +49,7 @@
     effectLevelDepthBar.style.width = ``;
     hashtagInput.value = ``;
     commentInput.value = ``;
-    window.util.element.hide(photoEditor);
+    window.util.modal.hide(photoEditor);
     removeEffect(getCurrentEffect());
     document.removeEventListener(`keydown`, onPhotoEditorEscPress);
     photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
@@ -302,5 +302,6 @@
 
   window.form = {
     open: openEditor,
+    close: closePhotoEditor,
   };
 })();
