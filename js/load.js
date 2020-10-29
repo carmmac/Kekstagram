@@ -37,12 +37,16 @@
     xhr.send();
   }
 
-  function sendData(data, onSuccess) {
+  function sendData(data, onSuccess, onError) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
     xhr.addEventListener(`load`, function () {
-      onSuccess();
+      if (xhr.status === 200) {
+        onSuccess();
+      } else {
+        onError();
+      }
     });
 
     xhr.open(`POST`, URL, true);

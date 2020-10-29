@@ -2,7 +2,8 @@
 
 (() => {
   // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
-  const photoUploader = document.querySelector(`.img-upload__input`);
+  const photoUploadForm = document.querySelector(`.img-upload__form`);
+  const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
   const photoEditor = document.querySelector(`.img-upload__overlay`);
   const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
   const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
@@ -16,6 +17,7 @@
 
   // Функция открытия окна редактора изображения
   function openEditor() {
+    photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
     window.util.modal.show(photoEditor);
     if (getCurrentEffect() === null) {
       window.util.element.hide(effectLevelPanel);
@@ -39,6 +41,8 @@
     // Обработчики фокусировки на поле хэштегов
     hashtagInput.addEventListener(`focusin`, preventEscPress);
     hashtagInput.addEventListener(`focusout`, restoreEscPress);
+    // Обработчик отправки изображения
+    photoUploadForm.addEventListener(`submit`, successPostHandler);
   }
 
   // Функция закрытия редактора изображения
@@ -61,6 +65,7 @@
     commentInput.removeEventListener(`focusout`, restoreEscPress);
     hashtagInput.removeEventListener(`focusin`, preventEscPress);
     hashtagInput.removeEventListener(`focusout`, restoreEscPress);
+    photoUploadForm.removeEventListener(`submit`, successPostHandler);
   }
 
   // Функция закрытия редактора по кнопке Х
@@ -74,6 +79,21 @@
       evt.preventDefault();
       closePhotoEditor();
     }
+  }
+
+  function submitForm() {
+    window.load.post(new FormData(photoUploadForm), () => {
+      closePhotoEditor();
+      window.popup.show(`success`);
+    }, () => {
+      closePhotoEditor();
+      window.popup.show(`error`);
+    });
+  }
+
+  function successPostHandler(evt) {
+    submitForm();
+    evt.preventDefault();
   }
 
   // Функция изменения масштаба превью-изображения

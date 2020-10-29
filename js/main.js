@@ -2,6 +2,7 @@
 (() => {
 
   const pictures = document.querySelector(`.pictures`);
+  const photoUploader = document.querySelector(`.img-upload__input`);
 
   function renderPhotos(imgs) {
     const fragment = document.createDocumentFragment();
@@ -44,31 +45,10 @@
   window.load.get(successLoadHandler, errorLoadHandler);
 
   // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
-  const photoUploadForm = document.querySelector(`.img-upload__form`);
-  const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
-  photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
+  // Обработчик загрузки нового изображения
+  photoUploader.addEventListener(`change`, changeUploadFormHandler);
 
   function changeUploadFormHandler() {
     window.form.open();
   }
-
-  // Обработчик загрузки нового изображения
-  photoUploader.addEventListener(`change`, changeUploadFormHandler);
-
-  // Обработчик отправки изображения
-  // ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования
-  photoUploadForm.addEventListener(`submit`, successPostHandler);
-
-  function onSuccess() {
-    window.load.post(new FormData(photoUploadForm), () => {
-      window.form.close();
-      window.popup.success.show();
-    });
-  }
-
-  function successPostHandler(evt) {
-    onSuccess();
-    evt.preventDefault();
-  }
-
 })();
