@@ -2,7 +2,7 @@
 
 // ЗАГРУЗКА ДАННЫХ С СЕРВЕРА
 (() => {
-  const URL = `https://21.javascript.pages.academy/kekstagram/data`;
+  const URL = `https://21.javascript.pages.academy/kekstagram/daa`;
   const TIMEOUT_IN_MS = 10000;
 
   window.load = function (onSuccess, onError) {

@@ -20,11 +20,7 @@
     return pictures.appendChild(fragment);
   }
 
-  function successLoadHandler(resp) {
-    renderPhotos(resp);
-  }
-
-  function errorLoadHandler(errorMessage) {
+  function showLoadError(errorMessage) {
     const node = document.createElement(`div`);
     node.style = `
       z-index: 100;
@@ -39,6 +35,14 @@
       font-weight: bold;`;
     node.textContent = errorMessage;
     document.body.insertAdjacentElement(`afterbegin`, node);
+  }
+
+  function successLoadHandler(resp) {
+    renderPhotos(resp);
+  }
+
+  function errorLoadHandler(msg) {
+    showLoadError(msg);
   }
 
   window.load(successLoadHandler, errorLoadHandler);
