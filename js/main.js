@@ -1,52 +1,43 @@
 "use strict";
+(() => {
 
-const pictures = document.querySelector(`.pictures`);
+  const pictures = document.querySelector(`.pictures`);
 
-// Наполнение блока фотографиями из массива
-function insertPhotoElements(imgs) {
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < imgs.length; i++) {
-    fragment.appendChild(window.picture.get(imgs[i], i));
+  function renderPhotos(imgs) {
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < imgs.length; i++) {
+      let img = window.picture.get(imgs[i], i);
+      img.addEventListener(`click`, () => {
+        window.bigPicture.show(imgs[i]);
+      });
+      fragment.appendChild(img);
+    }
+    return pictures.appendChild(fragment);
   }
-  return pictures.appendChild(fragment);
-}
-insertPhotoElements(window.data.photos);
 
-
-// ПОЛНОЭКРАННОЕ ФОТО
-// Обработчики открытия окна полноэкранной фотографии
-pictures.addEventListener(`click`, bigPictureOpenHandler);
-pictures.addEventListener(`keydown`, onPictureEnterPress);
-
-function bigPictureOpenHandler(evt) {
-  if (evt.target.closest(`img`) && photoEditor.classList.value.includes(`hidden`)) {
-    const pictureToShow = window.data.photos[evt.target.dataset.id];
-    window.bigPicture.show(pictureToShow);
+  function successLoadHandler(resp) {
+    renderPhotos(resp);
   }
-}
 
-function onPictureEnterPress(evt) {
-  if (evt.target.matches(`.picture`) && evt.key === `Enter`) {
-    evt.preventDefault();
-    const pictureToShow = window.data.photos[evt.target.querySelector(`img`).dataset.id];
-    window.bigPicture.show(pictureToShow);
+  function errorLoadHandler(msg) {
+    window.showMessage(msg);
   }
-}
 
+  window.load(successLoadHandler, errorLoadHandler);
 
-// ЗАГРУЗКА ИЗОБРАЖЕНИЯ
-const photoUploadForm = document.querySelector(`.img-upload__form`);
-const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
-const photoEditor = photoUploadForm.querySelector(`.img-upload__overlay`);
-photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
+  // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
+  const photoUploadForm = document.querySelector(`.img-upload__form`);
+  const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
+  photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
 
-function changeUploadFormHandler() {
-  window.form.open();
-}
-// Обработчик загрузки нового изображения
-photoUploader.addEventListener(`change`, changeUploadFormHandler);
+  function changeUploadFormHandler() {
+    window.form.open();
+  }
+  // Обработчик загрузки нового изображения
+  photoUploader.addEventListener(`change`, changeUploadFormHandler);
 
-// Обработчик отправки изображения
-// ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования
-// photoUploadForm.addEventListener(`submit`, function (evt) {
-// });
+  // Обработчик отправки изображения
+  // ! Вынести работу обрабочика в функцию, далее удалять обработчик при закрытии окна редактирования
+  // photoUploadForm.addEventListener(`submit`, function (evt) {
+  // });
+})();
