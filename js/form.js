@@ -17,7 +17,6 @@
 
   // Функция открытия окна редактора изображения
   function openEditor() {
-    photoUploadForm.action = `https://21.javascript.pages.academy/kekstagram`;
     window.util.modal.show(photoEditor);
     if (getCurrentEffect() === null) {
       window.util.element.hide(effectLevelPanel);

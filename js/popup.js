@@ -2,10 +2,6 @@
 
 (() => {
   const popupDisplayDestination = document.querySelector(`main`);
-  const statusValue = {
-    OK: `success`,
-    ERROR: `error`,
-  };
 
   const successMessageTemplate = document.querySelector(`#success`);
   const successMessageTemplateContent = successMessageTemplate.content.querySelector(`.success`);
@@ -18,21 +14,23 @@
   const popupErrorCloseBtn = newErrorPopup.querySelector(`.error__button`);
 
   function showPopup(status) {
-    if (status === statusValue.OK) {
-      insertPopup(newSuccessPopup);
+    if (status === `success`) {
+      insertPopup(popupDisplayDestination, newSuccessPopup);
       popupSuccessCloseBtn.addEventListener(`click`, onSuccessPopupCloseBtnPress);
       document.addEventListener(`keydown`, onSuccessPopupEscPress);
       newSuccessPopup.addEventListener(`click`, popupSuccessCloseHandler);
-    } else {
-      insertPopup(newErrorPopup);
+    } else if (status === `error`) {
+      insertPopup(popupDisplayDestination, newErrorPopup);
       popupErrorCloseBtn.addEventListener(`click`, onErrorPopupCloseBtnPress);
       document.addEventListener(`keydown`, onErrorPopupEscPress);
       newErrorPopup.addEventListener(`click`, popupErrorCloseHandler);
+    } else {
+      insertPopup(document.body, createErrorMesasge(status));
     }
   }
 
-  function insertPopup(popup) {
-    popupDisplayDestination.insertAdjacentElement(`afterbegin`, popup);
+  function insertPopup(dest, popup) {
+    dest.insertAdjacentElement(`afterbegin`, popup);
   }
 
   function closePopup(popup) {
@@ -82,15 +80,32 @@
   }
 
   function popupSuccessCloseHandler(evt) {
-    if (!evt.target.closest(`.${statusValue.OK}__inner`)) {
+    if (!evt.target.closest(`.success__inner`)) {
       closePopup(newSuccessPopup);
     }
   }
 
   function popupErrorCloseHandler(evt) {
-    if (!evt.target.closest(`.${statusValue.ERROR}__inner`)) {
+    if (!evt.target.closest(`.error__inner`)) {
       closePopup(newErrorPopup);
     }
+  }
+
+  function createErrorMesasge(errorMessage) {
+    const node = document.createElement(`div`);
+    node.style = `
+      z-index: 100;
+      position: fixed;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      padding: 5px;
+      text-align: center;
+      background-color: #ff0000;
+      font-size: 18px;
+      font-weight: bold;`;
+    node.textContent = errorMessage;
+    return node;
   }
 
   window.popup = {
