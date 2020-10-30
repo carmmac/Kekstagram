@@ -15,22 +15,22 @@
 
   function showPopup(status) {
     if (status === `success`) {
-      insertPopup(popupDisplayDestination, newSuccessPopup);
+      insertPopup(newSuccessPopup);
       popupSuccessCloseBtn.addEventListener(`click`, onSuccessPopupCloseBtnPress);
       document.addEventListener(`keydown`, onSuccessPopupEscPress);
       newSuccessPopup.addEventListener(`click`, popupSuccessCloseHandler);
     } else if (status === `error`) {
-      insertPopup(popupDisplayDestination, newErrorPopup);
+      insertPopup(newErrorPopup);
       popupErrorCloseBtn.addEventListener(`click`, onErrorPopupCloseBtnPress);
       document.addEventListener(`keydown`, onErrorPopupEscPress);
       newErrorPopup.addEventListener(`click`, popupErrorCloseHandler);
     } else {
-      insertPopup(document.body, createErrorMesasge(status));
-    }
+      insertPopup(createErrorMesasge(status));
+    } 
   }
 
-  function insertPopup(dest, popup) {
-    dest.insertAdjacentElement(`afterbegin`, popup);
+  function insertPopup(popup) {
+    popupDisplayDestination.insertAdjacentElement(`afterbegin`, popup);
   }
 
   function closePopup(popup) {
