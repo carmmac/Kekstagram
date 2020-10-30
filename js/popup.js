@@ -26,7 +26,7 @@
       newErrorPopup.addEventListener(`click`, popupErrorCloseHandler);
     } else {
       insertPopup(createErrorMesasge(status));
-    } 
+    }
   }
 
   function insertPopup(popup) {
