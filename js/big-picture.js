@@ -22,11 +22,11 @@
     bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
     insertBigPicComment(currentImg.comments);
     // Обработчик закрытия окна по по нажатию Esc
-    document.addEventListener(`keydown`, onBigPictureEscPress);
+    document.addEventListener(`keydown`, bigPictureEscPressHandler);
     // Обработчик закрытия окна по клику вне окна
     bigPicture.addEventListener(`click`, bigPictureCloseHandler);
     // Обработчик закрытия окна по кнопке "X"
-    bigPictureCloseBtn.addEventListener(`click`, onBigPictureCloseBtnPress);
+    bigPictureCloseBtn.addEventListener(`click`, bigPictureCloseBtnPressHandler);
   }
 
   // Функция наполнения комментария для полноэкранного фото
@@ -54,12 +54,12 @@
   }
 
   // Функция закрытия окна по кнопке Х
-  function onBigPictureCloseBtnPress() {
+  function bigPictureCloseBtnPressHandler() {
     closeBigPicture();
   }
 
   // Функция закрытия окна по нажатию Esc
-  function onBigPictureEscPress(evt) {
+  function bigPictureEscPressHandler(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
       closeBigPicture();
@@ -76,9 +76,9 @@
   // Функция закрытия окна полноэкранной фотографии
   function closeBigPicture() {
     window.util.modal.hide(bigPicture);
-    document.removeEventListener(`keydown`, onBigPictureEscPress);
+    document.removeEventListener(`keydown`, bigPictureEscPressHandler);
     bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
-    bigPictureCloseBtn.removeEventListener(`click`, onBigPictureCloseBtnPress);
+    bigPictureCloseBtn.removeEventListener(`click`, bigPictureCloseBtnPressHandler);
   }
 
 
