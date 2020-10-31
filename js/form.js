@@ -25,9 +25,9 @@
     // Обработчик изменения масштаба
     scalePanel.addEventListener(`click`, scaleChangeHandler);
     // Обработчик закрытия окна по кнопке "X"
-    photoEditorCloseBtn.addEventListener(`click`, onPhotoEditorCloseBtnPress);
+    photoEditorCloseBtn.addEventListener(`click`, photoEditorCloseBtnPressHandler);
     // Обработчик закрытия окна по по нажатию Esc
-    document.addEventListener(`keydown`, onPhotoEditorEscPress);
+    document.addEventListener(`keydown`, photoEditorEscPressHandler);
     // Обработчик переключения эффектов на изображении
     effectsPanel.addEventListener(`change`, effectChangeHandler);
     // Обработчик уровня эффекта
@@ -54,8 +54,8 @@
     commentInput.value = ``;
     window.util.modal.hide(photoEditor);
     removeEffect(getCurrentEffect());
-    document.removeEventListener(`keydown`, onPhotoEditorEscPress);
-    photoEditorCloseBtn.removeEventListener(`click`, onPhotoEditorCloseBtnPress);
+    document.removeEventListener(`keydown`, photoEditorEscPressHandler);
+    photoEditorCloseBtn.removeEventListener(`click`, photoEditorCloseBtnPressHandler);
     scalePanel.removeEventListener(`click`, scaleChangeHandler);
     effectsPanel.removeEventListener(`change`, effectChangeHandler);
     effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
@@ -68,12 +68,12 @@
   }
 
   // Функция закрытия редактора по кнопке Х
-  function onPhotoEditorCloseBtnPress() {
+  function photoEditorCloseBtnPressHandler() {
     closePhotoEditor();
   }
 
   // Функция закрытия редактора по нажатию Esc
-  function onPhotoEditorEscPress(evt) {
+  function photoEditorEscPressHandler(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
       closePhotoEditor();
@@ -200,7 +200,7 @@
       effectLevelPin.style.left = `${value}px`;
     }
 
-    function onMouseMove(moveEvt) {
+    function mouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
 
       let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
@@ -220,15 +220,15 @@
       effectLevelDepthBar.style.width = `${newEffectLevel}%`;
     }
 
-    function onMouseUp(upEvt) {
+    function mouseUpHandler(upEvt) {
       upEvt.preventDefault();
 
-      document.removeEventListener(`mousemove`, onMouseMove);
-      document.removeEventListener(`mouseup`, onMouseUp);
+      document.removeEventListener(`mousemove`, mouseMoveHandler);
+      document.removeEventListener(`mouseup`, mouseUpHandler);
     }
 
-    document.addEventListener(`mousemove`, onMouseMove);
-    document.addEventListener(`mouseup`, onMouseUp);
+    document.addEventListener(`mousemove`, mouseMoveHandler);
+    document.addEventListener(`mouseup`, mouseUpHandler);
   }
 
   function getEffectLevel(currLevel) {
@@ -302,11 +302,11 @@
   commentInput.maxLength = 140;
 
   function preventEscPress() {
-    document.removeEventListener(`keydown`, onPhotoEditorEscPress);
+    document.removeEventListener(`keydown`, photoEditorEscPressHandler);
   }
 
   function restoreEscPress() {
-    document.addEventListener(`keydown`, onPhotoEditorEscPress);
+    document.addEventListener(`keydown`, photoEditorEscPressHandler);
   }
 
   // Флаги фокуса поля для обработчика закрытия окна по Esc
