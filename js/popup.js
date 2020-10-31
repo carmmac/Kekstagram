@@ -18,14 +18,14 @@
     if (status === `success`) {
       activePopup = newSuccessPopup;
       insertPopup(activePopup);
-      popupSuccessCloseBtn.addEventListener(`click`, onSuccessPopupCloseBtnPress);
-      document.addEventListener(`keydown`, onPopupEscPress);
+      popupSuccessCloseBtn.addEventListener(`click`, successPopupCloseBtnPressHandler);
+      document.addEventListener(`keydown`, popupEscPressHandler);
       activePopup.addEventListener(`click`, popupSuccessCloseHandler);
     } else if (status === `error`) {
       activePopup = newErrorPopup;
       insertPopup(activePopup);
-      popupErrorCloseBtn.addEventListener(`click`, onErrorPopupCloseBtnPress);
-      document.addEventListener(`keydown`, onPopupEscPress);
+      popupErrorCloseBtn.addEventListener(`click`, errorPopupCloseBtnPressHandler);
+      document.addEventListener(`keydown`, popupEscPressHandler);
       activePopup.addEventListener(`click`, popupErrorCloseHandler);
     } else {
       insertPopup(createErrorMesasge(status));
@@ -40,25 +40,25 @@
   function closePopup(popup) {
     popup.remove();
     if (popup === newSuccessPopup) {
-      popupSuccessCloseBtn.removeEventListener(`click`, onSuccessPopupCloseBtnPress);
-      document.removeEventListener(`keydown`, onPopupEscPress);
+      popupSuccessCloseBtn.removeEventListener(`click`, successPopupCloseBtnPressHandler);
+      document.removeEventListener(`keydown`, popupEscPressHandler);
       popup.removeEventListener(`click`, popupSuccessCloseHandler);
     } else {
-      popupErrorCloseBtn.removeEventListener(`click`, onErrorPopupCloseBtnPress);
-      document.removeEventListener(`keydown`, onPopupEscPress);
+      popupErrorCloseBtn.removeEventListener(`click`, errorPopupCloseBtnPressHandler);
+      document.removeEventListener(`keydown`, popupEscPressHandler);
       popup.removeEventListener(`click`, popupErrorCloseHandler);
     }
   }
 
-  function onSuccessPopupCloseBtnPress() {
+  function successPopupCloseBtnPressHandler() {
     closePopup(newSuccessPopup);
   }
 
-  function onErrorPopupCloseBtnPress() {
+  function errorPopupCloseBtnPressHandler() {
     closePopup(newErrorPopup);
   }
 
-  function onPopupEscPress(evt) {
+  function popupEscPressHandler(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
       closePopup(activePopup);
