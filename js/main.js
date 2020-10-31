@@ -28,9 +28,9 @@
 
   // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
   // Обработчик загрузки нового изображения
-  photoUploader.addEventListener(`change`, changeUploadFormHandler);
+  photoUploader.addEventListener(`change`, uploadFormChangeHandler);
 
-  function changeUploadFormHandler() {
+  function uploadFormChangeHandler() {
     window.form.open();
   }
 })();
