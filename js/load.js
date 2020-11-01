@@ -2,14 +2,14 @@
 
 // ЗАГРУЗКА ДАННЫХ С СЕРВЕРА
 (() => {
-  const URL = `https://21.javascript.pages.academy/kekstagram/data`;
+  const URL = `https://21.javascript.pages.academy/kekstagram`;
   const TIMEOUT_IN_MS = 10000;
 
-  window.load = function (onSuccess, onError) {
+  function getResponse(onSuccess, onError) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
     xhr.timeout = TIMEOUT_IN_MS;
-    xhr.open(`GET`, URL, true);
+    xhr.open(`GET`, `${URL}/data`, true);
     xhr.addEventListener(`load`, function () {
       switch (xhr.status) {
         case 200:
@@ -35,5 +35,26 @@
       onError(`Запрос не успел выполниться за ${xhr.timeout / 1000} сек.`);
     });
     xhr.send();
+  }
+
+  function sendData(data, onSuccess, onError) {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = `json`;
+
+    xhr.addEventListener(`load`, function () {
+      if (xhr.status === 200) {
+        onSuccess();
+      } else {
+        onError();
+      }
+    });
+
+    xhr.open(`POST`, URL, true);
+    xhr.send(data);
+  }
+
+  window.load = {
+    get: getResponse,
+    post: sendData,
   };
 })();
