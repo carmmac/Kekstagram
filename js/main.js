@@ -7,23 +7,21 @@
 
   function successLoadHandler(resp) {
     photos = resp;
-    window.renderPhotos(resp);
+    window.renderPhotos(photos);
     window.filters.show();
 
-    imgFiltersForm.addEventListener(`click`, filterDebounceHandler);
+    imgFiltersForm.addEventListener(`click`, (evt) => {
+      const filteredImgs = getPhotos(evt);
+      window.renderPhotos(filteredImgs);
+    });
+  }
+
+  function getPhotos(evt) {
+    window.debounce(window.filters.get(evt.target.id, photos));
   }
 
   function errorLoadHandler(errorMessage) {
     window.popup.show(errorMessage);
-  }
-
-  function filterChangeHandler(evt) {
-    const filteredImgs = window.filters.get(evt.target.id, photos);
-    window.renderPhotos(filteredImgs);
-  }
-
-  function filterDebounceHandler(evt) {
-    window.debounce(filterChangeHandler(evt));
   }
 
   // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
