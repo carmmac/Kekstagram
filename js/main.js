@@ -1,6 +1,5 @@
 "use strict";
 (() => {
-
   const pictures = document.querySelector(`.pictures`);
   const photoUploader = document.querySelector(`.img-upload__input`);
   let photos = [];
@@ -43,7 +42,7 @@
   }
 
   function applyFilter(filter) {
-    const defPhotos = photos;
+    const defPhotos = photos.slice();
     const pics = pictures.querySelectorAll(`.picture`);
     for (let pic of pics) {
       pic.parentNode.removeChild(pic);
