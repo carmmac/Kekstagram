@@ -11,13 +11,9 @@
     window.filters.show();
 
     imgFiltersForm.addEventListener(`click`, (evt) => {
-      const filteredImgs = getPhotos(evt);
-      window.renderPhotos(filteredImgs);
+      const filteredImgs = window.filters.get(evt.target.id, photos);
+      window.debounce(window.renderPhotos(filteredImgs));
     });
-  }
-
-  function getPhotos(evt) {
-    window.debounce(window.filters.get(evt.target.id, photos));
   }
 
   function errorLoadHandler(errorMessage) {
