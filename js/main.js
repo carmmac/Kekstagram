@@ -38,7 +38,7 @@
   }
 
   function filterChangeHandler(evt) {
-    applyFilter(evt.target.id);
+    window.debounce(applyFilter(evt.target.id));
   }
 
   function applyFilter(filter) {
