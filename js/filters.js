@@ -24,8 +24,16 @@
     }
   }
 
+  function changeActiveFilterBtn(button) {
+    const activeFilteClassName = `img-filters__button--active`;
+    const currentActiveBtn = imgFilters.querySelector(`.${activeFilteClassName}`);
+    currentActiveBtn.classList.remove(activeFilteClassName);
+    button.classList.add(activeFilteClassName);
+  }
+
   window.filters = {
     show: showFilterPanel,
     get: getFilteredPhotos,
+    changeButton: changeActiveFilterBtn,
   };
 })();
