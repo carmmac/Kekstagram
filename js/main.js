@@ -9,10 +9,10 @@
     photos = resp;
     window.renderPhotos(photos);
     window.filters.show();
-
+    const debounceRenderPhotos = window.debounce((images) => window.renderPhotos(images));
     imgFiltersForm.addEventListener(`click`, (evt) => {
       const filteredImgs = window.filters.get(evt.target.id, photos);
-      window.debounce(window.renderPhotos(filteredImgs));
+      debounceRenderPhotos(filteredImgs);
     });
   }
 
