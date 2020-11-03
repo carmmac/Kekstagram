@@ -9,11 +9,19 @@
     photos = resp;
     window.renderPhotos(photos);
     window.filters.show();
-
+    const debounceRenderPhotos = window.debounce((images) => window.renderPhotos(images));
     imgFiltersForm.addEventListener(`click`, (evt) => {
+      changeActiveFilterBtn(evt.target);
       const filteredImgs = window.filters.get(evt.target.id, photos);
-      window.debounce(window.renderPhotos(filteredImgs));
+      debounceRenderPhotos(filteredImgs);
     });
+  }
+
+  function changeActiveFilterBtn(button) {
+    const activeFilteClassName = `img-filters__button--active`;
+    const currentActiveBtn = imgFiltersForm.querySelector(`.${activeFilteClassName}`);
+    currentActiveBtn.classList.remove(activeFilteClassName);
+    button.classList.add(activeFilteClassName);
   }
 
   function errorLoadHandler(errorMessage) {
