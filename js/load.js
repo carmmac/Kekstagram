@@ -4,6 +4,12 @@
 (() => {
   const URL = `https://21.javascript.pages.academy/kekstagram`;
   const TIMEOUT_IN_MS = 10000;
+  const StatusCode = {
+    OK: 200,
+    BAD_REQUEST: 400,
+    NOT_AUTH: 401,
+    NOT_FOUND: 404,
+  };
 
   function getResponse(onSuccess, onError) {
     const xhr = new XMLHttpRequest();
@@ -12,16 +18,16 @@
     xhr.open(`GET`, `${URL}/data`, true);
     xhr.addEventListener(`load`, function () {
       switch (xhr.status) {
-        case 200:
+        case StatusCode.OK:
           onSuccess(xhr.response);
           break;
-        case 400:
+        case StatusCode.BAD_REQUEST:
           onError(`Неверный запрос`);
           break;
-        case 401:
+        case StatusCode.NOT_AUTH:
           onError(`Пользователь не авторизован`);
           break;
-        case 404:
+        case StatusCode.NOT_FOUND:
           onError(`Ошибка загрузки данных`);
           break;
         default:
@@ -40,9 +46,8 @@
   function sendData(data, onSuccess, onError) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
-
     xhr.addEventListener(`load`, function () {
-      if (xhr.status === 200) {
+      if (xhr.status === StatusCode.OK) {
         onSuccess();
       } else {
         onError();

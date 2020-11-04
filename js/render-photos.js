@@ -10,9 +10,9 @@
     }
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < imgs.length; i++) {
-      let img = window.picture.get(imgs[i], i);
+      let img = window.picture(imgs[i], i);
       img.addEventListener(`click`, () => {
-        window.bigPicture.show(imgs[i]);
+        window.bigPicture(imgs[i]);
       });
       fragment.appendChild(img);
     }

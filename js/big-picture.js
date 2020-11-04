@@ -14,25 +14,6 @@
   const VISIBLE_COMMENTS_NUM = 5;
   let comments = [];
 
-  // Функция отображения окна с полноэкранной фотографией
-  function showBigPicture(currentImg) {
-    window.util.modal.show(bigPicture);
-    bigPictureImg.src = currentImg.url;
-    bigPictureLikesCount.textContent = currentImg.likes;
-    bigPictureCommentsCount.textContent = currentImg.comments.length;
-    bigPictureDescription.textContent = currentImg.description;
-    bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
-    comments = currentImg.comments;
-    insertBigPicComment(comments);
-    toggleCommentsBtnVisibility(comments);
-    // Обработчик закрытия окна по по нажатию Esc
-    document.addEventListener(`keydown`, bigPictureEscPressHandler);
-    // Обработчик закрытия окна по клику вне окна
-    bigPicture.addEventListener(`click`, bigPictureCloseHandler);
-    // Обработчик закрытия окна по кнопке "X"
-    bigPictureCloseBtn.addEventListener(`click`, bigPictureCloseBtnPressHandler);
-  }
-
   function commentsLoadHandler() {
     renderComments(bigPictureComments.children.length);
     toggleCommentsBtnVisibility();
@@ -106,8 +87,18 @@
     bigPictureCloseBtn.removeEventListener(`click`, bigPictureCloseBtnPressHandler);
   }
 
-
-  window.bigPicture = {
-    show: showBigPicture,
+  window.bigPicture = function (currentImg) {
+    window.util.modal.show(bigPicture);
+    bigPictureImg.src = currentImg.url;
+    bigPictureLikesCount.textContent = currentImg.likes;
+    bigPictureCommentsCount.textContent = currentImg.comments.length;
+    bigPictureDescription.textContent = currentImg.description;
+    bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
+    comments = currentImg.comments;
+    insertBigPicComment(comments);
+    toggleCommentsBtnVisibility(comments);
+    document.addEventListener(`keydown`, bigPictureEscPressHandler);
+    bigPicture.addEventListener(`click`, bigPictureCloseHandler);
+    bigPictureCloseBtn.addEventListener(`click`, bigPictureCloseBtnPressHandler);
   };
 })();

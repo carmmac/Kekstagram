@@ -3,6 +3,10 @@
 (() => {
   const imgFilters = document.querySelector(`.img-filters`);
   const RANDOW_IMG_NUM = 10;
+  const FilterName = {
+    RANDOM: `filter-random`,
+    DISCUSSED: `filter-discussed`,
+  };
   let currentActiveBtn;
 
   function showFilterPanel() {
@@ -13,10 +17,10 @@
     const filter = currentActiveBtn.id;
     const defaultPhotos = arr.slice();
     switch (filter) {
-      case `filter-random`:
+      case FilterName.RANDOM:
         const randomPhotos = window.util.shuffle(defaultPhotos).slice(RANDOW_IMG_NUM * -1);
         return randomPhotos;
-      case `filter-discussed`:
+      case FilterName.DISCUSSED:
         const topComment = defaultPhotos.sort((a, b) => {
           return b.comments.length - a.comments.length;
         });

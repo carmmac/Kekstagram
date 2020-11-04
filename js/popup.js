@@ -2,36 +2,19 @@
 
 (() => {
   const popupDisplayDestination = document.querySelector(`main`);
-
   const successMessageTemplate = document.querySelector(`#success`);
   const successMessageTemplateContent = successMessageTemplate.content.querySelector(`.success`);
   const newSuccessPopup = successMessageTemplateContent.cloneNode(true);
   const popupSuccessCloseBtn = newSuccessPopup.querySelector(`.success__button`);
-
   const errorMessageTemplate = document.querySelector(`#error`);
   const errorMessageTemplateContent = errorMessageTemplate.content.querySelector(`.error`);
   const newErrorPopup = errorMessageTemplateContent.cloneNode(true);
   const popupErrorCloseBtn = newErrorPopup.querySelector(`.error__button`);
   let activePopup;
-
-  function showPopup(status) {
-    if (status === `success`) {
-      activePopup = newSuccessPopup;
-      insertPopup(activePopup);
-      popupSuccessCloseBtn.addEventListener(`click`, successPopupCloseBtnPressHandler);
-      document.addEventListener(`keydown`, popupEscPressHandler);
-      activePopup.addEventListener(`click`, popupSuccessCloseHandler);
-    } else if (status === `error`) {
-      activePopup = newErrorPopup;
-      insertPopup(activePopup);
-      popupErrorCloseBtn.addEventListener(`click`, errorPopupCloseBtnPressHandler);
-      document.addEventListener(`keydown`, popupEscPressHandler);
-      activePopup.addEventListener(`click`, popupErrorCloseHandler);
-    } else {
-      insertPopup(createErrorMesasge(status));
-    }
-    return activePopup;
-  }
+  const StatusValue = {
+    SUCCESS: `success`,
+    ERROR: `error`,
+  };
 
   function insertPopup(popup) {
     popupDisplayDestination.insertAdjacentElement(`afterbegin`, popup);
@@ -65,26 +48,6 @@
     }
   }
 
-  // function onSuccessPopupEscPress(evt) {
-  //   if (evt.key === `Escape`) {
-  //     evt.preventDefault();
-  //     closePopup(newSuccessPopup);
-  //   }
-  // }
-
-  // function onErrorPopupEscPress(evt) {
-  //   if (evt.key === `Escape`) {
-  //     evt.preventDefault();
-  //     closePopup(newErrorPopup);
-  //   }
-  // }
-
-  // function OnDocumentClick(evt) {
-  //   if (!evt.target.closest(`.popup`)) {
-  //     closePopup(activePopup);
-  //   }
-  // }
-
   function popupSuccessCloseHandler(evt) {
     if (!evt.target.closest(`.success__inner`)) {
       closePopup(newSuccessPopup);
@@ -114,7 +77,22 @@
     return node;
   }
 
-  window.popup = {
-    show: showPopup,
+  window.popup = function (status) {
+    if (status === StatusValue.SUCCESS) {
+      activePopup = newSuccessPopup;
+      insertPopup(activePopup);
+      popupSuccessCloseBtn.addEventListener(`click`, successPopupCloseBtnPressHandler);
+      document.addEventListener(`keydown`, popupEscPressHandler);
+      activePopup.addEventListener(`click`, popupSuccessCloseHandler);
+    } else if (status === StatusValue.ERROR) {
+      activePopup = newErrorPopup;
+      insertPopup(activePopup);
+      popupErrorCloseBtn.addEventListener(`click`, errorPopupCloseBtnPressHandler);
+      document.addEventListener(`keydown`, popupEscPressHandler);
+      activePopup.addEventListener(`click`, popupErrorCloseHandler);
+    } else {
+      insertPopup(createErrorMesasge(status));
+    }
+    return activePopup;
   };
 })();

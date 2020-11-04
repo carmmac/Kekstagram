@@ -83,10 +83,10 @@
   function submitForm() {
     window.load.post(new FormData(photoUploadForm), () => {
       closePhotoEditor();
-      window.popup.show(`success`);
+      window.popup(`success`);
     }, () => {
       closePhotoEditor();
-      window.popup.show(`error`);
+      window.popup(`error`);
     });
   }
 
@@ -192,26 +192,21 @@
   // Функция изменения глубины эффекта
   function effectLevelChangeHandler(evt) {
     evt.preventDefault();
-
     const maxEffectLevel = effectLevelBar.offsetWidth;
     let startCoords = evt.clientX;
-
     function moveAt(value) {
       effectLevelPin.style.left = `${value}px`;
     }
 
     function mouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
-
       let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
       effectLevelInput.value = newEffectLevel;
       const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
       applyEffect(currentFilter.value, newEffectLevel);
-
       const shift = startCoords - moveEvt.clientX;
       startCoords = moveEvt.clientX;
       let moveValue = effectLevelPin.offsetLeft - shift;
-
       if (moveValue > 0 && moveValue < (maxEffectLevel)) {
         moveAt((moveValue));
       } else {
@@ -222,7 +217,6 @@
 
     function mouseUpHandler(upEvt) {
       upEvt.preventDefault();
-
       document.removeEventListener(`mousemove`, mouseMoveHandler);
       document.removeEventListener(`mouseup`, mouseUpHandler);
     }
@@ -308,16 +302,6 @@
   function restoreEscPress() {
     document.addEventListener(`keydown`, photoEditorEscPressHandler);
   }
-
-  // Флаги фокуса поля для обработчика закрытия окна по Esc
-  // commentInput.onfocus = () => {
-  //   commentInput.focused = true;
-  // };
-
-  // commentInput.onblur = () => {
-  //   commentInput.focused = false;
-  // };
-
 
   window.form = {
     open: openEditor,

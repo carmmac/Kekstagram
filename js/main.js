@@ -18,11 +18,9 @@
   }
 
   function errorLoadHandler(errorMessage) {
-    window.popup.show(errorMessage);
+    window.popup(errorMessage);
   }
 
-  // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
-  // Обработчик загрузки нового изображения
   photoUploader.addEventListener(`change`, uploadFormChangeHandler);
 
   function uploadFormChangeHandler() {
