@@ -1,30 +1,25 @@
 "use strict";
 (() => {
-
-  const pictures = document.querySelector(`.pictures`);
   const photoUploader = document.querySelector(`.img-upload__input`);
-
-  function renderPhotos(imgs) {
-    const fragment = document.createDocumentFragment();
-    for (let i = 0; i < imgs.length; i++) {
-      let img = window.picture.get(imgs[i], i);
-      img.addEventListener(`click`, () => {
-        window.bigPicture.show(imgs[i]);
-      });
-      fragment.appendChild(img);
-    }
-    return pictures.appendChild(fragment);
-  }
+  const imgFiltersForm = document.querySelector(`.img-filters__form`);
+  let photos = [];
+  window.load.get(successLoadHandler, errorLoadHandler);
 
   function successLoadHandler(resp) {
-    renderPhotos(resp);
+    photos = resp;
+    window.renderPhotos(photos);
+    window.filters.show();
+    const debounceRenderPhotos = window.debounce((images) => window.renderPhotos(images));
+    imgFiltersForm.addEventListener(`click`, (evt) => {
+      window.filters.changeButton(evt.target);
+      const filteredImgs = window.filters.get(evt.target.id, photos);
+      debounceRenderPhotos(filteredImgs);
+    });
   }
 
   function errorLoadHandler(errorMessage) {
     window.popup.show(errorMessage);
   }
-
-  window.load.get(successLoadHandler, errorLoadHandler);
 
   // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
   // Обработчик загрузки нового изображения
