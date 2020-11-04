@@ -10,6 +10,9 @@
   const bigPictureComment = bigPictureComments.querySelector(`.social__comment`);
   const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
   const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
+  const bigPictureCommentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
+  const VISIBLE_COMMENTS_NUM = 5;
+  let comments = [];
 
   // Функция отображения окна с полноэкранной фотографией
   function showBigPicture(currentImg) {
@@ -19,14 +22,30 @@
     bigPictureCommentsCount.textContent = currentImg.comments.length;
     bigPictureDescription.textContent = currentImg.description;
     bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
-    bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
-    insertBigPicComment(currentImg.comments);
+    comments = currentImg.comments;
+    insertBigPicComment(comments);
+    toggleCommentsBtnVisibility(comments);
     // Обработчик закрытия окна по по нажатию Esc
     document.addEventListener(`keydown`, bigPictureEscPressHandler);
     // Обработчик закрытия окна по клику вне окна
     bigPicture.addEventListener(`click`, bigPictureCloseHandler);
     // Обработчик закрытия окна по кнопке "X"
     bigPictureCloseBtn.addEventListener(`click`, bigPictureCloseBtnPressHandler);
+  }
+
+  function commentsLoadHandler() {
+    renderComments(bigPictureComments.children.length);
+    toggleCommentsBtnVisibility();
+  }
+
+  function toggleCommentsBtnVisibility() {
+    if (bigPictureComments.children.length < VISIBLE_COMMENTS_NUM || bigPictureComments.children.length === comments.length) {
+      window.util.element.hide(bigPictureCommentsLoadBtn);
+      bigPictureCommentsLoadBtn.removeEventListener(`click`, commentsLoadHandler);
+    } else {
+      window.util.element.show(bigPictureCommentsLoadBtn);
+      bigPictureCommentsLoadBtn.addEventListener(`click`, commentsLoadHandler);
+    }
   }
 
   // Функция наполнения комментария для полноэкранного фото
@@ -39,11 +58,17 @@
   }
 
   // Наполнение комментариев из массива для полноэкранного фото
-  function insertBigPicComment(comments) {
+  function insertBigPicComment() {
     removeBigPicComments();
+    renderComments();
+  }
+
+  function renderComments(i = 0) {
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < comments.length; i++) {
+    const j = i;
+    while (i < (j + VISIBLE_COMMENTS_NUM) && i < comments.length) {
       fragment.appendChild(getBigPicComment(comments[i]));
+      i++;
     }
     return bigPictureComments.appendChild(fragment);
   }
