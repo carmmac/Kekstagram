@@ -3,12 +3,14 @@
 (() => {
   const imgFilters = document.querySelector(`.img-filters`);
   const RANDOW_IMG_NUM = 10;
+  let currentActiveBtn;
 
   function showFilterPanel() {
     imgFilters.classList.remove(`img-filters--inactive`);
   }
 
-  function getFilteredPhotos(filter, arr) {
+  function getFilteredPhotos(arr) {
+    const filter = currentActiveBtn.id;
     const defaultPhotos = arr.slice();
     switch (filter) {
       case `filter-random`:
@@ -26,9 +28,10 @@
 
   function changeActiveFilterBtn(button) {
     const activeFilteClassName = `img-filters__button--active`;
-    const currentActiveBtn = imgFilters.querySelector(`.${activeFilteClassName}`);
+    currentActiveBtn = imgFilters.querySelector(`.${activeFilteClassName}`);
     currentActiveBtn.classList.remove(activeFilteClassName);
     button.classList.add(activeFilteClassName);
+    currentActiveBtn = button;
   }
 
   window.filters = {

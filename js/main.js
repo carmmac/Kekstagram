@@ -12,7 +12,7 @@
     const debounceRenderPhotos = window.debounce((images) => window.renderPhotos(images));
     imgFiltersForm.addEventListener(`click`, (evt) => {
       window.filters.changeButton(evt.target);
-      const filteredImgs = window.filters.get(evt.target.id, photos);
+      const filteredImgs = window.filters.get(photos);
       debounceRenderPhotos(filteredImgs);
     });
   }
