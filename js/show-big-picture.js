@@ -13,7 +13,6 @@
   const bigPictureCommentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
   const VISIBLE_COMMENTS_NUM = 5;
 
-  // Функция наполнения комментария для полноэкранного фото
   function getBigPicComment(comment) {
     const newBigPicComment = bigPictureComment.cloneNode(true);
     newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
@@ -22,7 +21,6 @@
     return newBigPicComment;
   }
 
-  // Наполнение комментариев из массива для полноэкранного фото
   function setRenderCommentLogic(comments) {
     bigPictureComments.innerHTML = ``;
     const totalCommentsNumber = comments.length;
