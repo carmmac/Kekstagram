@@ -50,7 +50,7 @@
     document.addEventListener(`keydown`, photoEditorEscPressHandler);
     effectsPanel.addEventListener(`change`, effectChangeHandler);
     effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
-    hashtagInput.addEventListener(`input`, checkHashtagValidity);
+    hashtagInput.addEventListener(`input`, hashtagValidityHandler);
     commentInput.addEventListener(`focusin`, preventEscPress);
     commentInput.addEventListener(`focusout`, restoreEscPress);
     hashtagInput.addEventListener(`focusin`, preventEscPress);
@@ -72,7 +72,7 @@
     scalePanel.removeEventListener(`click`, scaleChangeHandler);
     effectsPanel.removeEventListener(`change`, effectChangeHandler);
     effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
-    hashtagInput.removeEventListener(`input`, checkHashtagValidity);
+    hashtagInput.removeEventListener(`input`, hashtagValidityHandler);
     commentInput.removeEventListener(`focusin`, preventEscPress);
     commentInput.removeEventListener(`focusout`, restoreEscPress);
     hashtagInput.removeEventListener(`focusin`, preventEscPress);
@@ -230,24 +230,40 @@
     }
   }
 
+  function hashtagValidityHandler(evt) {
+    checkHashtagValidity(evt);
+  }
+
   function checkHashtagValidity(evt) {
     let hashtags = evt.target.value.split(/ +/);
     for (let i = 0; i < hashtags.length; i++) {
       if ((!regExp.test(hashtags[i])) && (hashtags[i].length !== 0)) {
         hashtagInput.setCustomValidity(`Неверный формат хэштэга ${hashtags[i]} !`);
+        setInvalidInputStyle(hashtagInput);
       } else if ((hashtags[i].length > MAX_HATSHTAG_LENGTH)) {
         hashtagInput.setCustomValidity(`Хэштэг ${hashtags[i]} слишком длинный!`);
+        setInvalidInputStyle(hashtagInput);
       } else if (hashtags.length > MAX_HASHTAG_NUM) {
         hashtagInput.setCustomValidity(`Слишком много хэштэгов!`);
+        setInvalidInputStyle(hashtagInput);
       } else if (checkIdenticalHashtags(hashtags)) {
         hashtagInput.setCustomValidity(`Не используйте одинаковые хэштэги!`);
+        setInvalidInputStyle(hashtagInput);
       } else if (checkEmptyHashtag(hashtags)) {
         hashtagInput.setCustomValidity(`Не используйте пустые хэштэги!`);
+        setInvalidInputStyle(hashtagInput);
       } else {
         hashtagInput.setCustomValidity(``);
+        hashtagInput.style.border = ``;
+        hashtagInput.style.padding = ``;
       }
       hashtagInput.reportValidity();
     }
+  }
+
+  function setInvalidInputStyle(input) {
+    input.style.border = `5px solid red`;
+    input.style.padding = `2px 7px`;
   }
 
   function checkIdenticalHashtags(arr) {
