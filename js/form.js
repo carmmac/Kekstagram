@@ -7,6 +7,7 @@
   const photoEditor = document.querySelector(`.img-upload__overlay`);
   const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
   const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
+  const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
   // ИЗМЕНЕНИЕ МАСШТАБА ИЗОБРАЖЕНИЯ
   const scalePanel = photoEditor.querySelector(`.img-upload__scale`);
   const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
@@ -40,6 +41,7 @@
   commentInput.maxLength = 140;
 
   function openEditor() {
+    showCustomPhoto();
     window.util.modal.show(photoEditor);
     if (getCurrentEffect() === null) {
       window.util.element.hide(effectLevelPanel);
@@ -61,6 +63,7 @@
   function closePhotoEditor() {
     photoUploader.value = ``;
     previewImg.style.transform = ``;
+    previewImg.style.width = ``;
     effectsPanel.querySelector(`#effect-none`).checked = true;
     effectLevelDepthBar.style.width = ``;
     hashtagInput.value = ``;
@@ -104,6 +107,23 @@
   function successPostHandler(evt) {
     submitForm();
     evt.preventDefault();
+  }
+
+  function showCustomPhoto() {
+    const file = photoUploader.files[0];
+    const fileName = file.name.toLowerCase();
+    const match = FILE_TYPES.some((fileType) => {
+      return fileName.endsWith(fileType);
+    });
+
+    if (match) {
+      const reader = new FileReader();
+      reader.addEventListener(`load`, () => {
+        previewImg.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+    }
+    previewImg.style.width = `100%`;
   }
 
   function changeImgScale(value) {
