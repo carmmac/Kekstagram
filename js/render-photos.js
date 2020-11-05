@@ -12,7 +12,7 @@
     for (let i = 0; i < imgs.length; i++) {
       let img = window.picture(imgs[i], i);
       img.addEventListener(`click`, () => {
-        window.bigPicture(imgs[i]);
+        window.showBigPicture(imgs[i]);
       });
       fragment.appendChild(img);
     }

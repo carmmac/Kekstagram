@@ -12,22 +12,6 @@
   const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
   const bigPictureCommentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
   const VISIBLE_COMMENTS_NUM = 5;
-  let comments = [];
-
-  function commentsLoadHandler() {
-    renderComments(bigPictureComments.children.length);
-    toggleCommentsBtnVisibility();
-  }
-
-  function toggleCommentsBtnVisibility() {
-    if (bigPictureComments.children.length < VISIBLE_COMMENTS_NUM || bigPictureComments.children.length === comments.length) {
-      window.util.element.hide(bigPictureCommentsLoadBtn);
-      bigPictureCommentsLoadBtn.removeEventListener(`click`, commentsLoadHandler);
-    } else {
-      window.util.element.show(bigPictureCommentsLoadBtn);
-      bigPictureCommentsLoadBtn.addEventListener(`click`, commentsLoadHandler);
-    }
-  }
 
   // Функция наполнения комментария для полноэкранного фото
   function getBigPicComment(comment) {
@@ -39,32 +23,45 @@
   }
 
   // Наполнение комментариев из массива для полноэкранного фото
-  function insertBigPicComment() {
-    removeBigPicComments();
-    renderComments();
+  function setRenderCommentLogic(comments) {
+    bigPictureComments.innerHTML = ``;
+    const totalCommentsNumber = comments.length;
+    let renderedCommentsNumber = totalCommentsNumber >= VISIBLE_COMMENTS_NUM ? VISIBLE_COMMENTS_NUM : totalCommentsNumber;
+
+    function commentsLoadHandler() {
+      const nonRenderedCommentsNumber = totalCommentsNumber - renderedCommentsNumber;
+      const nextRenderedCommentsNumber = renderedCommentsNumber +
+        (nonRenderedCommentsNumber >= VISIBLE_COMMENTS_NUM ? VISIBLE_COMMENTS_NUM : nonRenderedCommentsNumber);
+      renderComments(comments.slice(renderedCommentsNumber, nextRenderedCommentsNumber));
+      renderedCommentsNumber = nextRenderedCommentsNumber;
+      toggleCommentsBtnVisibility();
+    }
+
+    function toggleCommentsBtnVisibility() {
+      if (totalCommentsNumber <= renderedCommentsNumber) {
+        window.util.element.hide(bigPictureCommentsLoadBtn);
+        bigPictureCommentsLoadBtn.removeEventListener(`click`, commentsLoadHandler);
+      } else {
+        window.util.element.show(bigPictureCommentsLoadBtn);
+        bigPictureCommentsLoadBtn.addEventListener(`click`, commentsLoadHandler);
+      }
+    }
+    renderComments(comments.slice(0, renderedCommentsNumber));
+    toggleCommentsBtnVisibility();
   }
 
-  function renderComments(i = 0) {
+  function renderComments(comments) {
     const fragment = document.createDocumentFragment();
-    const j = i;
-    while (i < (j + VISIBLE_COMMENTS_NUM) && i < comments.length) {
+    for (let i = 0; i < comments.length; i++) {
       fragment.appendChild(getBigPicComment(comments[i]));
-      i++;
     }
     return bigPictureComments.appendChild(fragment);
   }
 
-  // Функцуия очистки комментариев для bigPicture
-  function removeBigPicComments() {
-    bigPictureComments.innerHTML = ``;
-  }
-
-  // Функция закрытия окна по кнопке Х
   function bigPictureCloseBtnPressHandler() {
     closeBigPicture();
   }
 
-  // Функция закрытия окна по нажатию Esc
   function bigPictureEscPressHandler(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
@@ -72,14 +69,12 @@
     }
   }
 
-  // Функция закрытия окна по клику вне окна
   function bigPictureCloseHandler(evt) {
     if (!evt.target.closest(`.big-picture__preview`)) {
       closeBigPicture();
     }
   }
 
-  // Функция закрытия окна полноэкранной фотографии
   function closeBigPicture() {
     window.util.modal.hide(bigPicture);
     document.removeEventListener(`keydown`, bigPictureEscPressHandler);
@@ -87,16 +82,14 @@
     bigPictureCloseBtn.removeEventListener(`click`, bigPictureCloseBtnPressHandler);
   }
 
-  window.bigPicture = function (currentImg) {
+  window.showBigPicture = function (currentImg) {
     window.util.modal.show(bigPicture);
     bigPictureImg.src = currentImg.url;
     bigPictureLikesCount.textContent = currentImg.likes;
     bigPictureCommentsCount.textContent = currentImg.comments.length;
     bigPictureDescription.textContent = currentImg.description;
     bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
-    comments = currentImg.comments;
-    insertBigPicComment(comments);
-    toggleCommentsBtnVisibility(comments);
+    setRenderCommentLogic(currentImg.comments);
     document.addEventListener(`keydown`, bigPictureEscPressHandler);
     bigPicture.addEventListener(`click`, bigPictureCloseHandler);
     bigPictureCloseBtn.addEventListener(`click`, bigPictureCloseBtnPressHandler);
