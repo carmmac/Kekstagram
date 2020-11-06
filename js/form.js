@@ -106,6 +106,10 @@
     evt.preventDefault();
   }
 
+  function setChangeHandler(cb) {
+    photoUploader.addEventListener(`change`, cb);
+  }
+
   function changeImgScale(value) {
     previewImg.style.transform = `scale(${value / 100})`;
   }
@@ -288,6 +292,7 @@
   }
 
   window.form = {
+    setHandler: setChangeHandler,
     open: openEditor,
     close: closePhotoEditor,
   };

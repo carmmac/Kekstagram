@@ -1,6 +1,5 @@
 "use strict";
 (() => {
-  const photoUploader = document.querySelector(`.img-upload__input`);
   const imgFiltersForm = document.querySelector(`.img-filters__form`);
   let photos = [];
   window.load.get(successLoadHandler, errorLoadHandler);
@@ -21,7 +20,7 @@
     window.popup(errorMessage);
   }
 
-  photoUploader.addEventListener(`change`, uploadFormChangeHandler);
+  window.form.setHandler(uploadFormChangeHandler);
 
   function uploadFormChangeHandler() {
     window.form.open();
