@@ -11,7 +11,7 @@
   let currentActiveBtn;
 
   function setFiltersChangeHandler(cb, photos) {
-    imgFiltersForm.addEventListener(`click`, function (evt) {
+    imgFiltersForm.addEventListener(`click`, (evt) => {
       changeActiveFilterBtn(evt.target);
       const filteredImgs = getFilteredPhotos(photos);
       cb(filteredImgs);
