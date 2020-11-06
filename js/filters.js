@@ -2,12 +2,21 @@
 
 (() => {
   const imgFilters = document.querySelector(`.img-filters`);
+  const imgFiltersForm = imgFilters.querySelector(`.img-filters__form`);
   const RANDOW_IMG_NUM = 10;
   const FilterName = {
     RANDOM: `filter-random`,
     DISCUSSED: `filter-discussed`,
   };
   let currentActiveBtn;
+
+  function setFiltersChangeHandler(cb, photos) {
+    imgFiltersForm.addEventListener(`click`, function (evt) {
+      changeActiveFilterBtn(evt.target);
+      const filteredImgs = getFilteredPhotos(photos);
+      cb(filteredImgs);
+    });
+  }
 
   function showFilterPanel() {
     imgFilters.classList.remove(`img-filters--inactive`);
@@ -39,8 +48,7 @@
   }
 
   window.filters = {
+    setHandler: setFiltersChangeHandler,
     show: showFilterPanel,
-    get: getFilteredPhotos,
-    changeButton: changeActiveFilterBtn,
   };
 })();
