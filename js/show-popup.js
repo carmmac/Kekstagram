@@ -76,7 +76,7 @@ function createErrorMesasge(errorMessage) {
   return node;
 }
 
-window.popup = function (status) {
+window.showPopup = function (status) {
   if (status === StatusValue.SUCCESS) {
     activePopup = newSuccessPopup;
     insertPopup(activePopup);

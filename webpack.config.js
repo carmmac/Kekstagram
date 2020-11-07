@@ -10,7 +10,7 @@ module.exports = {
     "./js/load.js",
     "./js/filters.js",
     "./js/render-photos.js",
-    "./js/popup.js",
+    "./js/show-popup.js",
     "./js/main.js",
   ],
   output: {

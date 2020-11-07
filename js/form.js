@@ -93,10 +93,10 @@ function photoEditorEscPressHandler(evt) {
 function submitForm() {
   window.load.post(new FormData(photoUploadForm), () => {
     closePhotoEditor();
-    window.popup(`success`);
+    window.showPopup(`success`);
   }, () => {
     closePhotoEditor();
-    window.popup(`error`);
+    window.showPopup(`error`);
   });
 }
 
