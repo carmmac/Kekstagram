@@ -2,13 +2,6 @@
 
 // ОБЩИЕ УТИЛИТЫ
 (() => {
-
-  // Рандомайзер чисел
-  function getRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  // Перемешивание массива
   function shuffleArr(arr) {
     let j;
     let temp;
@@ -21,13 +14,11 @@
     return arr;
   }
 
-  // Универсальная функция открытия модалки
   function showModalWindow(elem) {
     elem.classList.remove(`hidden`);
     document.body.classList.add(`modal-open`);
   }
 
-  // Универсальная функция закрытия модалки
   function hideModalWindow(elem) {
     elem.classList.add(`hidden`);
     document.body.classList.remove(`modal-open`);
@@ -42,7 +33,6 @@
   }
 
   window.util = {
-    random: getRandomNumber,
     shuffle: shuffleArr,
     modal: {
       show: showModalWindow,

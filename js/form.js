@@ -1,50 +1,62 @@
 "use strict";
 
 (() => {
-  // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
+  const INIT_SCALE_VALUE = 100;
+  const SCALE_CHANGE_STEP = 25;
+  const INITIAL_EFFECT_LVL = 100;
+  const MIN_HATSHTAG_LENGTH = 1;
+  const MAX_HATSHTAG_LENGTH = 20;
+  const MAX_HASHTAG_NUM = 5;
+
   const photoUploadForm = document.querySelector(`.img-upload__form`);
   const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
   const photoEditor = document.querySelector(`.img-upload__overlay`);
   const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
   const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
 
-  // ИЗМЕНЕНИЕ МАСШТАБА ИЗОБРАЖЕНИЯ
   const scalePanel = photoEditor.querySelector(`.img-upload__scale`);
   const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
   const scaleValueField = photoEditor.querySelector(`.scale__control--value`);
-  const INIT_SCALE_VALUE = 100;
-  const SCALE_CHANGE_STEP = 25;
 
-  // Функция открытия окна редактора изображения
+  const effectsPanel = photoEditor.querySelector(`.effects__list`);
+  const effectName = {
+    chrome: `grayscale`,
+    sepia: `sepia`,
+    marvin: `invert`,
+    phobos: `blur`,
+    heat: `brightness`,
+  };
+  const effectLevelPanel = photoEditor.querySelector(`.img-upload__effect-level`);
+  const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
+  const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
+  const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
+  const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
+
+  const hashtagInput = photoEditor.querySelector(`.text__hashtags`);
+  const regExp = /^#[a-zA-Zа-яА-Я\d]+$/;
+
+  const commentInput = photoEditor.querySelector(`.text__description`);
+  commentInput.maxLength = 140;
+
   function openEditor() {
     window.util.modal.show(photoEditor);
     if (getCurrentEffect() === null) {
       window.util.element.hide(effectLevelPanel);
     }
     scaleValueField.value = `${INIT_SCALE_VALUE}%`;
-    // Обработчик изменения масштаба
     scalePanel.addEventListener(`click`, scaleChangeHandler);
-    // Обработчик закрытия окна по кнопке "X"
     photoEditorCloseBtn.addEventListener(`click`, photoEditorCloseBtnPressHandler);
-    // Обработчик закрытия окна по по нажатию Esc
     document.addEventListener(`keydown`, photoEditorEscPressHandler);
-    // Обработчик переключения эффектов на изображении
     effectsPanel.addEventListener(`change`, effectChangeHandler);
-    // Обработчик уровня эффекта
     effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
-    // Обработчик ввода хэштегов
-    hashtagInput.addEventListener(`input`, checkHashtagValidity);
-    // Обработчики фокусировки на поле комментария
+    hashtagInput.addEventListener(`input`, hashtagValidityHandler);
     commentInput.addEventListener(`focusin`, preventEscPress);
     commentInput.addEventListener(`focusout`, restoreEscPress);
-    // Обработчики фокусировки на поле хэштегов
     hashtagInput.addEventListener(`focusin`, preventEscPress);
     hashtagInput.addEventListener(`focusout`, restoreEscPress);
-    // Обработчик отправки изображения
     photoUploadForm.addEventListener(`submit`, successPostHandler);
   }
 
-  // Функция закрытия редактора изображения
   function closePhotoEditor() {
     photoUploader.value = ``;
     previewImg.style.transform = ``;
@@ -59,7 +71,7 @@
     scalePanel.removeEventListener(`click`, scaleChangeHandler);
     effectsPanel.removeEventListener(`change`, effectChangeHandler);
     effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
-    hashtagInput.removeEventListener(`input`, checkHashtagValidity);
+    hashtagInput.removeEventListener(`input`, hashtagValidityHandler);
     commentInput.removeEventListener(`focusin`, preventEscPress);
     commentInput.removeEventListener(`focusout`, restoreEscPress);
     hashtagInput.removeEventListener(`focusin`, preventEscPress);
@@ -67,12 +79,10 @@
     photoUploadForm.removeEventListener(`submit`, successPostHandler);
   }
 
-  // Функция закрытия редактора по кнопке Х
   function photoEditorCloseBtnPressHandler() {
     closePhotoEditor();
   }
 
-  // Функция закрытия редактора по нажатию Esc
   function photoEditorEscPressHandler(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
@@ -83,10 +93,10 @@
   function submitForm() {
     window.load.post(new FormData(photoUploadForm), () => {
       closePhotoEditor();
-      window.popup.show(`success`);
+      window.showPopup(`success`);
     }, () => {
       closePhotoEditor();
-      window.popup.show(`error`);
+      window.showPopup(`error`);
     });
   }
 
@@ -95,7 +105,10 @@
     evt.preventDefault();
   }
 
-  // Функция изменения масштаба превью-изображения
+  function setChangeHandler(cb) {
+    photoUploader.addEventListener(`change`, cb);
+  }
+
   function changeImgScale(value) {
     previewImg.style.transform = `scale(${value / 100})`;
   }
@@ -108,7 +121,6 @@
     return currScale === 100 ? currScale : currScale + SCALE_CHANGE_STEP;
   }
 
-  // Функция применения масштаба
   function scaleChangeHandler(evt) {
     const currentScale = parseInt(scaleValueField.value, 10);
     let newScale;
@@ -121,17 +133,6 @@
     changeImgScale(newScale);
   }
 
-
-  // ЭФФЕКТЫ ИЗОБРАЖЕНИЯ
-  const effectsPanel = photoEditor.querySelector(`.effects__list`);
-  const effectName = {
-    chrome: `grayscale`,
-    sepia: `sepia`,
-    marvin: `invert`,
-    phobos: `blur`,
-    heat: `brightness`,
-  };
-
   function effectChangeHandler(evt) {
     if (evt.target.matches(`input[type="radio"]`)) {
       const currentEffectName = evt.target.value;
@@ -140,7 +141,6 @@
     }
   }
 
-  // Функция применения эффектов
   function changeEffect(value) {
     const currentEffect = getCurrentEffect();
     if (currentEffect !== `effects__preview--${value}`) {
@@ -155,19 +155,16 @@
     }
   }
 
-  // Функция добавления эффекта
   function addEffect(effect) {
     previewImg.classList.add(`effects__preview--${effect}`);
   }
 
-  // Функция удаления эффекта
   function removeEffect(effectClass) {
     previewImg.classList.remove(effectClass);
     previewImg.style.filter = ``;
     effectLevelDepthBar.style.width = `${INITIAL_EFFECT_LVL}%`;
   }
 
-  // Функция проверки наличия эффекта
   function getCurrentEffect() {
     const classes = previewImg.classList;
     for (let i = 0; i < classes.length; i++) {
@@ -179,39 +176,23 @@
     return null;
   }
 
-
-  // ИНТЕНСИВНОСТЬ ЭФФЕКТА
-  // начальная реализация по заданию
-  const effectLevelPanel = photoEditor.querySelector(`.img-upload__effect-level`);
-  const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
-  const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
-  const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
-  const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
-  const INITIAL_EFFECT_LVL = 100;
-
-  // Функция изменения глубины эффекта
   function effectLevelChangeHandler(evt) {
     evt.preventDefault();
-
     const maxEffectLevel = effectLevelBar.offsetWidth;
     let startCoords = evt.clientX;
-
     function moveAt(value) {
       effectLevelPin.style.left = `${value}px`;
     }
 
     function mouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
-
       let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
       effectLevelInput.value = newEffectLevel;
       const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
       applyEffect(currentFilter.value, newEffectLevel);
-
       const shift = startCoords - moveEvt.clientX;
       startCoords = moveEvt.clientX;
       let moveValue = effectLevelPin.offsetLeft - shift;
-
       if (moveValue > 0 && moveValue < (maxEffectLevel)) {
         moveAt((moveValue));
       } else {
@@ -222,7 +203,6 @@
 
     function mouseUpHandler(upEvt) {
       upEvt.preventDefault();
-
       document.removeEventListener(`mousemove`, mouseMoveHandler);
       document.removeEventListener(`mouseup`, mouseUpHandler);
     }
@@ -253,40 +233,46 @@
     }
   }
 
-  // ВАЛИДАЦИЯ ХЭШТЕГОВ
-  const hashtagInput = photoEditor.querySelector(`.text__hashtags`);
-  const regExp = /^#[a-zA-Zа-яА-Я\d]+$/;
-  const MIN_HATSHTAG_LENGTH = 1;
-  const MAX_HATSHTAG_LENGTH = 20;
-  const MAX_HASHTAG_NUM = 5;
+  function hashtagValidityHandler(evt) {
+    checkHashtagValidity(evt);
+  }
 
-  // Функция проверки валижности хэштега
   function checkHashtagValidity(evt) {
     let hashtags = evt.target.value.split(/ +/);
     for (let i = 0; i < hashtags.length; i++) {
       if ((!regExp.test(hashtags[i])) && (hashtags[i].length !== 0)) {
         hashtagInput.setCustomValidity(`Неверный формат хэштэга ${hashtags[i]} !`);
+        setInvalidInputStyle(hashtagInput);
       } else if ((hashtags[i].length > MAX_HATSHTAG_LENGTH)) {
         hashtagInput.setCustomValidity(`Хэштэг ${hashtags[i]} слишком длинный!`);
+        setInvalidInputStyle(hashtagInput);
       } else if (hashtags.length > MAX_HASHTAG_NUM) {
         hashtagInput.setCustomValidity(`Слишком много хэштэгов!`);
+        setInvalidInputStyle(hashtagInput);
       } else if (checkIdenticalHashtags(hashtags)) {
         hashtagInput.setCustomValidity(`Не используйте одинаковые хэштэги!`);
+        setInvalidInputStyle(hashtagInput);
       } else if (checkEmptyHashtag(hashtags)) {
         hashtagInput.setCustomValidity(`Не используйте пустые хэштэги!`);
+        setInvalidInputStyle(hashtagInput);
       } else {
         hashtagInput.setCustomValidity(``);
+        hashtagInput.style.border = ``;
+        hashtagInput.style.padding = ``;
       }
       hashtagInput.reportValidity();
     }
   }
 
-  // Функция проверки одиковых тэгов
+  function setInvalidInputStyle(input) {
+    input.style.border = `5px solid red`;
+    input.style.padding = `2px 7px`;
+  }
+
   function checkIdenticalHashtags(arr) {
     return arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
   }
 
-  // Функция проверки пустых тэгов
   function checkEmptyHashtag(arr) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].length === MIN_HATSHTAG_LENGTH) {
@@ -296,11 +282,6 @@
     return false;
   }
 
-
-  // ВАЛИДАЦИЯ КОММЕНТАРИЯ
-  const commentInput = photoEditor.querySelector(`.text__description`);
-  commentInput.maxLength = 140;
-
   function preventEscPress() {
     document.removeEventListener(`keydown`, photoEditorEscPressHandler);
   }
@@ -309,17 +290,8 @@
     document.addEventListener(`keydown`, photoEditorEscPressHandler);
   }
 
-  // Флаги фокуса поля для обработчика закрытия окна по Esc
-  // commentInput.onfocus = () => {
-  //   commentInput.focused = true;
-  // };
-
-  // commentInput.onblur = () => {
-  //   commentInput.focused = false;
-  // };
-
-
   window.form = {
+    setHandler: setChangeHandler,
     open: openEditor,
     close: closePhotoEditor,
   };

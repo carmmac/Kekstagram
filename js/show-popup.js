@@ -2,36 +2,17 @@
 
 (() => {
   const popupDisplayDestination = document.querySelector(`main`);
-
-  const successMessageTemplate = document.querySelector(`#success`);
-  const successMessageTemplateContent = successMessageTemplate.content.querySelector(`.success`);
-  const newSuccessPopup = successMessageTemplateContent.cloneNode(true);
+  const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+  const newSuccessPopup = successMessageTemplate.cloneNode(true);
   const popupSuccessCloseBtn = newSuccessPopup.querySelector(`.success__button`);
-
-  const errorMessageTemplate = document.querySelector(`#error`);
-  const errorMessageTemplateContent = errorMessageTemplate.content.querySelector(`.error`);
-  const newErrorPopup = errorMessageTemplateContent.cloneNode(true);
+  const errorMessageTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
+  const newErrorPopup = errorMessageTemplate.cloneNode(true);
   const popupErrorCloseBtn = newErrorPopup.querySelector(`.error__button`);
+  const StatusValue = {
+    SUCCESS: `success`,
+    ERROR: `error`,
+  };
   let activePopup;
-
-  function showPopup(status) {
-    if (status === `success`) {
-      activePopup = newSuccessPopup;
-      insertPopup(activePopup);
-      popupSuccessCloseBtn.addEventListener(`click`, successPopupCloseBtnPressHandler);
-      document.addEventListener(`keydown`, popupEscPressHandler);
-      activePopup.addEventListener(`click`, popupSuccessCloseHandler);
-    } else if (status === `error`) {
-      activePopup = newErrorPopup;
-      insertPopup(activePopup);
-      popupErrorCloseBtn.addEventListener(`click`, errorPopupCloseBtnPressHandler);
-      document.addEventListener(`keydown`, popupEscPressHandler);
-      activePopup.addEventListener(`click`, popupErrorCloseHandler);
-    } else {
-      insertPopup(createErrorMesasge(status));
-    }
-    return activePopup;
-  }
 
   function insertPopup(popup) {
     popupDisplayDestination.insertAdjacentElement(`afterbegin`, popup);
@@ -65,26 +46,6 @@
     }
   }
 
-  // function onSuccessPopupEscPress(evt) {
-  //   if (evt.key === `Escape`) {
-  //     evt.preventDefault();
-  //     closePopup(newSuccessPopup);
-  //   }
-  // }
-
-  // function onErrorPopupEscPress(evt) {
-  //   if (evt.key === `Escape`) {
-  //     evt.preventDefault();
-  //     closePopup(newErrorPopup);
-  //   }
-  // }
-
-  // function OnDocumentClick(evt) {
-  //   if (!evt.target.closest(`.popup`)) {
-  //     closePopup(activePopup);
-  //   }
-  // }
-
   function popupSuccessCloseHandler(evt) {
     if (!evt.target.closest(`.success__inner`)) {
       closePopup(newSuccessPopup);
@@ -97,7 +58,7 @@
     }
   }
 
-  function createErrorMesasge(errorMessage) {
+  function createErrorMessage(errorMessage) {
     const node = document.createElement(`div`);
     node.style = `
       z-index: 100;
@@ -114,7 +75,22 @@
     return node;
   }
 
-  window.popup = {
-    show: showPopup,
+  window.showPopup = function (status) {
+    if (status === StatusValue.SUCCESS) {
+      activePopup = newSuccessPopup;
+      insertPopup(activePopup);
+      popupSuccessCloseBtn.addEventListener(`click`, successPopupCloseBtnPressHandler);
+      document.addEventListener(`keydown`, popupEscPressHandler);
+      activePopup.addEventListener(`click`, popupSuccessCloseHandler);
+    } else if (status === StatusValue.ERROR) {
+      activePopup = newErrorPopup;
+      insertPopup(activePopup);
+      popupErrorCloseBtn.addEventListener(`click`, errorPopupCloseBtnPressHandler);
+      document.addEventListener(`keydown`, popupEscPressHandler);
+      activePopup.addEventListener(`click`, popupErrorCloseHandler);
+    } else {
+      insertPopup(createErrorMessage(status));
+    }
+    return activePopup;
   };
 })();
