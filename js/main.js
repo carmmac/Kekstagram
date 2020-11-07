@@ -10,7 +10,7 @@
   }
 
   function errorLoadHandler(errorMessage) {
-    window.popup(errorMessage);
+    window.showPopup(errorMessage);
   }
 
   window.form.setHandler(uploadFormChangeHandler);
