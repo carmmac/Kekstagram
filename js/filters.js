@@ -1,8 +1,8 @@
 "use strict";
 
+const RANDOM_IMG_NUM = 10;
 const imgFilters = document.querySelector(`.img-filters`);
 const imgFiltersForm = imgFilters.querySelector(`.img-filters__form`);
-const RANDOW_IMG_NUM = 10;
 const FilterName = {
   RANDOM: `filter-random`,
   DISCUSSED: `filter-discussed`,
@@ -26,7 +26,7 @@ function getFilteredPhotos(arr) {
   const defaultPhotos = arr.slice();
   switch (filter) {
     case FilterName.RANDOM:
-      const randomPhotos = window.util.shuffle(defaultPhotos).slice(RANDOW_IMG_NUM * -1);
+      const randomPhotos = window.util.shuffle(defaultPhotos).slice(RANDOM_IMG_NUM * -1);
       return randomPhotos;
     case FilterName.DISCUSSED:
       const topComment = defaultPhotos.sort((a, b) => {

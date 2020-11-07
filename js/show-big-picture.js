@@ -1,5 +1,6 @@
 "use strict";
 
+const VISIBLE_COMMENTS_NUM = 5;
 const bigPicture = document.querySelector(`.big-picture`);
 const bigPictureImg = bigPicture.querySelector(`.big-picture__img img`);
 const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
@@ -9,7 +10,6 @@ const bigPictureComment = bigPictureComments.querySelector(`.social__comment`);
 const bigPictureDescription = bigPicture.querySelector(`.social__caption`);
 const bigPictureCloseBtn = bigPicture.querySelector(`.big-picture__cancel`);
 const bigPictureCommentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
-const VISIBLE_COMMENTS_NUM = 5;
 
 function getBigPicComment(comment) {
   const newBigPicComment = bigPictureComment.cloneNode(true);

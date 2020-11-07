@@ -1,7 +1,7 @@
 "use strict";
 
-const URL_PATH = `https://21.javascript.pages.academy/kekstagram`;
 const TIMEOUT_IN_MS = 10000;
+const URL_PATH = `https://21.javascript.pages.academy/kekstagram`;
 const StatusCode = {
   OK: 200,
   BAD_REQUEST: 400,
