@@ -1,19 +1,23 @@
 "use strict";
 
 (() => {
-  // ЗАГРУЗКА ИЗОБРАЖЕНИЯ
+  const INIT_SCALE_VALUE = 100;
+  const SCALE_CHANGE_STEP = 25;
+  const INITIAL_EFFECT_LVL = 100;
+  const MIN_HATSHTAG_LENGTH = 1;
+  const MAX_HATSHTAG_LENGTH = 20;
+  const MAX_HASHTAG_NUM = 5;
+
   const photoUploadForm = document.querySelector(`.img-upload__form`);
   const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
   const photoEditor = document.querySelector(`.img-upload__overlay`);
   const previewImg = photoEditor.querySelector(`.img-upload__preview img`);
   const photoEditorCloseBtn = photoEditor.querySelector(`.img-upload__cancel`);
-  // ИЗМЕНЕНИЕ МАСШТАБА ИЗОБРАЖЕНИЯ
+
   const scalePanel = photoEditor.querySelector(`.img-upload__scale`);
   const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
   const scaleValueField = photoEditor.querySelector(`.scale__control--value`);
-  const INIT_SCALE_VALUE = 100;
-  const SCALE_CHANGE_STEP = 25;
-  // ЭФФЕКТЫ ИЗОБРАЖЕНИЯ
+
   const effectsPanel = photoEditor.querySelector(`.effects__list`);
   const effectName = {
     chrome: `grayscale`,
@@ -22,20 +26,15 @@
     phobos: `blur`,
     heat: `brightness`,
   };
-  // ИНТЕНСИВНОСТЬ ЭФФЕКТА
   const effectLevelPanel = photoEditor.querySelector(`.img-upload__effect-level`);
   const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
   const effectLevelPin = effectLevelPanel.querySelector(`.effect-level__pin`);
   const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
   const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
-  const INITIAL_EFFECT_LVL = 100;
-  // ВАЛИДАЦИЯ ХЭШТЕГОВ
+
   const hashtagInput = photoEditor.querySelector(`.text__hashtags`);
   const regExp = /^#[a-zA-Zа-яА-Я\d]+$/;
-  const MIN_HATSHTAG_LENGTH = 1;
-  const MAX_HATSHTAG_LENGTH = 20;
-  const MAX_HASHTAG_NUM = 5;
-  // ВАЛИДАЦИЯ КОММЕНТАРИЯ
+
   const commentInput = photoEditor.querySelector(`.text__description`);
   commentInput.maxLength = 140;
 

@@ -8,11 +8,11 @@
   const errorMessageTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   const newErrorPopup = errorMessageTemplate.cloneNode(true);
   const popupErrorCloseBtn = newErrorPopup.querySelector(`.error__button`);
-  let activePopup;
   const StatusValue = {
     SUCCESS: `success`,
     ERROR: `error`,
   };
+  let activePopup;
 
   function insertPopup(popup) {
     popupDisplayDestination.insertAdjacentElement(`afterbegin`, popup);
@@ -58,7 +58,7 @@
     }
   }
 
-  function createErrorMesasge(errorMessage) {
+  function createErrorMessage(errorMessage) {
     const node = document.createElement(`div`);
     node.style = `
       z-index: 100;
@@ -89,7 +89,7 @@
       document.addEventListener(`keydown`, popupEscPressHandler);
       activePopup.addEventListener(`click`, popupErrorCloseHandler);
     } else {
-      insertPopup(createErrorMesasge(status));
+      insertPopup(createErrorMessage(status));
     }
     return activePopup;
   };
