@@ -2,13 +2,11 @@
 
 (() => {
   const popupDisplayDestination = document.querySelector(`main`);
-  const successMessageTemplate = document.querySelector(`#success`);
-  const successMessageTemplateContent = successMessageTemplate.content.querySelector(`.success`);
-  const newSuccessPopup = successMessageTemplateContent.cloneNode(true);
+  const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+  const newSuccessPopup = successMessageTemplate.cloneNode(true);
   const popupSuccessCloseBtn = newSuccessPopup.querySelector(`.success__button`);
-  const errorMessageTemplate = document.querySelector(`#error`);
-  const errorMessageTemplateContent = errorMessageTemplate.content.querySelector(`.error`);
-  const newErrorPopup = errorMessageTemplateContent.cloneNode(true);
+  const errorMessageTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
+  const newErrorPopup = errorMessageTemplate.cloneNode(true);
   const popupErrorCloseBtn = newErrorPopup.querySelector(`.error__button`);
   let activePopup;
   const StatusValue = {
