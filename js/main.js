@@ -17,4 +17,5 @@ window.form.setHandler(uploadFormChangeHandler);
 
 function uploadFormChangeHandler() {
   window.form.open();
+  window.form.uploadPhoto();
 }
