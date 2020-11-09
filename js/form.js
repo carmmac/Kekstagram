@@ -6,6 +6,7 @@ const INITIAL_EFFECT_LVL = 100;
 const MIN_HATSHTAG_LENGTH = 1;
 const MAX_HATSHTAG_LENGTH = 20;
 const MAX_HASHTAG_NUM = 5;
+const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
 
 const photoUploadForm = document.querySelector(`.img-upload__form`);
 const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
@@ -60,6 +61,7 @@ function openEditor() {
 function closePhotoEditor() {
   photoUploader.value = ``;
   previewImg.style.transform = ``;
+  previewImg.style.width = ``;
   effectsPanel.querySelector(`#effect-none`).checked = true;
   effectLevelDepthBar.style.width = ``;
   hashtagInput.value = ``;
@@ -103,6 +105,22 @@ function submitForm() {
 function successPostHandler(evt) {
   submitForm();
   evt.preventDefault();
+}
+
+function uploadCustomPhoto() {
+  const file = photoUploader.files[0];
+  const fileName = file.name.toLowerCase();
+  const match = FILE_TYPES.some(function (fileType) {
+    return fileName.endsWith(fileType);
+  });
+  if (match) {
+    const reader = new FileReader();
+    reader.addEventListener(`load`, function () {
+      previewImg.src = reader.result;
+      previewImg.style.width = `100%`;
+    });
+    reader.readAsDataURL(file);
+  }
 }
 
 function changeImgScale(value) {
@@ -295,4 +313,5 @@ window.form = {
   setHandler: setChangeHandler,
   open: openEditor,
   close: closePhotoEditor,
+  uploadPhoto: uploadCustomPhoto,
 };
