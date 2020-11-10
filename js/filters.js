@@ -21,9 +21,9 @@ function showFilterPanel() {
   imgFilters.classList.remove(`img-filters--inactive`);
 }
 
-function getFilteredPhotos(arr) {
+function getFilteredPhotos(photos) {
   const filter = currentActiveBtn.id;
-  const defaultPhotos = arr.slice();
+  const defaultPhotos = photos.slice();
   switch (filter) {
     case FilterName.RANDOM:
       const randomPhotos = window.util.shuffle(defaultPhotos).slice(RANDOM_IMG_NUM * -1);
@@ -34,7 +34,7 @@ function getFilteredPhotos(arr) {
       });
       return topComment;
     default:
-      return arr;
+      return photos;
   }
 }
 

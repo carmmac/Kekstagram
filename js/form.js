@@ -51,10 +51,10 @@ function openEditor() {
   effectsPanel.addEventListener(`change`, effectChangeHandler);
   effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
   hashtagInput.addEventListener(`input`, hashtagValidityHandler);
-  commentInput.addEventListener(`focusin`, preventEscPress);
-  commentInput.addEventListener(`focusout`, restoreEscPress);
-  hashtagInput.addEventListener(`focusin`, preventEscPress);
-  hashtagInput.addEventListener(`focusout`, restoreEscPress);
+  commentInput.addEventListener(`focusin`, preventEscPressHandler);
+  commentInput.addEventListener(`focusout`, restoreEscPressHandler);
+  hashtagInput.addEventListener(`focusin`, preventEscPressHandler);
+  hashtagInput.addEventListener(`focusout`, restoreEscPressHandler);
   photoUploadForm.addEventListener(`submit`, successPostHandler);
 }
 
@@ -74,10 +74,10 @@ function closePhotoEditor() {
   effectsPanel.removeEventListener(`change`, effectChangeHandler);
   effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
   hashtagInput.removeEventListener(`input`, hashtagValidityHandler);
-  commentInput.removeEventListener(`focusin`, preventEscPress);
-  commentInput.removeEventListener(`focusout`, restoreEscPress);
-  hashtagInput.removeEventListener(`focusin`, preventEscPress);
-  hashtagInput.removeEventListener(`focusout`, restoreEscPress);
+  commentInput.removeEventListener(`focusin`, preventEscPressHandler);
+  commentInput.removeEventListener(`focusout`, restoreEscPressHandler);
+  hashtagInput.removeEventListener(`focusin`, preventEscPressHandler);
+  hashtagInput.removeEventListener(`focusout`, restoreEscPressHandler);
   photoUploadForm.removeEventListener(`submit`, successPostHandler);
 }
 
@@ -283,8 +283,8 @@ function checkHashtagValidity(evt) {
   hashtagInput.reportValidity();
 }
 
-function checkIdenticalHashtags(arr) {
-  return arr.some((item) => arr.indexOf(item) !== arr.lastIndexOf(item));
+function checkIdenticalHashtags(hashtags) {
+  return hashtags.some((item) => hashtags.indexOf(item) !== hashtags.lastIndexOf(item));
 }
 
 function setInvalidInputStyle(input) {
@@ -292,20 +292,20 @@ function setInvalidInputStyle(input) {
   input.style.padding = `2px 7px`;
 }
 
-function checkEmptyHashtag(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i].length === MIN_HATSHTAG_LENGTH) {
+function checkEmptyHashtag(hashtags) {
+  for (let i = 0; i < hashtags.length; i++) {
+    if (hashtags[i].length === MIN_HATSHTAG_LENGTH) {
       return true;
     }
   }
   return false;
 }
 
-function preventEscPress() {
+function preventEscPressHandler() {
   document.removeEventListener(`keydown`, photoEditorEscPressHandler);
 }
 
-function restoreEscPress() {
+function restoreEscPressHandler() {
   document.addEventListener(`keydown`, photoEditorEscPressHandler);
 }
 
