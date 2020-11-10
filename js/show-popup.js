@@ -13,11 +13,11 @@ const StatusValue = {
 };
 let activePopup;
 
-function insertPopup(popup) {
+const insertPopup = (popup) => {
   popupDisplayDestination.insertAdjacentElement(`afterbegin`, popup);
-}
+};
 
-function closePopup(popup) {
+const closePopup = (popup) => {
   popup.remove();
   if (popup === newSuccessPopup) {
     popupSuccessCloseBtn.removeEventListener(`click`, successPopupCloseBtnPressHandler);
@@ -28,36 +28,36 @@ function closePopup(popup) {
     document.removeEventListener(`keydown`, popupEscPressHandler);
     popup.removeEventListener(`click`, popupErrorCloseHandler);
   }
-}
+};
 
-function successPopupCloseBtnPressHandler() {
+const successPopupCloseBtnPressHandler = () => {
   closePopup(newSuccessPopup);
-}
+};
 
-function errorPopupCloseBtnPressHandler() {
+const errorPopupCloseBtnPressHandler = () => {
   closePopup(newErrorPopup);
-}
+};
 
-function popupEscPressHandler(evt) {
+const popupEscPressHandler = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     closePopup(activePopup);
   }
-}
+};
 
-function popupSuccessCloseHandler(evt) {
+const popupSuccessCloseHandler = (evt) => {
   if (!evt.target.closest(`.success__inner`)) {
     closePopup(newSuccessPopup);
   }
-}
+};
 
-function popupErrorCloseHandler(evt) {
+const popupErrorCloseHandler = (evt) => {
   if (!evt.target.closest(`.error__inner`)) {
     closePopup(newErrorPopup);
   }
-}
+};
 
-function createErrorMessage(errorMessage) {
+const createErrorMessage = (errorMessage) => {
   const node = document.createElement(`div`);
   node.style = `
     z-index: 100;
@@ -72,9 +72,9 @@ function createErrorMessage(errorMessage) {
     font-weight: bold;`;
   node.textContent = errorMessage;
   return node;
-}
+};
 
-window.showPopup = function (status) {
+window.showPopup = (status) => {
   if (status === StatusValue.SUCCESS) {
     activePopup = newSuccessPopup;
     insertPopup(activePopup);

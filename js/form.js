@@ -39,60 +39,18 @@ const regExp = /^#[a-zA-Zа-яА-Я\d]+$/;
 const commentInput = photoEditor.querySelector(`.text__description`);
 commentInput.maxLength = 140;
 
-function openEditor() {
-  window.util.modal.show(photoEditor);
-  if (getCurrentEffect() === null) {
-    window.util.element.hide(effectLevelPanel);
-  }
-  scaleValueField.value = `${INIT_SCALE_VALUE}%`;
-  scalePanel.addEventListener(`click`, scaleChangeHandler);
-  photoEditorCloseBtn.addEventListener(`click`, photoEditorCloseBtnPressHandler);
-  document.addEventListener(`keydown`, photoEditorEscPressHandler);
-  effectsPanel.addEventListener(`change`, effectChangeHandler);
-  effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
-  hashtagInput.addEventListener(`input`, hashtagValidityHandler);
-  commentInput.addEventListener(`focusin`, preventEscPressHandler);
-  commentInput.addEventListener(`focusout`, restoreEscPressHandler);
-  hashtagInput.addEventListener(`focusin`, preventEscPressHandler);
-  hashtagInput.addEventListener(`focusout`, restoreEscPressHandler);
-  photoUploadForm.addEventListener(`submit`, successPostHandler);
-}
-
-function closePhotoEditor() {
-  photoUploader.value = ``;
-  previewImg.style.transform = ``;
-  previewImg.style.width = ``;
-  effectsPanel.querySelector(`#effect-none`).checked = true;
-  effectLevelDepthBar.style.width = ``;
-  hashtagInput.value = ``;
-  commentInput.value = ``;
-  window.util.modal.hide(photoEditor);
-  removeEffect(getCurrentEffect());
-  document.removeEventListener(`keydown`, photoEditorEscPressHandler);
-  photoEditorCloseBtn.removeEventListener(`click`, photoEditorCloseBtnPressHandler);
-  scalePanel.removeEventListener(`click`, scaleChangeHandler);
-  effectsPanel.removeEventListener(`change`, effectChangeHandler);
-  effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
-  hashtagInput.removeEventListener(`input`, hashtagValidityHandler);
-  commentInput.removeEventListener(`focusin`, preventEscPressHandler);
-  commentInput.removeEventListener(`focusout`, restoreEscPressHandler);
-  hashtagInput.removeEventListener(`focusin`, preventEscPressHandler);
-  hashtagInput.removeEventListener(`focusout`, restoreEscPressHandler);
-  photoUploadForm.removeEventListener(`submit`, successPostHandler);
-}
-
-function photoEditorCloseBtnPressHandler() {
+const photoEditorCloseBtnPressHandler = () => {
   closePhotoEditor();
-}
+};
 
-function photoEditorEscPressHandler(evt) {
+const photoEditorEscPressHandler = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     closePhotoEditor();
   }
-}
+};
 
-function submitForm() {
+const submitForm = () => {
   window.load.post(new FormData(photoUploadForm), () => {
     closePhotoEditor();
     window.showPopup(`success`);
@@ -100,46 +58,46 @@ function submitForm() {
     closePhotoEditor();
     window.showPopup(`error`);
   });
-}
+};
 
-function successPostHandler(evt) {
+const successPostHandler = (evt) => {
   submitForm();
   evt.preventDefault();
-}
+};
 
-function uploadCustomPhoto() {
+const uploadCustomPhoto = () => {
   const file = photoUploader.files[0];
   const fileName = file.name.toLowerCase();
-  const match = FILE_TYPES.some(function (fileType) {
+  const match = FILE_TYPES.some((fileType) => {
     return fileName.endsWith(fileType);
   });
   if (match) {
     const reader = new FileReader();
-    reader.addEventListener(`load`, function () {
+    reader.addEventListener(`load`, () => {
       previewImg.src = reader.result;
       previewImg.style.width = `100%`;
     });
     reader.readAsDataURL(file);
   }
-}
+};
 
-function changeImgScale(value) {
+const changeImgScale = (value) => {
   previewImg.style.transform = `scale(${value / 100})`;
-}
+};
 
-function decreaseScaleValue(currScale) {
+const decreaseScaleValue = (currScale) => {
   return currScale > 25 ? currScale - SCALE_CHANGE_STEP : currScale;
-}
+};
 
-function increaseScaleValue(currScale) {
+const increaseScaleValue = (currScale) => {
   return currScale === 100 ? currScale : currScale + SCALE_CHANGE_STEP;
-}
+};
 
-function setChangeHandler(cb) {
+const setChangeHandler = (cb) => {
   photoUploader.addEventListener(`change`, cb);
-}
+};
 
-function scaleChangeHandler(evt) {
+const scaleChangeHandler = (evt) => {
   const currentScale = parseInt(scaleValueField.value, 10);
   let newScale;
   if (evt.target === scaleBtnSmaller) {
@@ -149,17 +107,30 @@ function scaleChangeHandler(evt) {
   }
   scaleValueField.value = `${newScale}%`;
   changeImgScale(newScale);
-}
+};
 
-function effectChangeHandler(evt) {
-  if (evt.target.matches(`input[type="radio"]`)) {
-    const currentEffectName = evt.target.value;
-    applyEffect(currentEffectName, INITIAL_EFFECT_LVL);
-    effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * INITIAL_EFFECT_LVL) / 100)}px`;
+const getCurrentEffect = () => {
+  const classes = previewImg.classList;
+  for (let i = 0; i < classes.length; i++) {
+    if (classes[i].includes(`effects__preview--`)) {
+      const currEffect = classes[i];
+      return currEffect;
+    }
   }
-}
+  return null;
+};
 
-function changeEffect(value) {
+const addEffect = (effect) => {
+  previewImg.classList.add(`effects__preview--${effect}`);
+};
+
+const removeEffect = (effectClass) => {
+  previewImg.classList.remove(effectClass);
+  previewImg.style.filter = ``;
+  effectLevelDepthBar.style.width = `${INITIAL_EFFECT_LVL}%`;
+};
+
+const changeEffect = (value) => {
   const currentEffect = getCurrentEffect();
   if (currentEffect !== `effects__preview--${value}`) {
     if (value !== `none`) {
@@ -171,70 +142,9 @@ function changeEffect(value) {
       removeEffect(currentEffect);
     }
   }
-}
+};
 
-function addEffect(effect) {
-  previewImg.classList.add(`effects__preview--${effect}`);
-}
-
-function removeEffect(effectClass) {
-  previewImg.classList.remove(effectClass);
-  previewImg.style.filter = ``;
-  effectLevelDepthBar.style.width = `${INITIAL_EFFECT_LVL}%`;
-}
-
-function getCurrentEffect() {
-  const classes = previewImg.classList;
-  for (let i = 0; i < classes.length; i++) {
-    if (classes[i].includes(`effects__preview--`)) {
-      const currEffect = classes[i];
-      return currEffect;
-    }
-  }
-  return null;
-}
-
-function effectLevelChangeHandler(evt) {
-  evt.preventDefault();
-  const maxEffectLevel = effectLevelBar.offsetWidth;
-  let startCoords = evt.clientX;
-  function moveAt(value) {
-    effectLevelPin.style.left = `${value}px`;
-  }
-
-  function mouseMoveHandler(moveEvt) {
-    moveEvt.preventDefault();
-    let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
-    effectLevelInput.value = newEffectLevel;
-    const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
-    applyEffect(currentFilter.value, newEffectLevel);
-    const shift = startCoords - moveEvt.clientX;
-    startCoords = moveEvt.clientX;
-    let moveValue = effectLevelPin.offsetLeft - shift;
-    if (moveValue > 0 && moveValue < (maxEffectLevel)) {
-      moveAt((moveValue));
-    } else {
-      moveAt((moveValue) > 0 ? maxEffectLevel : 0);
-    }
-    effectLevelDepthBar.style.width = `${newEffectLevel}%`;
-  }
-
-  function mouseUpHandler(upEvt) {
-    upEvt.preventDefault();
-    document.removeEventListener(`mousemove`, mouseMoveHandler);
-    document.removeEventListener(`mouseup`, mouseUpHandler);
-  }
-
-  document.addEventListener(`mousemove`, mouseMoveHandler);
-  document.addEventListener(`mouseup`, mouseUpHandler);
-}
-
-function getEffectLevel(currLevel) {
-  const effectLevel = Math.floor((currLevel * 100) / effectLevelBar.offsetWidth);
-  return effectLevel;
-}
-
-function applyEffect(effect, value) {
+const applyEffect = (effect, value) => {
   changeEffect(effect);
   switch (effect) {
     case `phobos`:
@@ -249,13 +159,76 @@ function applyEffect(effect, value) {
     default:
       previewImg.style.filter = effectName[effect] + `(${value / 100})`;
   }
-}
+};
 
-function hashtagValidityHandler(evt) {
-  checkHashtagValidity(evt);
-}
+const effectChangeHandler = (evt) => {
+  if (evt.target.matches(`input[type="radio"]`)) {
+    const currentEffectName = evt.target.value;
+    applyEffect(currentEffectName, INITIAL_EFFECT_LVL);
+    effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * INITIAL_EFFECT_LVL) / 100)}px`;
+  }
+};
 
-function checkHashtagValidity(evt) {
+const getEffectLevel = (currLevel) => {
+  const effectLevel = Math.floor((currLevel * 100) / effectLevelBar.offsetWidth);
+  return effectLevel;
+};
+
+const effectLevelChangeHandler = (evt) => {
+  evt.preventDefault();
+  const maxEffectLevel = effectLevelBar.offsetWidth;
+  let startCoords = evt.clientX;
+  const moveAt = (value) => {
+    effectLevelPin.style.left = `${value}px`;
+  };
+
+  const mouseMoveHandler = (moveEvt) => {
+    moveEvt.preventDefault();
+    let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
+    effectLevelInput.value = newEffectLevel;
+    const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
+    applyEffect(currentFilter.value, newEffectLevel);
+    const shift = startCoords - moveEvt.clientX;
+    startCoords = moveEvt.clientX;
+    let moveValue = effectLevelPin.offsetLeft - shift;
+    if (moveValue > 0 && moveValue < (maxEffectLevel)) {
+      moveAt((moveValue));
+    } else {
+      moveAt((moveValue) > 0 ? maxEffectLevel : 0);
+    }
+    effectLevelDepthBar.style.width = `${newEffectLevel}%`;
+  };
+
+  const mouseUpHandler = (upEvt) => {
+    upEvt.preventDefault();
+    document.removeEventListener(`mousemove`, mouseMoveHandler);
+    document.removeEventListener(`mouseup`, mouseUpHandler);
+  };
+
+  document.addEventListener(`mousemove`, mouseMoveHandler);
+  document.addEventListener(`mouseup`, mouseUpHandler);
+};
+
+
+const checkIdenticalHashtags = (hashtags) => {
+  return hashtags.some((item) => hashtags.indexOf(item) !== hashtags.lastIndexOf(item));
+};
+
+const setInvalidInputStyle = (input) => {
+  input.style.border = `5px solid red`;
+  input.style.padding = `2px 7px`;
+};
+
+const checkEmptyHashtag = (hashtags) => {
+  for (let i = 0; i < hashtags.length; i++) {
+    if (hashtags[i].length === MIN_HATSHTAG_LENGTH) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const checkHashtagValidity = (evt) => {
   let hashtags = evt.target.value.split(/ +/);
   for (let i = 0; i < hashtags.length; i++) {
     if ((!regExp.test(hashtags[i])) && (hashtags[i].length !== 0)) {
@@ -281,33 +254,61 @@ function checkHashtagValidity(evt) {
     hashtagInput.reportValidity();
   }
   hashtagInput.reportValidity();
-}
+};
 
-function checkIdenticalHashtags(hashtags) {
-  return hashtags.some((item) => hashtags.indexOf(item) !== hashtags.lastIndexOf(item));
-}
+const hashtagValidityHandler = (evt) => {
+  checkHashtagValidity(evt);
+};
 
-function setInvalidInputStyle(input) {
-  input.style.border = `5px solid red`;
-  input.style.padding = `2px 7px`;
-}
-
-function checkEmptyHashtag(hashtags) {
-  for (let i = 0; i < hashtags.length; i++) {
-    if (hashtags[i].length === MIN_HATSHTAG_LENGTH) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function preventEscPressHandler() {
+const preventEscPressHandler = () => {
   document.removeEventListener(`keydown`, photoEditorEscPressHandler);
-}
+};
 
-function restoreEscPressHandler() {
+const restoreEscPressHandler = () => {
   document.addEventListener(`keydown`, photoEditorEscPressHandler);
-}
+};
+
+const openEditor = () => {
+  window.util.modal.show(photoEditor);
+  if (getCurrentEffect() === null) {
+    window.util.element.hide(effectLevelPanel);
+  }
+  scaleValueField.value = `${INIT_SCALE_VALUE}%`;
+  scalePanel.addEventListener(`click`, scaleChangeHandler);
+  photoEditorCloseBtn.addEventListener(`click`, photoEditorCloseBtnPressHandler);
+  document.addEventListener(`keydown`, photoEditorEscPressHandler);
+  effectsPanel.addEventListener(`change`, effectChangeHandler);
+  effectLevelPin.addEventListener(`mousedown`, effectLevelChangeHandler);
+  hashtagInput.addEventListener(`input`, hashtagValidityHandler);
+  commentInput.addEventListener(`focusin`, preventEscPressHandler);
+  commentInput.addEventListener(`focusout`, restoreEscPressHandler);
+  hashtagInput.addEventListener(`focusin`, preventEscPressHandler);
+  hashtagInput.addEventListener(`focusout`, restoreEscPressHandler);
+  photoUploadForm.addEventListener(`submit`, successPostHandler);
+};
+
+const closePhotoEditor = () => {
+  photoUploader.value = ``;
+  previewImg.style.transform = ``;
+  previewImg.style.width = ``;
+  effectsPanel.querySelector(`#effect-none`).checked = true;
+  effectLevelDepthBar.style.width = ``;
+  hashtagInput.value = ``;
+  commentInput.value = ``;
+  window.util.modal.hide(photoEditor);
+  removeEffect(getCurrentEffect());
+  document.removeEventListener(`keydown`, photoEditorEscPressHandler);
+  photoEditorCloseBtn.removeEventListener(`click`, photoEditorCloseBtnPressHandler);
+  scalePanel.removeEventListener(`click`, scaleChangeHandler);
+  effectsPanel.removeEventListener(`change`, effectChangeHandler);
+  effectLevelPin.removeEventListener(`mousedown`, effectLevelChangeHandler);
+  hashtagInput.removeEventListener(`input`, hashtagValidityHandler);
+  commentInput.removeEventListener(`focusin`, preventEscPressHandler);
+  commentInput.removeEventListener(`focusout`, restoreEscPressHandler);
+  hashtagInput.removeEventListener(`focusin`, preventEscPressHandler);
+  hashtagInput.removeEventListener(`focusout`, restoreEscPressHandler);
+  photoUploadForm.removeEventListener(`submit`, successPostHandler);
+};
 
 window.form = {
   setHandler: setChangeHandler,

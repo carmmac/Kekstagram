@@ -9,12 +9,12 @@ const StatusCode = {
   NOT_FOUND: 404,
 };
 
-function getResponse(onSuccess, onError) {
+const getResponse = (onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
   xhr.timeout = TIMEOUT_IN_MS;
   xhr.open(`GET`, `${URL_PATH}/data`, true);
-  xhr.addEventListener(`load`, function () {
+  xhr.addEventListener(`load`, () => {
     switch (xhr.status) {
       case StatusCode.OK:
         onSuccess(xhr.response);
@@ -39,12 +39,12 @@ function getResponse(onSuccess, onError) {
     onError(`Запрос не успел выполниться за ${xhr.timeout / 1000} сек.`);
   });
   xhr.send();
-}
+};
 
-function sendData(data, onSuccess, onError) {
+const sendData = (data, onSuccess, onError) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
-  xhr.addEventListener(`load`, function () {
+  xhr.addEventListener(`load`, () => {
     if (xhr.status === StatusCode.OK) {
       onSuccess();
     } else {
@@ -54,7 +54,7 @@ function sendData(data, onSuccess, onError) {
 
   xhr.open(`POST`, URL_PATH, true);
   xhr.send(data);
-}
+};
 
 window.load = {
   get: getResponse,

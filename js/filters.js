@@ -9,19 +9,7 @@ const FilterName = {
 };
 let currentActiveBtn;
 
-function setFiltersChangeHandler(cb, photos) {
-  imgFiltersForm.addEventListener(`click`, (evt) => {
-    changeActiveFilterBtn(evt.target);
-    const filteredImgs = getFilteredPhotos(photos);
-    cb(filteredImgs);
-  });
-}
-
-function showFilterPanel() {
-  imgFilters.classList.remove(`img-filters--inactive`);
-}
-
-function getFilteredPhotos(photos) {
+const getFilteredPhotos = (photos) => {
   const filter = currentActiveBtn.id;
   const defaultPhotos = photos.slice();
   switch (filter) {
@@ -36,15 +24,27 @@ function getFilteredPhotos(photos) {
     default:
       return photos;
   }
-}
+};
 
-function changeActiveFilterBtn(button) {
+const setFiltersChangeHandler = (cb, photos) => {
+  imgFiltersForm.addEventListener(`click`, (evt) => {
+    changeActiveFilterBtn(evt.target);
+    const filteredImgs = getFilteredPhotos(photos);
+    cb(filteredImgs);
+  });
+};
+
+const showFilterPanel = () => {
+  imgFilters.classList.remove(`img-filters--inactive`);
+};
+
+const changeActiveFilterBtn = (button) => {
   const activeFilteClassName = `img-filters__button--active`;
   currentActiveBtn = imgFilters.querySelector(`.${activeFilteClassName}`);
   currentActiveBtn.classList.remove(activeFilteClassName);
   button.classList.add(activeFilteClassName);
   currentActiveBtn = button;
-}
+};
 
 window.filters = {
   setHandler: setFiltersChangeHandler,

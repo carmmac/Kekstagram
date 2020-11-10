@@ -1,6 +1,6 @@
 "use strict";
 
-function shuffleArr(items) {
+const shuffleArr = (items) => {
   let j;
   let temp;
   for (let i = items.length - 1; i > 0; i--) {
@@ -10,25 +10,25 @@ function shuffleArr(items) {
     items[i] = temp;
   }
   return items;
-}
+};
 
-function showModalWindow(elem) {
+const showModalWindow = (elem) => {
   elem.classList.remove(`hidden`);
   document.body.classList.add(`modal-open`);
-}
+};
 
-function hideModalWindow(elem) {
+const hideModalWindow = (elem) => {
   elem.classList.add(`hidden`);
   document.body.classList.remove(`modal-open`);
-}
+};
 
-function hideElement(elem) {
+const hideElement = (elem) => {
   elem.classList.add(`hidden`);
-}
+};
 
-function showElement(elem) {
+const showElement = (elem) => {
   elem.classList.remove(`hidden`);
-}
+};
 
 window.util = {
   shuffle: shuffleArr,

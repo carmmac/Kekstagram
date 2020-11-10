@@ -2,7 +2,7 @@
 
 const pictures = document.querySelector(`.pictures`);
 
-window.renderPhotos = function (imgs) {
+window.renderPhotos = (imgs) => {
   const pics = pictures.querySelectorAll(`.picture`);
   for (let pic of pics) {
     pic.parentNode.removeChild(pic);
