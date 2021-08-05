@@ -1,8 +1,7 @@
-"use strict";
 
-const DEBOUNCE_INTERVAL = 500;
+import {DEBOUNCE_INTERVAL} from "../const.js";
 
-window.debounce = (cb) => {
+export const debounce = (cb) => {
   let lastTimeout = null;
 
   return (...parameters) => {

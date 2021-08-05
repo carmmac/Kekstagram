@@ -1,6 +1,6 @@
-"use strict";
+import {VISIBLE_COMMENTS_NUM} from "../const.js";
+import {hideElement, showElement} from "./util.js";
 
-const VISIBLE_COMMENTS_NUM = 5;
 const bigPicture = document.querySelector(`.big-picture`);
 const bigPictureImg = bigPicture.querySelector(`.big-picture__img img`);
 const bigPictureLikesCount = bigPicture.querySelector(`.likes-count`);
@@ -43,10 +43,10 @@ const setRenderCommentLogic = (comments) => {
 
   const toggleCommentsBtnVisibility = () => {
     if (totalCommentsNumber <= renderedCommentsNumber) {
-      window.util.element.hide(bigPictureCommentsLoadBtn);
+      hideElement(bigPictureCommentsLoadBtn);
       bigPictureCommentsLoadBtn.removeEventListener(`click`, commentsLoadHandler);
     } else {
-      window.util.element.show(bigPictureCommentsLoadBtn);
+      showElement(bigPictureCommentsLoadBtn);
       bigPictureCommentsLoadBtn.addEventListener(`click`, commentsLoadHandler);
     }
   };
@@ -72,14 +72,14 @@ const bigPictureCloseHandler = (evt) => {
 };
 
 const closeBigPicture = () => {
-  window.util.modal.hide(bigPicture);
+  hideElement(bigPicture);
   document.removeEventListener(`keydown`, bigPictureEscPressHandler);
   bigPicture.removeEventListener(`click`, bigPictureCloseHandler);
   bigPictureCloseBtn.removeEventListener(`click`, bigPictureCloseBtnPressHandler);
 };
 
 window.showBigPicture = (currentImg) => {
-  window.util.modal.show(bigPicture);
+  showElement(bigPicture);
   bigPictureImg.src = currentImg.url;
   bigPictureLikesCount.textContent = currentImg.likes;
   bigPictureCommentsCount.textContent = currentImg.comments.length;

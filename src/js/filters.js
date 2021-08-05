@@ -1,12 +1,12 @@
-"use strict";
+import {
+  RANDOM_IMG_NUM,
+  FilterName,
+} from "../const.js";
+import {shuffleArr} from "./util.js";
 
-const RANDOM_IMG_NUM = 10;
 const imgFilters = document.querySelector(`.img-filters`);
 const imgFiltersForm = imgFilters.querySelector(`.img-filters__form`);
-const FilterName = {
-  RANDOM: `filter-random`,
-  DISCUSSED: `filter-discussed`,
-};
+
 let currentActiveBtn;
 
 const getFilteredPhotos = (photos) => {
@@ -14,7 +14,7 @@ const getFilteredPhotos = (photos) => {
   const defaultPhotos = photos.slice();
   switch (filter) {
     case FilterName.RANDOM:
-      const randomPhotos = window.util.shuffle(defaultPhotos).slice(RANDOM_IMG_NUM * -1);
+      const randomPhotos = shuffleArr(defaultPhotos).slice(RANDOM_IMG_NUM * -1);
       return randomPhotos;
     case FilterName.DISCUSSED:
       const topComment = defaultPhotos.sort((a, b) => {
@@ -46,7 +46,7 @@ const changeActiveFilterBtn = (button) => {
   currentActiveBtn = button;
 };
 
-window.filters = {
+export const filters = {
   setHandler: setFiltersChangeHandler,
   show: showFilterPanel,
 };

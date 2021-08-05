@@ -1,4 +1,4 @@
-"use strict";
+import {StatusValue} from "../const.js";
 
 const popupDisplayDestination = document.querySelector(`main`);
 const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
@@ -7,10 +7,7 @@ const popupSuccessCloseBtn = newSuccessPopup.querySelector(`.success__button`);
 const errorMessageTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 const newErrorPopup = errorMessageTemplate.cloneNode(true);
 const popupErrorCloseBtn = newErrorPopup.querySelector(`.error__button`);
-const StatusValue = {
-  SUCCESS: `success`,
-  ERROR: `error`,
-};
+
 let activePopup;
 
 const insertPopup = (popup) => {
@@ -74,7 +71,7 @@ const createErrorMessage = (errorMessage) => {
   return node;
 };
 
-window.showPopup = (status) => {
+export const showPopup = (status) => {
   if (status === StatusValue.SUCCESS) {
     activePopup = newSuccessPopup;
     insertPopup(activePopup);

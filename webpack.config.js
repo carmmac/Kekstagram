@@ -2,21 +2,24 @@ const path = require("path");
 
 module.exports = {
   entry: [
-    "./js/util.js",
-    "./js/debounce.js",
-    "./js/render-picture.js",
-    "./js/show-big-picture.js",
-    "./js/form.js",
-    "./js/load.js",
-    "./js/filters.js",
-    "./js/render-photos.js",
-    "./js/show-popup.js",
-    "./js/main.js",
+    "./src/js/util.js",
+    "./src/js/debounce.js",
+    "./src/js/render-picture.js",
+    "./src/js/show-big-picture.js",
+    "./src/js/form.js",
+    "./src/js/load.js",
+    "./src/js/filters.js",
+    "./src/js/render-photos.js",
+    "./src/js/show-popup.js",
+    "./src/js/main.js",
   ],
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname),
-    iife: true
+    path: path.resolve(__dirname, 'express/public'),
   },
-  devtool: false
+  devServer: {
+    contentBase: path.resolve(__dirname, 'express/public'),
+    watchContentBase: true,
+  },
+  devtool: 'source-map',
 };

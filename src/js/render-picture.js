@@ -1,10 +1,8 @@
-"use strict";
-
 const pictureTemplate = document.querySelector(`#picture`).content.querySelector(
     `.picture`
 );
 
-window.renderPicture = (photo) => {
+export const renderPicture = (photo) => {
   const newPicture = pictureTemplate.cloneNode(true);
   const newPictureImg = newPicture.querySelector(`.picture__img`);
   newPictureImg.src = photo.url;
