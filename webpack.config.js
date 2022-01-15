@@ -1,25 +1,16 @@
 const path = require("path");
 
 module.exports = {
-  entry: [
-    "./src/js/util.js",
-    "./src/js/debounce.js",
-    "./src/js/render-picture.js",
-    "./src/js/show-big-picture.js",
-    "./src/js/form.js",
-    "./src/js/load.js",
-    "./src/js/filters.js",
-    "./src/js/render-photos.js",
-    "./src/js/show-popup.js",
-    "./src/js/main.js",
-  ],
+  entry: "./src/index.js",
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, 'express/public'),
+    path: path.resolve(__dirname, 'frontend/public'),
   },
   devServer: {
-    contentBase: path.resolve(__dirname, 'express/public'),
+    contentBase: path.resolve(__dirname, 'frontend/public'),
     watchContentBase: true,
+    open: true,
+    port: 8080,
   },
   devtool: 'source-map',
 };

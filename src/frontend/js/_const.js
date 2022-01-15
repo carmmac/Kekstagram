@@ -7,9 +7,8 @@ const MAX_HASHTAG_NUM = 5;
 const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
 const RANDOM_IMG_NUM = 10;
 const DEBOUNCE_INTERVAL = 500;
-const TIMEOUT_IN_MS = 10000;
-const URL_PATH = `https://21.javascript.pages.academy/kekstagram`;
 const VISIBLE_COMMENTS_NUM = 5;
+const MAX_ID_LENGTH = 10;
 
 const regExp = /^#[a-zA-Zа-яА-Я\d]+$/;
 
@@ -46,12 +45,9 @@ const StatusValue = {
   ERROR: `error`,
 };
 
-const HttpCode = {
-  OK: 200,
-  CREATED: 201,
-  BAD_REQUEST: 400,
-  NOT_FOUND: 404,
-  SERVER_ERROR: 500,
+const SuccessHTTPStatusRange = {
+  MIN: 200,
+  MAX: 299
 };
 
 export {
@@ -64,16 +60,14 @@ export {
   FILE_TYPES,
   RANDOM_IMG_NUM,
   DEBOUNCE_INTERVAL,
-  TIMEOUT_IN_MS,
-  URL_PATH,
   VISIBLE_COMMENTS_NUM,
+  MAX_ID_LENGTH,
 
   regExp,
-  Effect,
   EffectName,
+  Effect,
   FilterName,
-
   StatusCode,
   StatusValue,
-  HttpCode,
+  SuccessHTTPStatusRange,
 };

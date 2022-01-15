@@ -1,0 +1,47 @@
+'use strict';
+
+const CLI_INFO_COMMAND = `--info`;
+const CLI_SERVER_COMMAND = `--server`;
+const CLI_GENERATE_MOCKS_COMMAND = `--generate-mocks`;
+const DEFAULT_CLI_COMMAND = CLI_INFO_COMMAND;
+const DEFAULT_BACKEND_PORT = 3000;
+const DEFAULT_FRONTEND_PORT = 8080;
+const SERVER_API_PREFIX = `/api`;
+const DEFAULT_SERVER_URL = `http://localhost:${DEFAULT_BACKEND_PORT}${SERVER_API_PREFIX}`;
+const DEFAULT_URL = `http://localhost:${DEFAULT_FRONTEND_PORT}`;
+const SERVER_TIMEOUT = 5000;
+
+const PHOTOS_DIR_PATH = `./data/photos`;
+const MOCKS_DIR_PATH = `./mocks`;
+
+const ExitCode = {
+  SUCCESS: 0,
+  ERROR: 1,
+};
+
+const HttpCode = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+  SERVER_ERROR: 500,
+};
+
+module.exports = {
+  CLI_INFO_COMMAND,
+  CLI_SERVER_COMMAND,
+  CLI_GENERATE_MOCKS_COMMAND,
+  DEFAULT_CLI_COMMAND,
+  DEFAULT_BACKEND_PORT,
+  DEFAULT_FRONTEND_PORT,
+  DEFAULT_SERVER_URL,
+  DEFAULT_URL,
+  SERVER_API_PREFIX,
+  SERVER_TIMEOUT,
+
+  PHOTOS_DIR_PATH,
+  MOCKS_DIR_PATH,
+
+  HttpCode,
+  ExitCode,
+};

@@ -1,5 +1,5 @@
 
-import {DEBOUNCE_INTERVAL} from "../const.js";
+import {DEBOUNCE_INTERVAL} from "./_const";
 
 export const debounce = (cb) => {
   let lastTimeout = null;

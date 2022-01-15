@@ -1,4 +1,4 @@
-import {VISIBLE_COMMENTS_NUM} from "../const.js";
+import {VISIBLE_COMMENTS_NUM} from "./const.js";
 import {hideElement, showElement} from "./util.js";
 
 const bigPicture = document.querySelector(`.big-picture`);

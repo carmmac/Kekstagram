@@ -9,10 +9,10 @@ import {
   Effect,
   EffectName,
   regExp,
-} from "../const.js";
+} from "./const.js";
 
 import {showPopup} from "./show-popup.js";
-import {load} from "./load.js";
+// import {load} from "./load.js";
 import {hideElement, showElement} from "./util.js";
 
 const photoUploadForm = document.querySelector(`.img-upload__form`);
@@ -49,18 +49,18 @@ const photoEditorEscPressHandler = (evt) => {
   }
 };
 
-const submitForm = () => {
-  load.post(new FormData(photoUploadForm), () => {
-    closePhotoEditor();
-    showPopup(`success`);
-  }, () => {
-    closePhotoEditor();
-    showPopup(`error`);
-  });
-};
+// const submitForm = () => {
+//   load.post(new FormData(photoUploadForm), () => {
+//     closePhotoEditor();
+//     showPopup(`success`);
+//   }, () => {
+//     closePhotoEditor();
+//     showPopup(`error`);
+//   });
+// };
 
 const successPostHandler = (evt) => {
-  submitForm();
+  // submitForm();
   evt.preventDefault();
 };
 
