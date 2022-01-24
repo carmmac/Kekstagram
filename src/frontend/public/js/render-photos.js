@@ -1,4 +1,5 @@
-import {renderPicture} from "./render-picture.js";
+import {renderPicture} from './render-picture.js';
+import {showBigPicture} from './show-big-picture';
 
 const pictures = document.querySelector(`.pictures`);
 
@@ -11,7 +12,7 @@ export const renderPhotos = (imgs) => {
   for (let i = 0; i < imgs.length; i++) {
     let img = renderPicture(imgs[i], i);
     img.addEventListener(`click`, () => {
-      window.showBigPicture(imgs[i]);
+      showBigPicture(imgs[i]);
     });
     fragment.appendChild(img);
   }

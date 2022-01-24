@@ -1,7 +1,7 @@
 import {
   RANDOM_IMG_NUM,
   FilterName,
-} from "./const.js";
+} from "./_const.js";
 import {shuffleArr} from "./util.js";
 
 const imgFilters = document.querySelector(`.img-filters`);

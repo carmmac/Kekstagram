@@ -9,9 +9,9 @@ import {
   Effect,
   EffectName,
   regExp,
-} from "./const.js";
+} from "./_const.js";
 
-import {showPopup} from "./show-popup.js";
+// import {showPopup} from "./show-popup.js";
 // import {load} from "./load.js";
 import {hideElement, showElement} from "./util.js";
 
