@@ -6,7 +6,7 @@ export const debounce = (cb) => {
 
   return (...parameters) => {
     if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
+      clearTimeout(lastTimeout);
     }
     lastTimeout = window.setTimeout(() => {
       cb(...parameters);

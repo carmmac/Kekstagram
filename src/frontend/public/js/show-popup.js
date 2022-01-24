@@ -1,4 +1,4 @@
-import {StatusValue} from "./const.js";
+import {StatusValue} from "./_const.js";
 
 const popupDisplayDestination = document.querySelector(`main`);
 const successMessageTemplate = document.querySelector(`#success`).content.querySelector(`.success`);

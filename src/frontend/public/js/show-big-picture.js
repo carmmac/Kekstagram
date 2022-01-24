@@ -1,4 +1,4 @@
-import {VISIBLE_COMMENTS_NUM} from "./const.js";
+import {VISIBLE_COMMENTS_NUM} from "./_const.js";
 import {hideElement, showElement} from "./util.js";
 
 const bigPicture = document.querySelector(`.big-picture`);
@@ -78,7 +78,7 @@ const closeBigPicture = () => {
   bigPictureCloseBtn.removeEventListener(`click`, bigPictureCloseBtnPressHandler);
 };
 
-window.showBigPicture = (currentImg) => {
+export const showBigPicture = (currentImg) => {
   showElement(bigPicture);
   bigPictureImg.src = currentImg.url;
   bigPictureLikesCount.textContent = currentImg.likes;
