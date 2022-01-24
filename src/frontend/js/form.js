@@ -1,12 +1,19 @@
-"use strict";
+import {
+  INIT_SCALE_VALUE,
+  SCALE_CHANGE_STEP,
+  INITIAL_EFFECT_LVL,
+  MIN_HATSHTAG_LENGTH,
+  MAX_HATSHTAG_LENGTH,
+  MAX_HASHTAG_NUM,
+  FILE_TYPES,
+  Effect,
+  EffectName,
+  regExp,
+} from "./const.js";
 
-const INIT_SCALE_VALUE = 100;
-const SCALE_CHANGE_STEP = 25;
-const INITIAL_EFFECT_LVL = 100;
-const MIN_HATSHTAG_LENGTH = 1;
-const MAX_HATSHTAG_LENGTH = 20;
-const MAX_HASHTAG_NUM = 5;
-const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
+import {showPopup} from "./show-popup.js";
+// import {load} from "./load.js";
+import {hideElement, showElement} from "./util.js";
 
 const photoUploadForm = document.querySelector(`.img-upload__form`);
 const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
@@ -19,13 +26,6 @@ const scaleBtnSmaller = photoEditor.querySelector(`.scale__control--smaller`);
 const scaleValueField = photoEditor.querySelector(`.scale__control--value`);
 
 const effectsPanel = photoEditor.querySelector(`.effects__list`);
-const effectName = {
-  chrome: `grayscale`,
-  sepia: `sepia`,
-  marvin: `invert`,
-  phobos: `blur`,
-  heat: `brightness`,
-};
 
 const effectLevelPanel = photoEditor.querySelector(`.img-upload__effect-level`);
 const effectLevelBar = effectLevelPanel.querySelector(`.effect-level__line`);
@@ -34,7 +34,6 @@ const effectLevelInput = effectLevelPanel.querySelector(`.effect-level__value`);
 const effectLevelDepthBar = effectLevelPanel.querySelector(`.effect-level__depth`);
 
 const hashtagInput = photoEditor.querySelector(`.text__hashtags`);
-const regExp = /^#[a-zA-Zа-яА-Я\d]+$/;
 
 const commentInput = photoEditor.querySelector(`.text__description`);
 commentInput.maxLength = 140;
@@ -50,18 +49,18 @@ const photoEditorEscPressHandler = (evt) => {
   }
 };
 
-const submitForm = () => {
-  window.load.post(new FormData(photoUploadForm), () => {
-    closePhotoEditor();
-    window.showPopup(`success`);
-  }, () => {
-    closePhotoEditor();
-    window.showPopup(`error`);
-  });
-};
+// const submitForm = () => {
+//   load.post(new FormData(photoUploadForm), () => {
+//     closePhotoEditor();
+//     showPopup(`success`);
+//   }, () => {
+//     closePhotoEditor();
+//     showPopup(`error`);
+//   });
+// };
 
 const successPostHandler = (evt) => {
-  submitForm();
+  // submitForm();
   evt.preventDefault();
 };
 
@@ -134,11 +133,11 @@ const changeEffect = (value) => {
   const currentEffect = getCurrentEffect();
   if (currentEffect !== `effects__preview--${value}`) {
     if (value !== `none`) {
-      window.util.element.show(effectLevelPanel);
+      showElement(effectLevelPanel);
       removeEffect(currentEffect);
       addEffect(value);
     } else {
-      window.util.element.hide(effectLevelPanel);
+      hideElement(effectLevelPanel);
       removeEffect(currentEffect);
     }
   }
@@ -147,17 +146,17 @@ const changeEffect = (value) => {
 const applyEffect = (effect, value) => {
   changeEffect(effect);
   switch (effect) {
-    case `phobos`:
-      previewImg.style.filter = effectName[effect] + `(${(value * 3) / 100}px)`;
+    case EffectName.PHOBOS:
+      previewImg.style.filter = Effect[effect] + `(${(value * 3) / 100}px)`;
       break;
-    case `heat`:
-      previewImg.style.filter = effectName[effect] + `(${(value * 3) / 100})`;
+    case EffectName.HEAT:
+      previewImg.style.filter = Effect[effect] + `(${(value * 3) / 100})`;
       break;
-    case `marvin`:
-      previewImg.style.filter = effectName[effect] + `(${value}%)`;
+    case EffectName.MARVIN:
+      previewImg.style.filter = Effect[effect] + `(${value}%)`;
       break;
     default:
-      previewImg.style.filter = effectName[effect] + `(${value / 100})`;
+      previewImg.style.filter = Effect[effect] + `(${value / 100})`;
   }
 };
 
@@ -269,9 +268,9 @@ const restoreEscPressHandler = () => {
 };
 
 const openEditor = () => {
-  window.util.modal.show(photoEditor);
+  showElement(photoEditor);
   if (getCurrentEffect() === null) {
-    window.util.element.hide(effectLevelPanel);
+    hideElement(effectLevelPanel);
   }
   scaleValueField.value = `${INIT_SCALE_VALUE}%`;
   scalePanel.addEventListener(`click`, scaleChangeHandler);
@@ -295,7 +294,7 @@ const closePhotoEditor = () => {
   effectLevelDepthBar.style.width = ``;
   hashtagInput.value = ``;
   commentInput.value = ``;
-  window.util.modal.hide(photoEditor);
+  hideElement(photoEditor);
   removeEffect(getCurrentEffect());
   document.removeEventListener(`keydown`, photoEditorEscPressHandler);
   photoEditorCloseBtn.removeEventListener(`click`, photoEditorCloseBtnPressHandler);
@@ -310,7 +309,7 @@ const closePhotoEditor = () => {
   photoUploadForm.removeEventListener(`submit`, successPostHandler);
 };
 
-window.form = {
+export const form = {
   setHandler: setChangeHandler,
   open: openEditor,
   close: closePhotoEditor,

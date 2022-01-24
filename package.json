@@ -1,28 +1,32 @@
 {
   "name": "kekstagram",
-  "version": "19.0.0",
+  "version": "19.1.0",
   "private": true,
   "description": "Личный проект «Кекстаграм» от HTML Academy",
   "repository": {
     "type": "git",
     "url": "git@github.com:htmlacademy-javascript/835565-kekstagram-21.git"
   },
-  "bugs": {
-    "url": "https://github.com/htmlacademy-javascript/835565-kekstagram-21/issues"
-  },
+  "license": "MIT",
   "devDependencies": {
     "eslint": "7.1.0",
     "eslint-config-htmlacademy": "0.6.0",
-    "webpack": "5.4.0",
-    "webpack-cli": "4.2.0"
+    "nodemon": "2.0.12",
+    "webpack": "4.44.2",
+    "webpack-cli": "3.3.12",
+    "webpack-dev-server": "3.11.0"
   },
-  "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^0.24.0",
+    "cors": "2.8.5",
+    "express": "^4.17.1",
+    "nanoid": "3.1.23"
+  },
   "scripts": {
     "test": "eslint js/",
-    "build": "webpack --mode production"
-  },
-  "engines": {
-    "node": "8.11"
+    "build": "webpack --mode production",
+    "start-wp": "webpack-dev-server",
+    "start::backend": "nodemon ./src/service/service.js --server",
+    "generate-mocks": "node ./src/service/service.js --generate-mocks"
   }
 }

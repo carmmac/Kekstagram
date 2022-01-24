@@ -1,12 +1,29 @@
+# Файлы и папки операционной системы
 .DS_Store
+
+# Файлы редактора
 .idea
+*.sublime*
+.vscode/
+
+# Вспомогательные файлы
 *.ai
 *.log
 *.pdf
 *.psd
-*.sublime*
+*.zip
+*.http
 build/
 node_modules/
 npm-debug.log*
 Thumbs.db
-.vscode/
+
+# Директория с моковыми данными
+mocks/
+
+# Директория с загруженными изображениями
+src/frontend/public/photos
+
+# Папка с собранными файлами проекта
+src/frontend/public/*.js
+src/frontend/public/*.js.map

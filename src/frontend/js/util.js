@@ -1,5 +1,3 @@
-"use strict";
-
 const shuffleArr = (items) => {
   let j;
   let temp;
@@ -30,14 +28,10 @@ const showElement = (elem) => {
   elem.classList.remove(`hidden`);
 };
 
-window.util = {
-  shuffle: shuffleArr,
-  modal: {
-    show: showModalWindow,
-    hide: hideModalWindow,
-  },
-  element: {
-    show: showElement,
-    hide: hideElement,
-  },
+export {
+  shuffleArr,
+  showModalWindow,
+  hideModalWindow,
+  showElement,
+  hideElement,
 };
