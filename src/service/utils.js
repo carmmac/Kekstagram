@@ -4,7 +4,40 @@ const fs = require(`fs`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 
-const {MOCKS_DIR_PATH, PHOTOS_DIR_PATH} = require(`./const.js`);
+const {
+  MOCKS_DIR_PATH,
+  PHOTOS_DIR_PATH,
+  PICTURE_ID_LENGTH,
+  COMMENTS_FILE_PATH,
+  MOCK_USERS,
+  CommentsNum,
+  LikesNum,
+  CommentSentensesNum,
+} = require(`./const.js`);
+
+const getRandomNum = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const shuffle = (someArray) => {
+  for (let i = someArray.length - 1; i > 0; i--) {
+    const randomPosition = Math.floor(Math.random() * i);
+    [someArray[i], someArray[randomPosition]] = [someArray[randomPosition], someArray[i]];
+  }
+  return someArray;
+};
+
+const readTextContent = async (filePath) => {
+  try {
+    const content = await fs.promises.readFile(filePath, `utf8`);
+    return content.trim().split(`\n`);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
 
 const createDirs = (dirpaths) => {
   console.info(`Creating folders...`);
@@ -31,24 +64,52 @@ const copyFiles = async (sourceDir, targetDir) => {
   console.info(`Finished. \n`);
 };
 
-const generateMockPicture = (pictureFileName) => {
-  return {
-    id: nanoid(5),
-    url: `${pictureFileName}`,
-  };
+const generateComments = (messages) => {
+  const commentsCount = getRandomNum(CommentsNum.MIN, CommentsNum.MAX);
+
+  return Array(commentsCount).fill({}).map(() => {
+    const {name, avatar} = MOCK_USERS[getRandomNum(0, MOCK_USERS.length - 1)];
+
+    return {
+      avatar,
+      name,
+      message: shuffle(messages)
+        .slice(0, getRandomNum(CommentSentensesNum.MIN, CommentSentensesNum.MAX))
+        .join(` `)
+    };
+  });
 };
+
+const generateMockPicture = (pictureFileName, commentsSentenses) => ({
+  id: nanoid(PICTURE_ID_LENGTH),
+  url: `${pictureFileName}`,
+  likes: getRandomNum(LikesNum.MIN, LikesNum.MAX),
+  comments: generateComments(commentsSentenses)
+});
 
 const getMockData = async () => {
   console.info(`Generating data...`);
-  console.log(22222222);
 
   const mockData = [];
-  const picturesFileNames = await fs.promises.readdir(
-      path.resolve(process.cwd(), PHOTOS_DIR_PATH)
-  );
+
+  const [
+    picturesFileNames,
+    commentsSentenses
+  ] = await Promise.all([
+    fs.promises.readdir(
+        path.resolve(process.cwd(), PHOTOS_DIR_PATH)
+    ),
+    readTextContent(
+        path.resolve(process.cwd(), COMMENTS_FILE_PATH)
+    )
+  ]);
 
   for (const pictureFileName of picturesFileNames) {
-    mockData.push(generateMockPicture(pictureFileName));
+    // const randomUser = MOCK_USERS[getRandomNum(0, MOCK_USERS.length - 1)];
+
+    mockData.push(
+        generateMockPicture(pictureFileName, commentsSentenses)
+    );
   }
 
   console.info(`Finished. \n`);
@@ -65,6 +126,7 @@ const createMockFile = async (data) => {
 };
 
 module.exports = {
+  getRandomNum,
   getMockData,
   createDirs,
   copyFiles,

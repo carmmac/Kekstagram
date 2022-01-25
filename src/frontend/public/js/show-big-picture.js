@@ -13,7 +13,7 @@ const bigPictureCommentsLoadBtn = bigPicture.querySelector(`.comments-loader`);
 
 const getBigPicComment = (comment) => {
   const newBigPicComment = bigPictureComment.cloneNode(true);
-  newBigPicComment.querySelector(`.social__picture`).src = comment.avatar;
+  newBigPicComment.querySelector(`.social__picture`).src = `../img/${comment.avatar}`;
   newBigPicComment.querySelector(`.social__picture`).alt = comment.name;
   newBigPicComment.querySelector(`.social__text`).textContent = comment.message;
   return newBigPicComment;
@@ -30,7 +30,9 @@ const renderComments = (comments) => {
 const setRenderCommentLogic = (comments) => {
   bigPictureComments.innerHTML = ``;
   const totalCommentsNumber = comments.length;
-  let renderedCommentsNumber = totalCommentsNumber >= VISIBLE_COMMENTS_NUM ? VISIBLE_COMMENTS_NUM : totalCommentsNumber;
+  let renderedCommentsNumber = (totalCommentsNumber >= VISIBLE_COMMENTS_NUM)
+    ? VISIBLE_COMMENTS_NUM
+    : totalCommentsNumber;
 
   const commentsLoadHandler = () => {
     const nonRenderedCommentsNumber = totalCommentsNumber - renderedCommentsNumber;
@@ -80,7 +82,7 @@ const closeBigPicture = () => {
 
 export const showBigPicture = (currentImg) => {
   showElement(bigPicture);
-  bigPictureImg.src = currentImg.url;
+  bigPictureImg.src = `../photos/${currentImg.url}`;
   bigPictureLikesCount.textContent = currentImg.likes;
   bigPictureCommentsCount.textContent = currentImg.comments.length;
   bigPictureDescription.textContent = currentImg.description;
