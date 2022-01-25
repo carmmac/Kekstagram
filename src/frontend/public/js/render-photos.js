@@ -5,16 +5,22 @@ const pictures = document.querySelector(`.pictures`);
 
 export const renderPhotos = (imgs) => {
   const pics = pictures.querySelectorAll(`.picture`);
+
   for (let pic of pics) {
     pic.parentNode.removeChild(pic);
   }
+
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < imgs.length; i++) {
-    let img = renderPicture(imgs[i], i);
+
+  imgs.forEach((item) => {
+    const img = renderPicture(item);
+
     img.addEventListener(`click`, () => {
-      showBigPicture(imgs[i]);
+      showBigPicture(item);
     });
+
     fragment.appendChild(img);
-  }
+  });
+
   return pictures.appendChild(fragment);
 };

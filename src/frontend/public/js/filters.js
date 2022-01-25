@@ -12,15 +12,18 @@ let currentActiveBtn;
 const getFilteredPhotos = (photos) => {
   const filter = currentActiveBtn.id;
   const defaultPhotos = photos.slice();
+
   switch (filter) {
     case FilterName.RANDOM:
       const randomPhotos = shuffleArr(defaultPhotos).slice(RANDOM_IMG_NUM * -1);
       return randomPhotos;
+
     case FilterName.DISCUSSED:
       const topComment = defaultPhotos.sort((a, b) => {
         return b.comments.length - a.comments.length;
       });
       return topComment;
+
     default:
       return photos;
   }
@@ -41,6 +44,7 @@ const showFilterPanel = () => {
 const changeActiveFilterBtn = (button) => {
   const activeFilteClassName = `img-filters__button--active`;
   currentActiveBtn = imgFilters.querySelector(`.${activeFilteClassName}`);
+
   currentActiveBtn.classList.remove(activeFilteClassName);
   button.classList.add(activeFilteClassName);
   currentActiveBtn = button;

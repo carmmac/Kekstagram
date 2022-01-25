@@ -16,6 +16,7 @@ const insertPopup = (popup) => {
 
 const closePopup = (popup) => {
   popup.remove();
+
   if (popup === newSuccessPopup) {
     popupSuccessCloseBtn.removeEventListener(`click`, successPopupCloseBtnPressHandler);
     document.removeEventListener(`keydown`, popupEscPressHandler);
@@ -56,6 +57,7 @@ const popupErrorCloseHandler = (evt) => {
 
 const createErrorMessage = (errorMessage) => {
   const node = document.createElement(`div`);
+
   node.style = `
     z-index: 100;
     position: fixed;
@@ -67,25 +69,36 @@ const createErrorMessage = (errorMessage) => {
     background-color: #ff0000;
     font-size: 18px;
     font-weight: bold;`;
+
   node.textContent = errorMessage;
+
   return node;
 };
 
 export const showPopup = (status) => {
-  if (status === StatusValue.SUCCESS) {
-    activePopup = newSuccessPopup;
-    insertPopup(activePopup);
-    popupSuccessCloseBtn.addEventListener(`click`, successPopupCloseBtnPressHandler);
-    document.addEventListener(`keydown`, popupEscPressHandler);
-    activePopup.addEventListener(`click`, popupSuccessCloseHandler);
-  } else if (status === StatusValue.ERROR) {
-    activePopup = newErrorPopup;
-    insertPopup(activePopup);
-    popupErrorCloseBtn.addEventListener(`click`, errorPopupCloseBtnPressHandler);
-    document.addEventListener(`keydown`, popupEscPressHandler);
-    activePopup.addEventListener(`click`, popupErrorCloseHandler);
-  } else {
-    insertPopup(createErrorMessage(status));
+  switch (status) {
+    case StatusValue.SUCCESS:
+      activePopup = newSuccessPopup;
+      insertPopup(activePopup);
+      popupSuccessCloseBtn.addEventListener(`click`, successPopupCloseBtnPressHandler);
+
+      document.addEventListener(`keydown`, popupEscPressHandler);
+      activePopup.addEventListener(`click`, popupSuccessCloseHandler);
+      break;
+
+    case StatusValue.ERROR:
+      activePopup = newErrorPopup;
+      insertPopup(activePopup);
+
+      popupErrorCloseBtn.addEventListener(`click`, errorPopupCloseBtnPressHandler);
+      document.addEventListener(`keydown`, popupEscPressHandler);
+      activePopup.addEventListener(`click`, popupErrorCloseHandler);
+      break;
+
+    default:
+      insertPopup(createErrorMessage(status));
+      break;
   }
+
   return activePopup;
 };

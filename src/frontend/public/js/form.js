@@ -67,9 +67,7 @@ const successPostHandler = (evt) => {
 const uploadCustomPhoto = () => {
   const file = photoUploader.files[0];
   const fileName = file.name.toLowerCase();
-  const match = FILE_TYPES.some((fileType) => {
-    return fileName.endsWith(fileType);
-  });
+  const match = FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
   if (match) {
     const reader = new FileReader();
     reader.addEventListener(`load`, () => {
@@ -99,23 +97,28 @@ const setChangeHandler = (cb) => {
 const scaleChangeHandler = (evt) => {
   const currentScale = parseInt(scaleValueField.value, 10);
   let newScale;
+
   if (evt.target === scaleBtnSmaller) {
     newScale = decreaseScaleValue(currentScale);
   } else {
     newScale = increaseScaleValue(currentScale);
   }
+
   scaleValueField.value = `${newScale}%`;
+
   changeImgScale(newScale);
 };
 
 const getCurrentEffect = () => {
   const classes = previewImg.classList;
+
   for (let i = 0; i < classes.length; i++) {
     if (classes[i].includes(`effects__preview--`)) {
       const currEffect = classes[i];
       return currEffect;
     }
   }
+
   return null;
 };
 
@@ -125,12 +128,14 @@ const addEffect = (effect) => {
 
 const removeEffect = (effectClass) => {
   previewImg.classList.remove(effectClass);
+
   previewImg.style.filter = ``;
   effectLevelDepthBar.style.width = `${INITIAL_EFFECT_LVL}%`;
 };
 
 const changeEffect = (value) => {
   const currentEffect = getCurrentEffect();
+
   if (currentEffect !== `effects__preview--${value}`) {
     if (value !== `none`) {
       showElement(effectLevelPanel);
@@ -145,16 +150,20 @@ const changeEffect = (value) => {
 
 const applyEffect = (effect, value) => {
   changeEffect(effect);
+
   switch (effect) {
     case EffectName.PHOBOS:
       previewImg.style.filter = Effect[effect] + `(${(value * 3) / 100}px)`;
       break;
+
     case EffectName.HEAT:
       previewImg.style.filter = Effect[effect] + `(${(value * 3) / 100})`;
       break;
+
     case EffectName.MARVIN:
       previewImg.style.filter = Effect[effect] + `(${value}%)`;
       break;
+
     default:
       previewImg.style.filter = Effect[effect] + `(${value / 100})`;
   }
@@ -163,26 +172,28 @@ const applyEffect = (effect, value) => {
 const effectChangeHandler = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     const currentEffectName = evt.target.value;
+
     applyEffect(currentEffectName, INITIAL_EFFECT_LVL);
+
     effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * INITIAL_EFFECT_LVL) / 100)}px`;
   }
 };
 
-const getEffectLevel = (currLevel) => {
-  const effectLevel = Math.floor((currLevel * 100) / effectLevelBar.offsetWidth);
-  return effectLevel;
-};
+const getEffectLevel = (currLevel) => Math.floor((currLevel * 100) / effectLevelBar.offsetWidth);
 
 const effectLevelChangeHandler = (evt) => {
   evt.preventDefault();
+
   const maxEffectLevel = effectLevelBar.offsetWidth;
   let startCoords = evt.clientX;
+
   const moveAt = (value) => {
     effectLevelPin.style.left = `${value}px`;
   };
 
   const mouseMoveHandler = (moveEvt) => {
     moveEvt.preventDefault();
+
     let newEffectLevel = getEffectLevel(effectLevelPin.offsetLeft);
     effectLevelInput.value = newEffectLevel;
     const currentFilter = effectsPanel.querySelector(`input[type="radio"]:checked`);
@@ -190,16 +201,19 @@ const effectLevelChangeHandler = (evt) => {
     const shift = startCoords - moveEvt.clientX;
     startCoords = moveEvt.clientX;
     let moveValue = effectLevelPin.offsetLeft - shift;
+
     if (moveValue > 0 && moveValue < (maxEffectLevel)) {
       moveAt((moveValue));
     } else {
       moveAt((moveValue) > 0 ? maxEffectLevel : 0);
     }
+
     effectLevelDepthBar.style.width = `${newEffectLevel}%`;
   };
 
   const mouseUpHandler = (upEvt) => {
     upEvt.preventDefault();
+
     document.removeEventListener(`mousemove`, mouseMoveHandler);
     document.removeEventListener(`mouseup`, mouseUpHandler);
   };
@@ -229,6 +243,7 @@ const checkEmptyHashtag = (hashtags) => {
 
 const checkHashtagValidity = (evt) => {
   let hashtags = evt.target.value.split(/ +/);
+
   for (let i = 0; i < hashtags.length; i++) {
     if ((!regExp.test(hashtags[i])) && (hashtags[i].length !== 0)) {
       hashtagInput.setCustomValidity(`Неверный формат хэштэга ${hashtags[i]} !`);
@@ -269,10 +284,13 @@ const restoreEscPressHandler = () => {
 
 const openEditor = () => {
   showElement(photoEditor);
+
   if (getCurrentEffect() === null) {
     hideElement(effectLevelPanel);
   }
+
   scaleValueField.value = `${INIT_SCALE_VALUE}%`;
+
   scalePanel.addEventListener(`click`, scaleChangeHandler);
   photoEditorCloseBtn.addEventListener(`click`, photoEditorCloseBtnPressHandler);
   document.addEventListener(`keydown`, photoEditorEscPressHandler);
@@ -294,8 +312,10 @@ const closePhotoEditor = () => {
   effectLevelDepthBar.style.width = ``;
   hashtagInput.value = ``;
   commentInput.value = ``;
+
   hideElement(photoEditor);
   removeEffect(getCurrentEffect());
+
   document.removeEventListener(`keydown`, photoEditorEscPressHandler);
   photoEditorCloseBtn.removeEventListener(`click`, photoEditorCloseBtnPressHandler);
   scalePanel.removeEventListener(`click`, scaleChangeHandler);
