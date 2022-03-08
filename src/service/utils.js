@@ -80,7 +80,7 @@ const generateComments = (messages) => {
   });
 };
 
-const generateMockPicture = (pictureFileName, commentsSentenses) => ({
+const generatePicture = (pictureFileName, commentsSentenses) => ({
   id: nanoid(PICTURE_ID_LENGTH),
   url: `${pictureFileName}`,
   likes: getRandomNum(LikesNum.MIN, LikesNum.MAX),
@@ -106,9 +106,8 @@ const getMockData = async () => {
 
   for (const pictureFileName of picturesFileNames) {
     // const randomUser = MOCK_USERS[getRandomNum(0, MOCK_USERS.length - 1)];
-
     mockData.push(
-        generateMockPicture(pictureFileName, commentsSentenses)
+        generatePicture(pictureFileName, commentsSentenses)
     );
   }
 

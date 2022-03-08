@@ -13,7 +13,7 @@ const app = new Router();
   try {
     const fileContent = await fs.readFile(path.resolve(process.cwd(), `mocks/mocks.json`));
     const mockData = JSON.parse(fileContent);
-    return photosRouter(app, new PhotosService(mockData));
+    photosRouter(app, new PhotosService(mockData));
   } catch (error) {
     console.error(error);
     throw new Error(`Error while setting up server-side API: ${error.message}`);
