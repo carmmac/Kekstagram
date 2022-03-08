@@ -1,6 +1,6 @@
 import {
   RANDOM_IMG_NUM,
-  FilterName,
+  Filter,
 } from "./_const.js";
 import {shuffleArr} from "./util.js";
 
@@ -14,11 +14,11 @@ const getFilteredPhotos = (photos) => {
   const defaultPhotos = photos.slice();
 
   switch (filter) {
-    case FilterName.RANDOM:
+    case Filter.RANDOM.name:
       const randomPhotos = shuffleArr(defaultPhotos).slice(RANDOM_IMG_NUM * -1);
       return randomPhotos;
 
-    case FilterName.DISCUSSED:
+    case Filter.DISCUSSED.name:
       const topComment = defaultPhotos.sort((a, b) => {
         return b.comments.length - a.comments.length;
       });

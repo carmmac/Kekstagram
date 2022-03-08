@@ -1,7 +1,7 @@
 import {
-  INIT_SCALE_VALUE,
+  DEFAULT_SCALE_VALUE,
   SCALE_CHANGE_STEP,
-  INITIAL_EFFECT_LVL,
+  DEFAULT_EFFECT_VALUE,
   MIN_HATSHTAG_LENGTH,
   MAX_HATSHTAG_LENGTH,
   MAX_HASHTAG_NUM,
@@ -9,11 +9,11 @@ import {
   Effect,
   EffectName,
   regExp,
-} from "./_const.js";
+} from "../../_const";
 
 // import {showPopup} from "./show-popup.js";
 // import {load} from "./load.js";
-import {hideElement, showElement} from "./util.js";
+import {hideElement, showElement} from "../../_util";
 
 const photoUploadForm = document.querySelector(`.img-upload__form`);
 const photoUploader = photoUploadForm.querySelector(`.img-upload__input`);
@@ -130,7 +130,7 @@ const removeEffect = (effectClass) => {
   previewImg.classList.remove(effectClass);
 
   previewImg.style.filter = ``;
-  effectLevelDepthBar.style.width = `${INITIAL_EFFECT_LVL}%`;
+  effectLevelDepthBar.style.width = `${DEFAULT_EFFECT_VALUE}%`;
 };
 
 const changeEffect = (value) => {
@@ -173,9 +173,9 @@ const effectChangeHandler = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     const currentEffectName = evt.target.value;
 
-    applyEffect(currentEffectName, INITIAL_EFFECT_LVL);
+    applyEffect(currentEffectName, DEFAULT_EFFECT_VALUE);
 
-    effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * INITIAL_EFFECT_LVL) / 100)}px`;
+    effectLevelPin.style.left = `${Math.floor((effectLevelBar.offsetWidth * DEFAULT_EFFECT_VALUE) / 100)}px`;
   }
 };
 
@@ -289,7 +289,7 @@ const openEditor = () => {
     hideElement(effectLevelPanel);
   }
 
-  scaleValueField.value = `${INIT_SCALE_VALUE}%`;
+  scaleValueField.value = `${DEFAULT_SCALE_VALUE}%`;
 
   scalePanel.addEventListener(`click`, scaleChangeHandler);
   photoEditorCloseBtn.addEventListener(`click`, photoEditorCloseBtnPressHandler);

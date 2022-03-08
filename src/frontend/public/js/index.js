@@ -1,4 +1,4 @@
-import {getAPI} from './api';
+import {getAPI} from '../../api/api';
 import {form} from './form';
 import {renderPhotos} from './render-photos';
 import {filters} from './filters';

@@ -435,12 +435,12 @@ main {
   border: 0;
 }
 
-.scale__control:hover,
-.scale__control:focus {
+.scale__control:hover:enabled,
+.scale__control:focus:enabled {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.scale__control:active {
+.scale__control:active:enabled {
   -webkit-transform: translateY(1px);
       -ms-transform: translateY(1px);
           transform: translateY(1px);
@@ -450,7 +450,7 @@ main {
   border-radius: 50% 0 0 50%;
 }
 
-.scale__control--smaller::before {
+.scale__control--smaller:enabled::before {
   content: "–";
   position: absolute;
   top: 50%;
@@ -479,7 +479,7 @@ main {
   border-radius: 0 50% 50% 0;
 }
 
-.scale__control--bigger::before {
+.scale__control--bigger:enabled::before {
   content: "+";
   position: absolute;
   top: 50%;
@@ -587,7 +587,7 @@ main {
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
 
-  cursor: move;
+  cursor: pointer;
 }
 
 .effect-level__depth {
@@ -634,6 +634,7 @@ main {
 .effects__label {
   font-family: "Open Sans", "Arial", sans-serif;
   font-weight: 700;
+  color: #ffe753;
 
   cursor: pointer;
 }
@@ -641,7 +642,7 @@ main {
 .effects__label:hover,
 .effects__label:focus,
 .effects__radio:checked + .effects__label {
-  color: #ffe753;
+  color: #a89515;
 }
 
 .effects__preview {
