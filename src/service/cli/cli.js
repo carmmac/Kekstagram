@@ -2,7 +2,7 @@
 
 const info = require(`./info`);
 const server = require(`./server`);
-const generateMocks = require(`../generate-mocks`);
+const generateMocks = require(`../cli/generate-mocks`);
 
 module.exports = {
   [info.name]: info,

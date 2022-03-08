@@ -7,14 +7,14 @@ const {
   CLI_GENERATE_MOCKS_COMMAND,
   PHOTOS_DIR_PATH,
   ExitCode,
-} = require(`./const`);
+} = require(`../const`);
 
 const {
   getMockData,
   createDirs,
   copyFiles,
   createMockFile,
-} = require(`./utils`);
+} = require(`../utils`);
 
 const PHOTOS_UPLOAD_DIR_PATH = `src/frontend/public/photos`;
 
