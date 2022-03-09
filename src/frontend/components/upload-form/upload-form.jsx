@@ -3,7 +3,8 @@ import EffectsList from "./effects/effects-list";
 import PreviewContainer from "./preview-container/preview-container";
 
 const UploadForm = () => {
-  const [isPreviewOpen, setIsPreviewOpen] = useState(true);
+  // ! opener
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const previewToggleHandler = (value) => setIsPreviewOpen(value);
 

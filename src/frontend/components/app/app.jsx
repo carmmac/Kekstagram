@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {fetchPhotosList} from "../../store/api-action";
 import {getPhotosLoadIndicator} from "../../store/selectors";
+import BigPicture from '../big-picture/big-picture';
 import Main from "../main/main";
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route exact path={`/`} element={<Main />} />
+        <Route exact path={`/pictures/:id`} element={<BigPicture />} />
       </Routes>
     </BrowserRouter>
   );

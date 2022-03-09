@@ -5,9 +5,19 @@ const getPhotos = createSelector(
     (photos) => photos
 );
 
+const getPhoto = createSelector(
+    (state) => state.photo,
+    (photo) => photo
+);
+
 const getPhotosLoadIndicator = createSelector(
     (state) => state.isLoadedIndicator.arePhotosLoaded,
     (arePhotosLoaded) => arePhotosLoaded
+);
+
+const getPhotoLoadIndicator = createSelector(
+    (state) => state.isLoadedIndicator.isPhotoLoaded,
+    (isPhotoLoaded) => isPhotoLoaded
 );
 
 const getFilter = createSelector(
@@ -23,6 +33,8 @@ const getEffect = createSelector(
 export {
   getPhotos,
   getPhotosLoadIndicator,
+  getPhoto,
+  getPhotoLoadIndicator,
   getFilter,
   getEffect,
 };

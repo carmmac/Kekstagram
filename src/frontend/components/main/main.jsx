@@ -8,6 +8,7 @@ import Footer from "../footer/footer";
 import Header from "../header/header";
 import PictureCard from "../picture-card/picture-card";
 import UploadForm from "../upload-form/upload-form";
+import Loading from '../loading/loading';
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,10 @@ const Main = () => {
   );
 
   useEffect(() => setPhotosToShow(photos), [arePhotosLoaded]);
+
+  if (!arePhotosLoaded) {
+    return <Loading />;
+  }
 
   return (
     <>

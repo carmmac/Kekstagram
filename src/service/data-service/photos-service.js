@@ -8,6 +8,10 @@ class PhotosService {
   findAll() {
     return this._photos;
   }
+
+  findOne(id) {
+    return this._photos.find((photo) => photo.id === id);
+  }
 }
 
 module.exports = PhotosService;

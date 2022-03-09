@@ -1,4 +1,4 @@
-import {VISIBLE_COMMENTS_NUM} from "./_const.js";
+import {INITIAL_VISIBLE_COMMENTS_NUM} from "./_const.js";
 import {hideElement, showElement} from "./util.js";
 
 const bigPicture = document.querySelector(`.big-picture`);
@@ -38,14 +38,14 @@ const setRenderCommentLogic = (comments) => {
   bigPictureComments.innerHTML = ``;
 
   const totalCommentsNumber = comments.length;
-  let renderedCommentsNumber = (totalCommentsNumber >= VISIBLE_COMMENTS_NUM)
-    ? VISIBLE_COMMENTS_NUM
+  let renderedCommentsNumber = (totalCommentsNumber >= INITIAL_VISIBLE_COMMENTS_NUM)
+    ? INITIAL_VISIBLE_COMMENTS_NUM
     : totalCommentsNumber;
 
   const commentsLoadHandler = () => {
     const nonRenderedCommentsNumber = totalCommentsNumber - renderedCommentsNumber;
     const nextRenderedCommentsNumber = renderedCommentsNumber +
-      ((nonRenderedCommentsNumber >= VISIBLE_COMMENTS_NUM) ? VISIBLE_COMMENTS_NUM : nonRenderedCommentsNumber);
+      ((nonRenderedCommentsNumber >= INITIAL_VISIBLE_COMMENTS_NUM) ? INITIAL_VISIBLE_COMMENTS_NUM : nonRenderedCommentsNumber);
 
     renderComments(comments.slice(renderedCommentsNumber, nextRenderedCommentsNumber));
 

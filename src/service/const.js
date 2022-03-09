@@ -14,6 +14,7 @@ const PICTURE_ID_LENGTH = 5;
 
 const PHOTOS_DIR_PATH = `./data/photos`;
 const COMMENTS_FILE_PATH = `./data/comments.txt`;
+const DESCRIPTIONS_FILE_PATH = `./data/descriptions.txt`;
 const MOCKS_DIR_PATH = `./mocks`;
 
 const MOCK_USERS = [
@@ -86,6 +87,7 @@ module.exports = {
 
   PHOTOS_DIR_PATH,
   COMMENTS_FILE_PATH,
+  DESCRIPTIONS_FILE_PATH,
   MOCKS_DIR_PATH,
 
   MOCK_USERS,

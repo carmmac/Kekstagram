@@ -23,4 +23,15 @@ module.exports = (app, photosService) => {
     res.status(HttpCode.OK)
       .json(photos);
   });
+
+  photosRouter.get(`/:id`, cors(corsOptions), (req, res) => {
+    const {id} = req.params;
+    const photo = photosService.findOne(id);
+    if (!photo) {
+      res.status(HttpCode.NOT_FOUND)
+        .send(`Photo with id ${id} not found`);
+    }
+    res.status(HttpCode.OK)
+      .json(photo);
+  });
 };
