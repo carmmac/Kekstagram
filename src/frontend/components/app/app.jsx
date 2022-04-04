@@ -5,6 +5,7 @@ import {fetchPhotosList} from "../../store/api-action";
 import {getPhotosLoadIndicator} from "../../store/selectors";
 import BigPicture from '../big-picture/big-picture';
 import Main from "../main/main";
+import NotFound from '../not-found/not-found';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const App = () => {
       <Routes>
         <Route exact path={`/`} element={<Main />} />
         <Route exact path={`/pictures/:id`} element={<BigPicture />} />
+        <Route path={`*`} element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
