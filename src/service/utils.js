@@ -13,6 +13,7 @@ const {
   CommentsNum,
   LikesNum,
   CommentSentensesNum,
+  DESCRIPTIONS_FILE_PATH,
 } = require(`./const.js`);
 
 const getRandomNum = (min, max) => {
@@ -80,11 +81,12 @@ const generateComments = (messages) => {
   });
 };
 
-const generateMockPicture = (pictureFileName, commentsSentenses) => ({
+const generateMockPicture = (pictureFileName, commentsSentenses, descriptionSentenses) => ({
   id: nanoid(PICTURE_ID_LENGTH),
   url: `${pictureFileName}`,
   likes: getRandomNum(LikesNum.MIN, LikesNum.MAX),
-  comments: generateComments(commentsSentenses)
+  comments: generateComments(commentsSentenses),
+  description: descriptionSentenses[getRandomNum(0, descriptionSentenses.length - 1)],
 });
 
 const getMockData = async () => {
@@ -94,21 +96,23 @@ const getMockData = async () => {
 
   const [
     picturesFileNames,
-    commentsSentenses
+    commentsSentenses,
+    descriptionSentenses,
   ] = await Promise.all([
     fs.promises.readdir(
         path.resolve(process.cwd(), PHOTOS_DIR_PATH)
     ),
     readTextContent(
         path.resolve(process.cwd(), COMMENTS_FILE_PATH)
+    ),
+    readTextContent(
+        path.resolve(process.cwd(), DESCRIPTIONS_FILE_PATH)
     )
   ]);
 
   for (const pictureFileName of picturesFileNames) {
-    // const randomUser = MOCK_USERS[getRandomNum(0, MOCK_USERS.length - 1)];
-
     mockData.push(
-        generateMockPicture(pictureFileName, commentsSentenses)
+        generateMockPicture(pictureFileName, commentsSentenses, descriptionSentenses)
     );
   }
 
