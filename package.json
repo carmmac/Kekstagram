@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "concurrently": "^8.2.0",
     "cors": "2.8.5",
     "express": "^4.17.1",
     "nanoid": "3.1.23"
@@ -25,8 +26,10 @@
   "scripts": {
     "test": "eslint js/",
     "build": "webpack --mode production",
-    "start-wp": "webpack-dev-server",
-    "start::backend": "nodemon ./src/service/service.js --server",
-    "generate-mocks": "node ./src/service/service.js --generate-mocks"
+    "start::front": "webpack-dev-server",
+    "start::back": "nodemon ./src/service/service.js --server",
+    "generate-mocks": "node ./src/service/service.js --generate-mocks",
+    "start-dev": "concurrently -n \"FRONT,BACK\" -c \"bgYellow,bgBlue.bold\" \"npm:start::front\" \"npm:start::back\"",
+    "start": "npm run generate-mocks && npm run start-dev"
   }
 }
